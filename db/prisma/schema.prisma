@@ -1,0 +1,1442 @@
+// DalifaBooks — Prisma Schema v1.0
+// Data dictionary section 15
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ══════════════════════════════════════════════════════════════════
+// 15.2 IDENTITY
+// ══════════════════════════════════════════════════════════════════
+
+model User {
+  id                String     @id @default(uuid()) @db.Uuid
+  email             String?    @unique @db.VarChar(254)
+  phone             String?    @db.VarChar(20)
+  full_name         String     @db.VarChar(120)
+  status            UserStatus @default(active)
+  email_verified_at DateTime?  @db.Timestamptz
+
+  created_at DateTime @default(now()) @db.Timestamptz
+  updated_at DateTime @updatedAt @db.Timestamptz
+
+  // Identity
+  credential         Credential?
+  sessions           Session[]
+  auth_tokens        AuthToken[]
+  auth_challenges    AuthChallenge[]
+  mfa_credential     MfaCredential?
+  mfa_recovery_codes MfaRecoveryCode[]
+  user_roles         UserRole[]
+  user_consents      UserConsent[]
+  addresses          Address[]
+  staff_invitations_sent StaffInvitation[] @relation("InvitedBy")
+
+  // Catalog / Content
+  media_assets_uploaded MediaAsset[]     @relation("MediaUploader")
+  post_authored         Post[]           @relation("PostAuthor")
+  post_revisions_acted  PostRevision[]   @relation("PostRevisionActor")
+  page_revisions_acted  PageRevision[]   @relation("PageRevisionActor")
+  site_settings_updated SiteSetting[]    @relation("SettingUpdater")
+
+  // Cart / Checkout
+  carts           Cart[]           @relation("CartOwner")
+  checkout_quotes CheckoutQuote[]  @relation("QuoteOwner")
+
+  // Inventory
+  stock_movements_acted StockMovement[] @relation("StockMovementActor")
+
+  // Orders
+  orders         Order[]         @relation("OrderCustomer")
+  order_events_acted OrderEvent[] @relation("OrderEventActor")
+  order_notes_acted  OrderNote[]  @relation("OrderNoteActor")
+
+  // Payments
+  payment_receipts_acted     PaymentReceipt[]      @relation("ReceiptActor")
+  payment_review_requests    PaymentReviewRequest[] @relation("ReviewRequester")
+  refunds_acted              Refund[]              @relation("RefundActor")
+
+  // Promotions
+  coupon_reservations CouponReservation[] @relation("CouponReservationUser")
+  coupon_redemptions  CouponRedemption[]  @relation("CouponRedemptionUser")
+
+  // Audit
+  audit_logs AuditLog[] @relation("AuditActor")
+
+  @@map("users")
+}
+
+enum UserStatus {
+  active
+  blocked
+
+  @@map("user_status")
+}
+
+model Credential {
+  user_id       String @id @db.Uuid
+  password_hash String @db.Text
+
+  created_at DateTime @default(now()) @db.Timestamptz
+  updated_at DateTime @updatedAt @db.Timestamptz
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Restrict)
+
+  @@map("credentials")
+}
+
+model Session {
+  id           String          @id @default(uuid()) @db.Uuid
+  token_hash   String          @unique @db.Text
+  user_id      String          @db.Uuid
+  audience     SessionAudience
+  expires_at   DateTime        @db.Timestamptz
+  revoked_at   DateTime?       @db.Timestamptz
+  last_seen_at DateTime?       @db.Timestamptz
+
+  created_at DateTime @default(now()) @db.Timestamptz
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Restrict)
+
+  @@index([user_id])
+  @@map("sessions")
+}
+
+enum SessionAudience {
+  storefront
+  admin
+
+  @@map("session_audience")
+}
+
+model AuthToken {
+  id            String           @id @default(uuid()) @db.Uuid
+  user_id       String           @db.Uuid
+  purpose       AuthTokenPurpose
+  token_hash    String           @unique @db.Text
+  expires_at    DateTime         @db.Timestamptz
+  used_at       DateTime?        @db.Timestamptz
+  pending_email String?          @db.VarChar(254)
+
+  created_at DateTime @default(now()) @db.Timestamptz
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Restrict)
+
+  @@index([user_id])
+  @@map("auth_tokens")
+}
+
+enum AuthTokenPurpose {
+  verify_email
+  reset_password
+  change_email
+
+  @@map("auth_token_purpose")
+}
+
+model AuthChallenge {
+  id         String    @id @default(uuid()) @db.Uuid
+  user_id    String    @db.Uuid
+  token_hash String    @unique @db.Text
+  purpose    String    @db.VarChar(64)
+  expires_at DateTime  @db.Timestamptz
+  used_at    DateTime? @db.Timestamptz
+  attempts   Int       @default(0)
+
+  created_at DateTime @default(now()) @db.Timestamptz
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Restrict)
+
+  @@index([user_id])
+  @@map("auth_challenges")
+}
+
+model MfaCredential {
+  user_id          String    @id @db.Uuid
+  encrypted_secret String    @db.Text
+  enabled_at       DateTime? @db.Timestamptz
+  last_used_step   BigInt?
+
+  created_at DateTime @default(now()) @db.Timestamptz
+  updated_at DateTime @updatedAt @db.Timestamptz
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Restrict)
+
+  @@map("mfa_credentials")
+}
+
+model MfaRecoveryCode {
+  id        String    @id @default(uuid()) @db.Uuid
+  user_id   String    @db.Uuid
+  code_hash String    @db.Text
+  used_at   DateTime? @db.Timestamptz
+
+  created_at DateTime @default(now()) @db.Timestamptz
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Restrict)
+
+  @@index([user_id])
+  @@map("mfa_recovery_codes")
+}
+
+model Role {
+  id          String  @id @default(uuid()) @db.Uuid
+  code        String  @unique @db.VarChar(64)
+  name        String  @db.VarChar(120)
+  description String? @db.Text
+
+  created_at DateTime @default(now()) @db.Timestamptz
+  updated_at DateTime @updatedAt @db.Timestamptz
+
+  user_roles       UserRole[]
+  role_permissions RolePermission[]
+  invitation_roles InvitationRole[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id          String  @id @default(uuid()) @db.Uuid
+  code        String  @unique @db.VarChar(64)
+  description String? @db.Text
+
+  created_at DateTime @default(now()) @db.Timestamptz
+
+  role_permissions RolePermission[]
+
+  @@map("permissions")
+}
+
+model UserRole {
+  user_id String @db.Uuid
+  role_id String @db.Uuid
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Restrict)
+  role Role @relation(fields: [role_id], references: [id], onDelete: Restrict)
+
+  @@id([user_id, role_id])
+  @@map("user_roles")
+}
+
+model RolePermission {
+  role_id       String @db.Uuid
+  permission_id String @db.Uuid
+
+  role       Role       @relation(fields: [role_id], references: [id], onDelete: Restrict)
+  permission Permission @relation(fields: [permission_id], references: [id], onDelete: Restrict)
+
+  @@id([role_id, permission_id])
+  @@map("role_permissions")
+}
+
+model StaffInvitation {
+  id          String    @id @default(uuid()) @db.Uuid
+  email       String    @db.VarChar(254)
+  invited_by  String    @db.Uuid
+  token_hash  String    @unique @db.Text
+  expires_at  DateTime  @db.Timestamptz
+  accepted_at DateTime? @db.Timestamptz
+
+  created_at DateTime @default(now()) @db.Timestamptz
+
+  inviter          User             @relation("InvitedBy", fields: [invited_by], references: [id], onDelete: Restrict)
+  invitation_roles InvitationRole[]
+
+  @@map("staff_invitations")
+}
+
+model InvitationRole {
+  invitation_id String @db.Uuid
+  role_id       String @db.Uuid
+
+  invitation StaffInvitation @relation(fields: [invitation_id], references: [id], onDelete: Cascade)
+  role       Role            @relation(fields: [role_id], references: [id], onDelete: Restrict)
+
+  @@id([invitation_id, role_id])
+  @@map("invitation_roles")
+}
+
+model UserConsent {
+  id                 String   @id @default(uuid()) @db.Uuid
+  user_id            String?  @db.Uuid
+  order_id           String?  @db.Uuid
+  policy_revision_id String   @db.Uuid
+  purpose            String   @db.VarChar(64)
+  accepted           Boolean
+  accepted_at        DateTime @db.Timestamptz
+
+  created_at DateTime @default(now()) @db.Timestamptz
+
+  user          User?        @relation(fields: [user_id], references: [id], onDelete: Restrict)
+  order         Order?       @relation(fields: [order_id], references: [id], onDelete: Restrict)
+  page_revision PageRevision @relation(fields: [policy_revision_id], references: [id], onDelete: Restrict)
+
+  @@map("user_consents")
+}
+
+model Address {
+  id                      String  @id @default(uuid()) @db.Uuid
+  user_id                 String  @db.Uuid
+  recipient               String  @db.VarChar(120)
+  phone                   String  @db.VarChar(20)
+  address_line            String  @db.VarChar(300)
+  locality_codes          Json
+  locality_names          Json
+  address_catalog_version String  @db.VarChar(32)
+  is_default              Boolean @default(false)
+
+  created_at DateTime @default(now()) @db.Timestamptz
+  updated_at DateTime @updatedAt @db.Timestamptz
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Restrict)
+
+  @@index([user_id])
+  @@map("addresses")
+}
+
+// ══════════════════════════════════════════════════════════════════
+// 15.3 CATALOG & CONTENT
+// ══════════════════════════════════════════════════════════════════
+
+model Book {
+  id              String     @id @default(uuid()) @db.Uuid
+  title           String     @db.VarChar(300)
+  slug            String     @unique @db.VarChar(200)
+  description     String?    @db.Text
+  status          BookStatus @default(draft)
+  seo_title       String?    @db.VarChar(200)
+  seo_description String?    @db.VarChar(500)
+  search_text     String?    @db.Text
+  version         Int        @default(1)
+
+  created_at DateTime @default(now()) @db.Timestamptz
+  updated_at DateTime @updatedAt @db.Timestamptz
+
+  editions         BookEdition[]
+  book_authors     BookAuthor[]
+  book_categories  BookCategory[]
+  book_images      BookImage[]
+  collection_books CollectionBook[]
+
+  @@index([status])
+  @@map("books")
+}
+
+enum BookStatus {
+  draft
+  published
+  archived
+
+  @@map("book_status")
+}
+
+model BookEdition {
+  id               String        @id @default(uuid()) @db.Uuid
+  book_id          String        @db.Uuid
+  sku              String        @unique @db.VarChar(64)
+  isbn             String?       @unique @db.VarChar(13)
+  publisher_id     String?       @db.Uuid
+  language         String        @db.VarChar(20)
+  format           EditionFormat
+  publication_date DateTime?     @db.Date
+  page_count       Int?
+  list_price_vnd   BigInt
+  sale_price_vnd   BigInt
+  status           EditionStatus @default(draft)
+  version          Int           @default(1)
+
+  created_at DateTime @default(now()) @db.Timestamptz
+  updated_at DateTime @updatedAt @db.Timestamptz
+
+  book      Book       @relation(fields: [book_id], references: [id], onDelete: Restrict)
+  publisher Publisher? @relation(fields: [publisher_id], references: [id], onDelete: Restrict)
+
+  book_images            BookImage[]
+  inventory_balances     InventoryBalance[]
+  inventory_reservations InventoryReservation[]
+  stock_movements        StockMovement[]        @relation("StockMovementEdition")
+  cart_items             CartItem[]
+  order_items            OrderItem[]
+  coupon_editions        CouponEdition[]
+
+  @@index([book_id])
+  @@index([status])
+  @@map("book_editions")
+}
+
+enum EditionFormat {
+  paperback
+  hardcover
+
+  @@map("edition_format")
+}
+
+enum EditionStatus {
+  draft
+  active
+  archived
+
+  @@map("edition_status")
+}
+
+model Author {
+  id          String     @id @default(uuid()) @db.Uuid
+  name        String     @db.VarChar(200)
+  slug        String     @unique @db.VarChar(200)
+  description String?    @db.Text
+  asset_id    String?    @db.Uuid
+  status      MetaStatus @default(active)
+
+  created_at DateTime @default(now()) @db.Timestamptz
+  updated_at DateTime @updatedAt @db.Timestamptz
+
+  asset        MediaAsset?  @relation("AuthorAsset", fields: [asset_id], references: [id], onDelete: Restrict)
+  book_authors BookAuthor[]
+
+  @@map("authors")
+}
+
+model Publisher {
+  id          String     @id @default(uuid()) @db.Uuid
+  name        String     @db.VarChar(200)
+  slug        String     @unique @db.VarChar(200)
+  description String?    @db.Text
+  asset_id    String?    @db.Uuid
+  status      MetaStatus @default(active)
+
+  created_at DateTime @default(now()) @db.Timestamptz
+  updated_at DateTime @updatedAt @db.Timestamptz
+
+  asset    MediaAsset?   @relation("PublisherAsset", fields: [asset_id], references: [id], onDelete: Restrict)
+  editions BookEdition[]
+
+  @@map("publishers")
+}
+
+enum MetaStatus {
+  active
+  archived
+
+  @@map("meta_status")
+}
+
+model Category {
+  id          String  @id @default(uuid()) @db.Uuid
+  parent_id   String? @db.Uuid
+  name        String  @db.VarChar(200)
+  slug        String  @unique @db.VarChar(200)
+  description String? @db.Text
+  asset_id    String? @db.Uuid
+  position    Int     @default(0)
+  active      Boolean @default(true)
+
+  created_at DateTime @default(now()) @db.Timestamptz
+  updated_at DateTime @updatedAt @db.Timestamptz
+
+  parent          Category?      @relation("CategoryParent", fields: [parent_id], references: [id], onDelete: Restrict)
+  children        Category[]     @relation("CategoryParent")
+  asset           MediaAsset?    @relation("CategoryAsset", fields: [asset_id], references: [id], onDelete: Restrict)
+  book_categories BookCategory[]
+  coupon_categories CouponCategory[]
+
+  @@map("categories")
+}
+
+model BookAuthor {
+  book_id   String @db.Uuid
+  author_id String @db.Uuid
+  position  Int    @default(0)
+
+  book   Book   @relation(fields: [book_id], references: [id], onDelete: Restrict)
+  author Author @relation(fields: [author_id], references: [id], onDelete: Restrict)
+
+  @@id([book_id, author_id])
+  @@map("book_authors")
+}
+
+model BookCategory {
+  book_id     String  @db.Uuid
+  category_id String  @db.Uuid
+  is_primary  Boolean @default(false)
+
+  book     Book     @relation(fields: [book_id], references: [id], onDelete: Restrict)
+  category Category @relation(fields: [category_id], references: [id], onDelete: Restrict)
+
+  @@id([book_id, category_id])
+  @@map("book_categories")
+}
+
+model MediaAsset {
+  id            String          @id @default(uuid()) @db.Uuid
+  object_key    String          @unique @db.Text
+  original_name String          @db.Text
+  mime_type     String          @db.VarChar(64)
+  size_bytes    BigInt
+  width         Int?
+  height        Int?
+  alt_text      String?         @db.Text
+  visibility    AssetVisibility @default(public)
+  status        AssetStatus     @default(processing)
+  uploaded_by   String          @db.Uuid
+
+  created_at DateTime @default(now()) @db.Timestamptz
+  updated_at DateTime @updatedAt @db.Timestamptz
+
+  uploader User @relation("MediaUploader", fields: [uploaded_by], references: [id], onDelete: Restrict)
+
+  book_images      BookImage[]
+  authors          Author[]        @relation("AuthorAsset")
+  publishers       Publisher[]     @relation("PublisherAsset")
+  categories       Category[]      @relation("CategoryAsset")
+  posts            Post[]          @relation("PostCover")
+  banners_desktop  Banner[]        @relation("BannerDesktop")
+  banners_mobile   Banner[]        @relation("BannerMobile")
+  payment_receipts PaymentReceipt[] @relation("ReceiptEvidence")
+  refunds          Refund[]        @relation("RefundEvidence")
+
+  @@map("media_assets")
+}
+
+enum AssetVisibility {
+  public
+  private
+
+  @@map("asset_visibility")
+}
+
+enum AssetStatus {
+  uploading
+  processing
+  ready
+  rejected
+
+  @@map("asset_status")
+}
+
+model BookImage {
+  id         String  @id @default(uuid()) @db.Uuid
+  book_id    String  @db.Uuid
+  edition_id String? @db.Uuid
+  asset_id   String  @db.Uuid
+  position   Int     @default(0)
+
+  created_at DateTime @default(now()) @db.Timestamptz
+
+  book    Book         @relation(fields: [book_id], references: [id], onDelete: Restrict)
+  edition BookEdition? @relation(fields: [edition_id], references: [id], onDelete: Restrict)
+  asset   MediaAsset   @relation(fields: [asset_id], references: [id], onDelete: Restrict)
+
+  @@index([book_id])
+  @@map("book_images")
+}
+
+model BookCollection {
+  id       String  @id @default(uuid()) @db.Uuid
+  name     String  @db.VarChar(200)
+  slug     String  @unique @db.VarChar(200)
+  active   Boolean @default(true)
+  position Int     @default(0)
+
+  created_at DateTime @default(now()) @db.Timestamptz
+  updated_at DateTime @updatedAt @db.Timestamptz
+
+  collection_books CollectionBook[]
+
+  @@map("book_collections")
+}
+
+model CollectionBook {
+  collection_id String @db.Uuid
+  book_id       String @db.Uuid
+  position      Int    @default(0)
+
+  collection BookCollection @relation(fields: [collection_id], references: [id], onDelete: Cascade)
+  book       Book           @relation(fields: [book_id], references: [id], onDelete: Restrict)
+
+  @@id([collection_id, book_id])
+  @@map("collection_books")
+}
+
+model Post {
+  id              String     @id @default(uuid()) @db.Uuid
+  title           String     @db.VarChar(300)
+  slug            String     @unique @db.VarChar(200)
+  excerpt         String?    @db.Text
+  cover_asset_id  String?    @db.Uuid
+  body            String     @db.Text
+  author_user_id  String     @db.Uuid
+  status          PostStatus @default(draft)
+  publish_at      DateTime?  @db.Timestamptz
+  published_at    DateTime?  @db.Timestamptz
+  seo_title       String?    @db.VarChar(200)
+  seo_description String?    @db.VarChar(500)
+  version         Int        @default(1)
+
+  created_at DateTime @default(now()) @db.Timestamptz
+  updated_at DateTime @updatedAt @db.Timestamptz
+
+  cover_asset MediaAsset?    @relation("PostCover", fields: [cover_asset_id], references: [id], onDelete: Restrict)
+  author      User           @relation("PostAuthor", fields: [author_user_id], references: [id], onDelete: Restrict)
+  revisions   PostRevision[]
+
+  @@index([status, published_at])
+  @@map("posts")
+}
+
+enum PostStatus {
+  draft
+  scheduled
+  published
+  archived
+
+  @@map("post_status")
+}
+
+model PostRevision {
+  id              String @id @default(uuid()) @db.Uuid
+  post_id         String @db.Uuid
+  revision_number Int
+  content         Json
+  actor_id        String @db.Uuid
+
+  created_at DateTime @default(now()) @db.Timestamptz
+
+  post  Post @relation(fields: [post_id], references: [id], onDelete: Restrict)
+  actor User @relation("PostRevisionActor", fields: [actor_id], references: [id], onDelete: Restrict)
+
+  @@unique([post_id, revision_number])
+  @@map("post_revisions")
+}
+
+model ContentPage {
+  id           String     @id @default(uuid()) @db.Uuid
+  title        String     @db.VarChar(300)
+  slug         String     @unique @db.VarChar(200)
+  body         String     @db.Text
+  status       PostStatus @default(draft)
+  published_at DateTime?  @db.Timestamptz
+  version      Int        @default(1)
+
+  created_at DateTime @default(now()) @db.Timestamptz
+  updated_at DateTime @updatedAt @db.Timestamptz
+
+  revisions PageRevision[]
+
+  @@map("content_pages")
+}
+
+model PageRevision {
+  id              String @id @default(uuid()) @db.Uuid
+  page_id         String @db.Uuid
+  revision_number Int
+  content         Json
+  actor_id        String @db.Uuid
+
+  created_at DateTime @default(now()) @db.Timestamptz
+
+  page          ContentPage   @relation(fields: [page_id], references: [id], onDelete: Restrict)
+  actor         User          @relation("PageRevisionActor", fields: [actor_id], references: [id], onDelete: Restrict)
+  user_consents UserConsent[]
+
+  @@unique([page_id, revision_number])
+  @@map("page_revisions")
+}
+
+model Banner {
+  id               String    @id @default(uuid()) @db.Uuid
+  name             String    @db.VarChar(200)
+  desktop_asset_id String    @db.Uuid
+  mobile_asset_id  String?   @db.Uuid
+  alt              String    @db.Text
+  target_url       String    @db.Text
+  placement        String    @db.VarChar(64)
+  position         Int       @default(0)
+  active           Boolean   @default(true)
+  starts_at        DateTime? @db.Timestamptz
+  ends_at          DateTime? @db.Timestamptz
+
+  created_at DateTime @default(now()) @db.Timestamptz
+  updated_at DateTime @updatedAt @db.Timestamptz
+
+  desktop_asset MediaAsset  @relation("BannerDesktop", fields: [desktop_asset_id], references: [id], onDelete: Restrict)
+  mobile_asset  MediaAsset? @relation("BannerMobile", fields: [mobile_asset_id], references: [id], onDelete: Restrict)
+
+  @@map("banners")
+}
+
+model SiteSetting {
+  key        String @id @db.Text
+  value      Json
+  version    Int    @default(1)
+  updated_by String @db.Uuid
+
+  updated_at DateTime @updatedAt @db.Timestamptz
+
+  updater User @relation("SettingUpdater", fields: [updated_by], references: [id], onDelete: Restrict)
+
+  @@map("site_settings")
+}
+
+model ShippingRule {
+  id                          String  @id @default(uuid()) @db.Uuid
+  region_key                  String  @db.VarChar(64)
+  method_code                 String  @db.VarChar(64)
+  fee_vnd                     BigInt
+  free_shipping_threshold_vnd BigInt?
+  active                      Boolean @default(true)
+  version                     Int     @default(1)
+
+  created_at DateTime @default(now()) @db.Timestamptz
+  updated_at DateTime @updatedAt @db.Timestamptz
+
+  @@map("shipping_rules")
+}
+
+// ══════════════════════════════════════════════════════════════════
+// 15.4 CART & QUOTE
+// ══════════════════════════════════════════════════════════════════
+
+model Cart {
+  id               String     @id @default(uuid()) @db.Uuid
+  user_id          String?    @db.Uuid
+  guest_token_hash String?    @unique @db.Text
+  status           CartStatus @default(active)
+  expires_at       DateTime?  @db.Timestamptz
+  version          Int        @default(1)
+
+  created_at DateTime @default(now()) @db.Timestamptz
+  updated_at DateTime @updatedAt @db.Timestamptz
+
+  user            User?           @relation("CartOwner", fields: [user_id], references: [id], onDelete: Restrict)
+  items           CartItem[]
+  checkout_quotes CheckoutQuote[]
+  orders          Order[]
+
+  @@index([user_id])
+  @@map("carts")
+}
+
+enum CartStatus {
+  active
+  converted
+  expired
+
+  @@map("cart_status")
+}
+
+model CartItem {
+  id         String @id @default(uuid()) @db.Uuid
+  cart_id    String @db.Uuid
+  edition_id String @db.Uuid
+  quantity   Int
+
+  created_at DateTime @default(now()) @db.Timestamptz
+  updated_at DateTime @updatedAt @db.Timestamptz
+
+  cart    Cart        @relation(fields: [cart_id], references: [id], onDelete: Cascade)
+  edition BookEdition @relation(fields: [edition_id], references: [id], onDelete: Restrict)
+
+  @@unique([cart_id, edition_id])
+  @@map("cart_items")
+}
+
+model CheckoutQuote {
+  id               String    @id @default(uuid()) @db.Uuid
+  cart_id          String?   @db.Uuid
+  owner_user_id    String?   @db.Uuid
+  guest_scope_hash String?   @db.Text
+  request_snapshot Json
+  result_snapshot  Json
+  expires_at       DateTime  @db.Timestamptz
+  consumed_at      DateTime? @db.Timestamptz
+
+  created_at DateTime @default(now()) @db.Timestamptz
+
+  cart  Cart?  @relation(fields: [cart_id], references: [id], onDelete: Restrict)
+  owner User?  @relation("QuoteOwner", fields: [owner_user_id], references: [id], onDelete: Restrict)
+  order Order?
+
+  @@map("checkout_quotes")
+}
+
+// ══════════════════════════════════════════════════════════════════
+// 15.5 INVENTORY
+// ══════════════════════════════════════════════════════════════════
+
+model Warehouse {
+  id     String  @id @default(uuid()) @db.Uuid
+  code   String  @unique @db.VarChar(32)
+  name   String  @db.VarChar(200)
+  active Boolean @default(true)
+
+  created_at DateTime @default(now()) @db.Timestamptz
+
+  inventory_balances     InventoryBalance[]
+  inventory_reservations InventoryReservation[]
+  stock_movements        StockMovement[]
+
+  @@map("warehouses")
+}
+
+model InventoryBalance {
+  edition_id          String @db.Uuid
+  warehouse_id        String @db.Uuid
+  on_hand             Int    @default(0)
+  reserved            Int    @default(0)
+  low_stock_threshold Int    @default(0)
+  version             Int    @default(1)
+
+  updated_at DateTime @updatedAt @db.Timestamptz
+
+  edition   BookEdition @relation(fields: [edition_id], references: [id], onDelete: Restrict)
+  warehouse Warehouse   @relation(fields: [warehouse_id], references: [id], onDelete: Restrict)
+
+  @@id([edition_id, warehouse_id])
+  @@map("inventory_balances")
+}
+
+model InventoryReservation {
+  id            String            @id @default(uuid()) @db.Uuid
+  order_item_id String            @db.Uuid
+  edition_id    String            @db.Uuid
+  warehouse_id  String            @db.Uuid
+  quantity      Int
+  status        ReservationStatus @default(active)
+  expires_at    DateTime?         @db.Timestamptz
+  released_at   DateTime?         @db.Timestamptz
+
+  created_at DateTime @default(now()) @db.Timestamptz
+
+  order_item OrderItem   @relation(fields: [order_item_id], references: [id], onDelete: Restrict)
+  edition    BookEdition @relation(fields: [edition_id], references: [id], onDelete: Restrict)
+  warehouse  Warehouse   @relation(fields: [warehouse_id], references: [id], onDelete: Restrict)
+
+  @@unique([order_item_id, warehouse_id])
+  @@index([status, expires_at])
+  @@map("inventory_reservations")
+}
+
+enum ReservationStatus {
+  active
+  consumed
+  released
+
+  @@map("reservation_status")
+}
+
+model StockMovement {
+  id            String  @id @default(uuid()) @db.Uuid
+  edition_id    String  @db.Uuid
+  warehouse_id  String  @db.Uuid
+  delta_on_hand Int
+  delta_reserved Int
+  reason        String  @db.VarChar(64)
+  source_type   String  @db.VarChar(64)
+  source_id     String  @db.Uuid
+  operation_key String  @unique @db.Text
+  actor_id      String? @db.Uuid
+  note          String? @db.Text
+
+  created_at DateTime @default(now()) @db.Timestamptz
+
+  edition   BookEdition @relation("StockMovementEdition", fields: [edition_id], references: [id], onDelete: Restrict)
+  warehouse Warehouse   @relation(fields: [warehouse_id], references: [id], onDelete: Restrict)
+  actor     User?       @relation("StockMovementActor", fields: [actor_id], references: [id], onDelete: Restrict)
+
+  @@index([edition_id, warehouse_id])
+  @@map("stock_movements")
+}
+
+// ══════════════════════════════════════════════════════════════════
+// 15.6 ORDERS & SHIPPING
+// ══════════════════════════════════════════════════════════════════
+
+model Order {
+  id                 String            @id @default(uuid()) @db.Uuid
+  order_number       String            @unique @db.VarChar(32)
+  user_id            String?           @db.Uuid
+  cart_id            String?           @db.Uuid
+  quote_id           String            @unique @db.Uuid
+  contact_snapshot   Json
+  address_snapshot   Json
+  order_status       OrderStatus       @default(pending)
+  payment_status     PaymentStatus     @default(unpaid)
+  fulfillment_status FulfillmentStatus @default(unfulfilled)
+  payment_method     PaymentMethod
+  currency           String            @default("VND") @db.Char(3)
+  subtotal_vnd       BigInt
+  discount_vnd       BigInt            @default(0)
+  shipping_vnd       BigInt
+  total_vnd          BigInt
+  coupon_snapshot    Json?
+  note               String?           @db.VarChar(1000)
+  expires_at         DateTime?         @db.Timestamptz
+  confirmed_at       DateTime?         @db.Timestamptz
+  completed_at       DateTime?         @db.Timestamptz
+  replacement_of_id  String?           @db.Uuid
+  version            Int               @default(1)
+
+  created_at DateTime @default(now()) @db.Timestamptz
+  updated_at DateTime @updatedAt @db.Timestamptz
+
+  user           User?            @relation("OrderCustomer", fields: [user_id], references: [id], onDelete: Restrict)
+  cart           Cart?            @relation(fields: [cart_id], references: [id], onDelete: Restrict)
+  quote          CheckoutQuote    @relation(fields: [quote_id], references: [id], onDelete: Restrict)
+  replacement_of Order?           @relation("OrderReplacement", fields: [replacement_of_id], references: [id], onDelete: Restrict)
+  replacements   Order[]          @relation("OrderReplacement")
+
+  items              OrderItem[]
+  events             OrderEvent[]
+  notes              OrderNote[]
+  access_tokens      OrderAccessToken[]
+  guest_challenges   GuestAccessChallenge[]
+  shipments          Shipment[]
+  payment_attempts   PaymentAttempt[]
+  coupon_reservation CouponReservation?
+  coupon_redemption  CouponRedemption?
+  user_consents      UserConsent[]
+
+  @@index([user_id, created_at(sort: Desc)])
+  @@index([order_status, created_at(sort: Desc)])
+  @@index([payment_status, created_at(sort: Desc)])
+  @@map("orders")
+}
+
+enum OrderStatus {
+  pending
+  confirmed
+  completed
+  cancelled
+
+  @@map("order_status")
+}
+
+enum PaymentStatus {
+  unpaid
+  paid
+  partially_refunded
+  refunded
+
+  @@map("payment_status")
+}
+
+enum FulfillmentStatus {
+  unfulfilled
+  processing
+  shipped
+  delivered
+  returned
+
+  @@map("fulfillment_status")
+}
+
+enum PaymentMethod {
+  cod
+  bank_transfer
+
+  @@map("payment_method")
+}
+
+model OrderItem {
+  id               String @id @default(uuid()) @db.Uuid
+  order_id         String @db.Uuid
+  edition_id       String @db.Uuid
+  sku_snapshot     String @db.VarChar(64)
+  title_snapshot   String @db.VarChar(300)
+  edition_snapshot Json
+  unit_price_vnd   BigInt
+  discount_vnd     BigInt @default(0)
+  quantity         Int
+
+  created_at DateTime @default(now()) @db.Timestamptz
+
+  order          Order                  @relation(fields: [order_id], references: [id], onDelete: Restrict)
+  edition        BookEdition            @relation(fields: [edition_id], references: [id], onDelete: Restrict)
+  reservations   InventoryReservation[]
+  shipment_items ShipmentItem[]
+
+  @@index([order_id])
+  @@map("order_items")
+}
+
+model OrderEvent {
+  id         String          @id @default(uuid()) @db.Uuid
+  order_id   String          @db.Uuid
+  event_type String          @db.VarChar(64)
+  visibility EventVisibility @default(internal)
+  actor_id   String?         @db.Uuid
+  payload    Json
+  request_id String?         @db.Text
+
+  created_at DateTime @default(now()) @db.Timestamptz
+
+  order Order @relation(fields: [order_id], references: [id], onDelete: Restrict)
+  actor User? @relation("OrderEventActor", fields: [actor_id], references: [id], onDelete: Restrict)
+
+  @@index([order_id])
+  @@map("order_events")
+}
+
+enum EventVisibility {
+  internal
+  customer
+
+  @@map("event_visibility")
+}
+
+model OrderNote {
+  id       String @id @default(uuid()) @db.Uuid
+  order_id String @db.Uuid
+  actor_id String @db.Uuid
+  note     String @db.Text
+
+  created_at DateTime @default(now()) @db.Timestamptz
+
+  order Order @relation(fields: [order_id], references: [id], onDelete: Restrict)
+  actor User  @relation("OrderNoteActor", fields: [actor_id], references: [id], onDelete: Restrict)
+
+  @@index([order_id])
+  @@map("order_notes")
+}
+
+model OrderAccessToken {
+  id         String    @id @default(uuid()) @db.Uuid
+  order_id   String    @db.Uuid
+  token_hash String    @unique @db.Text
+  expires_at DateTime  @db.Timestamptz
+  revoked_at DateTime? @db.Timestamptz
+
+  created_at DateTime @default(now()) @db.Timestamptz
+
+  order Order @relation(fields: [order_id], references: [id], onDelete: Restrict)
+
+  @@map("order_access_tokens")
+}
+
+model GuestAccessChallenge {
+  id             String    @id @default(uuid()) @db.Uuid
+  order_id       String    @db.Uuid
+  challenge_hash String    @unique @db.Text
+  otp_hash       String    @db.Text
+  attempts       Int       @default(0)
+  expires_at     DateTime  @db.Timestamptz
+  used_at        DateTime? @db.Timestamptz
+
+  created_at DateTime @default(now()) @db.Timestamptz
+
+  order Order @relation(fields: [order_id], references: [id], onDelete: Restrict)
+
+  @@map("guest_access_challenges")
+}
+
+model Shipment {
+  id            String         @id @default(uuid()) @db.Uuid
+  order_id      String         @db.Uuid
+  carrier       String?        @db.VarChar(64)
+  tracking_code String?        @db.VarChar(128)
+  status        ShipmentStatus @default(draft)
+  source        ShipmentSource @default(manual)
+  shipped_at    DateTime?      @db.Timestamptz
+  delivered_at  DateTime?      @db.Timestamptz
+  version       Int            @default(1)
+
+  created_at DateTime @default(now()) @db.Timestamptz
+  updated_at DateTime @updatedAt @db.Timestamptz
+
+  order  Order           @relation(fields: [order_id], references: [id], onDelete: Restrict)
+  items  ShipmentItem[]
+  events ShipmentEvent[]
+
+  @@index([order_id])
+  @@map("shipments")
+}
+
+enum ShipmentStatus {
+  draft
+  shipped
+  delivered
+  returned
+  cancelled
+
+  @@map("shipment_status")
+}
+
+enum ShipmentSource {
+  manual
+  provider
+
+  @@map("shipment_source")
+}
+
+model ShipmentItem {
+  shipment_id   String @db.Uuid
+  order_item_id String @db.Uuid
+  quantity      Int
+
+  shipment   Shipment  @relation(fields: [shipment_id], references: [id], onDelete: Restrict)
+  order_item OrderItem @relation(fields: [order_item_id], references: [id], onDelete: Restrict)
+
+  @@id([shipment_id, order_item_id])
+  @@map("shipment_items")
+}
+
+model ShipmentEvent {
+  id                String   @id @default(uuid()) @db.Uuid
+  shipment_id       String   @db.Uuid
+  event_type        String   @db.VarChar(64)
+  occurred_at       DateTime @db.Timestamptz
+  source            String   @db.VarChar(32)
+  external_event_id String?  @db.Text
+  payload           Json
+
+  created_at DateTime @default(now()) @db.Timestamptz
+
+  shipment Shipment @relation(fields: [shipment_id], references: [id], onDelete: Restrict)
+
+  @@map("shipment_events")
+}
+
+// ══════════════════════════════════════════════════════════════════
+// 15.7 PAYMENT & COUPON
+// ══════════════════════════════════════════════════════════════════
+
+model PaymentAttempt {
+  id                            String               @id @default(uuid()) @db.Uuid
+  order_id                      String               @db.Uuid
+  provider                      PaymentProvider
+  merchant_reference            String               @unique @db.Text
+  provider_transaction_id       String?              @db.Text
+  amount_vnd                    BigInt
+  status                        PaymentAttemptStatus @default(pending)
+  payment_instructions_snapshot Json?
+  version                       Int                  @default(1)
+
+  created_at DateTime @default(now()) @db.Timestamptz
+  updated_at DateTime @updatedAt @db.Timestamptz
+
+  order           Order                  @relation(fields: [order_id], references: [id], onDelete: Restrict)
+  receipts        PaymentReceipt[]
+  review_requests PaymentReviewRequest[]
+  refunds         Refund[]
+
+  @@index([order_id, created_at(sort: Desc)])
+  @@map("payment_attempts")
+}
+
+enum PaymentProvider {
+  cod
+  manual_bank
+  gateway
+
+  @@map("payment_provider")
+}
+
+enum PaymentAttemptStatus {
+  pending
+  review
+  paid
+  failed
+  expired
+
+  @@map("payment_attempt_status")
+}
+
+model PaymentReceipt {
+  id                 String   @id @default(uuid()) @db.Uuid
+  payment_attempt_id String   @db.Uuid
+  provider           String   @db.VarChar(64)
+  external_reference String   @db.Text
+  amount_vnd         BigInt
+  received_at        DateTime @db.Timestamptz
+  evidence_asset_id  String?  @db.Uuid
+  actor_id           String?  @db.Uuid
+
+  created_at DateTime @default(now()) @db.Timestamptz
+
+  payment_attempt PaymentAttempt @relation(fields: [payment_attempt_id], references: [id], onDelete: Restrict)
+  evidence_asset  MediaAsset?    @relation("ReceiptEvidence", fields: [evidence_asset_id], references: [id], onDelete: Restrict)
+  actor           User?          @relation("ReceiptActor", fields: [actor_id], references: [id], onDelete: Restrict)
+
+  @@unique([provider, external_reference])
+  @@map("payment_receipts")
+}
+
+model PaymentReviewRequest {
+  id                 String              @id @default(uuid()) @db.Uuid
+  payment_attempt_id String              @db.Uuid
+  note               String?             @db.Text
+  status             ReviewRequestStatus @default(pending)
+  requested_by       String?             @db.Uuid
+
+  created_at DateTime @default(now()) @db.Timestamptz
+  updated_at DateTime @updatedAt @db.Timestamptz
+
+  payment_attempt PaymentAttempt @relation(fields: [payment_attempt_id], references: [id], onDelete: Restrict)
+  requester       User?          @relation("ReviewRequester", fields: [requested_by], references: [id], onDelete: Restrict)
+
+  @@index([payment_attempt_id])
+  @@map("payment_review_requests")
+}
+
+enum ReviewRequestStatus {
+  pending
+  processed
+
+  @@map("review_request_status")
+}
+
+model Refund {
+  id                 String       @id @default(uuid()) @db.Uuid
+  payment_attempt_id String       @db.Uuid
+  merchant_reference String       @unique @db.Text
+  amount_vnd         BigInt
+  status             RefundStatus @default(requested)
+  reason             String       @db.Text
+  provider_reference String?      @db.Text
+  evidence_asset_id  String?      @db.Uuid
+  actor_id           String       @db.Uuid
+  completed_at       DateTime?    @db.Timestamptz
+
+  created_at DateTime @default(now()) @db.Timestamptz
+  updated_at DateTime @updatedAt @db.Timestamptz
+
+  payment_attempt PaymentAttempt @relation(fields: [payment_attempt_id], references: [id], onDelete: Restrict)
+  evidence_asset  MediaAsset?    @relation("RefundEvidence", fields: [evidence_asset_id], references: [id], onDelete: Restrict)
+  actor           User           @relation("RefundActor", fields: [actor_id], references: [id], onDelete: Restrict)
+
+  @@map("refunds")
+}
+
+enum RefundStatus {
+  requested
+  processing
+  succeeded
+  failed
+  cancelled
+
+  @@map("refund_status")
+}
+
+model WebhookEvent {
+  id                String             @id @default(uuid()) @db.Uuid
+  provider          String             @db.VarChar(64)
+  event_id          String             @db.Text
+  payload           Json
+  processing_status WebhookEventStatus @default(pending)
+  received_at       DateTime           @db.Timestamptz
+  processed_at      DateTime?          @db.Timestamptz
+
+  created_at DateTime @default(now()) @db.Timestamptz
+
+  @@unique([provider, event_id])
+  @@map("webhook_events")
+}
+
+enum WebhookEventStatus {
+  pending
+  processing
+  completed
+  failed
+
+  @@map("webhook_event_status")
+}
+
+model Coupon {
+  id               String     @id @default(uuid()) @db.Uuid
+  code             String     @unique @db.VarChar(40)
+  type             CouponType
+  value            Int
+  max_discount_vnd BigInt?
+  min_subtotal_vnd BigInt     @default(0)
+  starts_at        DateTime   @db.Timestamptz
+  ends_at          DateTime   @db.Timestamptz
+  max_uses         Int?
+  per_user_limit   Int?
+  active           Boolean    @default(true)
+  version          Int        @default(1)
+
+  created_at DateTime @default(now()) @db.Timestamptz
+  updated_at DateTime @updatedAt @db.Timestamptz
+
+  coupon_categories CouponCategory[]
+  coupon_editions   CouponEdition[]
+  reservations      CouponReservation[]
+  redemptions       CouponRedemption[]
+
+  @@map("coupons")
+}
+
+enum CouponType {
+  percent
+  fixed
+
+  @@map("coupon_type")
+}
+
+model CouponCategory {
+  coupon_id   String @db.Uuid
+  category_id String @db.Uuid
+
+  coupon   Coupon   @relation(fields: [coupon_id], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [category_id], references: [id], onDelete: Restrict)
+
+  @@id([coupon_id, category_id])
+  @@map("coupon_categories")
+}
+
+model CouponEdition {
+  coupon_id  String @db.Uuid
+  edition_id String @db.Uuid
+
+  coupon  Coupon      @relation(fields: [coupon_id], references: [id], onDelete: Cascade)
+  edition BookEdition @relation(fields: [edition_id], references: [id], onDelete: Restrict)
+
+  @@id([coupon_id, edition_id])
+  @@map("coupon_editions")
+}
+
+model CouponReservation {
+  id         String           @id @default(uuid()) @db.Uuid
+  coupon_id  String           @db.Uuid
+  order_id   String           @unique @db.Uuid
+  user_id    String?          @db.Uuid
+  status     CouponHoldStatus @default(held)
+  expires_at DateTime?        @db.Timestamptz
+
+  created_at DateTime @default(now()) @db.Timestamptz
+
+  coupon Coupon @relation(fields: [coupon_id], references: [id], onDelete: Restrict)
+  order  Order  @relation(fields: [order_id], references: [id], onDelete: Restrict)
+  user   User?  @relation("CouponReservationUser", fields: [user_id], references: [id], onDelete: Restrict)
+
+  @@map("coupon_reservations")
+}
+
+enum CouponHoldStatus {
+  held
+  converted
+  released
+
+  @@map("coupon_hold_status")
+}
+
+model CouponRedemption {
+  id           String           @id @default(uuid()) @db.Uuid
+  coupon_id    String           @db.Uuid
+  order_id     String           @unique @db.Uuid
+  user_id      String?          @db.Uuid
+  discount_vnd BigInt
+  status       RedemptionStatus @default(active)
+
+  created_at DateTime @default(now()) @db.Timestamptz
+
+  coupon Coupon @relation(fields: [coupon_id], references: [id], onDelete: Restrict)
+  order  Order  @relation(fields: [order_id], references: [id], onDelete: Restrict)
+  user   User?  @relation("CouponRedemptionUser", fields: [user_id], references: [id], onDelete: Restrict)
+
+  @@map("coupon_redemptions")
+}
+
+enum RedemptionStatus {
+  active
+  reversed
+
+  @@map("redemption_status")
+}
+
+// ══════════════════════════════════════════════════════════════════
+// 15.8 INFRASTRUCTURE
+// ══════════════════════════════════════════════════════════════════
+
+model IdempotencyKey {
+  id              String            @id @default(uuid()) @db.Uuid
+  principal_scope String            @db.Text
+  endpoint        String            @db.Text
+  key             String            @db.Text
+  request_hash    String            @db.Text
+  status          IdempotencyStatus @default(processing)
+  response_code   Int?
+  response_body   Json?
+  expires_at      DateTime          @db.Timestamptz
+
+  created_at DateTime @default(now()) @db.Timestamptz
+  updated_at DateTime @updatedAt @db.Timestamptz
+
+  @@unique([principal_scope, endpoint, key])
+  @@map("idempotency_keys")
+}
+
+enum IdempotencyStatus {
+  processing
+  completed
+
+  @@map("idempotency_status")
+}
+
+model OutboxEvent {
+  id              String       @id @default(uuid()) @db.Uuid
+  aggregate_type  String       @db.VarChar(64)
+  aggregate_id    String       @db.Uuid
+  event_type      String       @db.VarChar(64)
+  payload         Json
+  status          OutboxStatus @default(pending)
+  attempts        Int          @default(0)
+  next_attempt_at DateTime     @db.Timestamptz
+  locked_until    DateTime?    @db.Timestamptz
+
+  created_at DateTime @default(now()) @db.Timestamptz
+  updated_at DateTime @updatedAt @db.Timestamptz
+
+  job_attempts JobAttempt[]
+
+  @@index([status, next_attempt_at])
+  @@map("outbox_events")
+}
+
+enum OutboxStatus {
+  pending
+  processing
+  completed
+  failed
+
+  @@map("outbox_status")
+}
+
+model JobAttempt {
+  id              String    @id @default(uuid()) @db.Uuid
+  outbox_event_id String    @db.Uuid
+  attempt_no      Int
+  started_at      DateTime  @db.Timestamptz
+  finished_at     DateTime? @db.Timestamptz
+  error_code      String?   @db.VarChar(64)
+
+  created_at DateTime @default(now()) @db.Timestamptz
+
+  outbox_event OutboxEvent @relation(fields: [outbox_event_id], references: [id], onDelete: Restrict)
+
+  @@map("job_attempts")
+}
+
+model AuditLog {
+  id          String  @id @default(uuid()) @db.Uuid
+  actor_id    String? @db.Uuid
+  action      String  @db.VarChar(64)
+  entity_type String  @db.VarChar(64)
+  entity_id   String  @db.Uuid
+  before_data Json?
+  after_data  Json?
+  reason      String? @db.Text
+  request_id  String  @db.Text
+
+  created_at DateTime @default(now()) @db.Timestamptz
+
+  actor User? @relation("AuditActor", fields: [actor_id], references: [id], onDelete: Restrict)
+
+  @@index([entity_type, entity_id, created_at(sort: Desc)])
+  @@map("audit_logs")
+}

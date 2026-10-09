@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-body: system-ui, -apple-system, sans-serif;
+  }
+
+  body {
+    font-family: var(--font-body);
+    font-size: 14px; /* CMS 14–16px theo đặc tả */
+    color: #111827;
+    background-color: #f9fafb;
+  }
+}
