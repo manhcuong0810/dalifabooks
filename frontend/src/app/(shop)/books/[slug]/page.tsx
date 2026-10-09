@@ -53,7 +53,7 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
     <>
       {/* HEADER — giống trang chủ, "Danh mục sách" active */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-surface/95 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
-        <div className="h-40 w-full flex flex-col justify-between">
+        <div className="w-full flex flex-col">
           <div className="bg-primary text-on-primary py-space-xs px-margin-desktop">
             <div className="max-w-[1240px] mx-auto flex items-center justify-between text-body-sm font-body-sm">
               <div className="flex items-center gap-space-lg">

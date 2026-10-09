@@ -12,51 +12,124 @@ const CATEGORIES = [
   { icon: "account_balance",  label: "Lịch sử - Triết học",          count: "490 tựa",   slug: "lich-su-triet-hoc" },
 ];
 
+// Design tokens khớp với tailwind config gốc
+const C = {
+  primary:          "#001428",
+  primaryContainer: "#0f2942",
+  onPrimary:        "#ffffff",
+  secondary:        "#904d00",
+  secondaryContainer: "#fe932c",
+  surface:          "#f8f9ff",
+  surfaceCard:      "#FFFFFF",
+  surfaceSubtle:    "#F1F5F9",
+  surfaceContainer: "#e5eeff",
+  textPrimary:      "#0F172A",
+  textSecondary:    "#475569",
+  textMuted:        "#94A3B8",
+  border:           "#E2E8F0",
+};
+
 export default function CategoryDropdown() {
   const [open, setOpen] = useState(false);
 
   return (
     <div
-      className="relative"
+      style={{ position: "relative" }}
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
     >
-      {/* Trigger button */}
+      {/* Trigger */}
       <button
-        className="px-3.5 py-2 rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-subtle hover:text-on-surface transition-all whitespace-nowrap flex items-center gap-1"
         type="button"
-        aria-haspopup="true"
-        aria-expanded={open}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "4px",
+          padding: "8px 14px",
+          borderRadius: "8px",
+          fontSize: "14px",
+          fontWeight: 500,
+          lineHeight: "20px",
+          color: open ? C.primary : C.textSecondary,
+          background: open ? C.surfaceSubtle : "transparent",
+          border: "none",
+          cursor: "pointer",
+          whiteSpace: "nowrap",
+          fontFamily: "Be Vietnam Pro, sans-serif",
+          transition: "background 0.15s, color 0.15s",
+        }}
       >
         <span>Danh mục sách</span>
         <span
-          className="material-symbols-outlined text-[16px] transition-transform duration-200"
-          style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)" }}
+          className="material-symbols-outlined"
+          style={{
+            fontSize: "16px",
+            display: "inline-flex",
+            transform: open ? "rotate(180deg)" : "rotate(0deg)",
+            transition: "transform 0.2s",
+          }}
         >
           expand_more
         </span>
       </button>
 
-      {/* Dropdown panel */}
+      {/* Dropdown */}
       {open && (
-        <div className="absolute top-full left-0 pt-1 z-50 min-w-[280px]">
-          <div className="bg-surface-card rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.14)] border border-surface-border overflow-hidden">
-
-            <div className="px-4 pt-3 pb-2">
-              <span className="font-label-sm text-label-sm text-text-muted uppercase tracking-widest">Khám phá theo lĩnh vực</span>
+        <div
+          style={{
+            position: "absolute",
+            top: "100%",
+            left: 0,
+            paddingTop: "4px",
+            zIndex: 9999,
+            minWidth: "300px",
+          }}
+        >
+          <div
+            style={{
+              background: C.surfaceCard,
+              borderRadius: "12px",
+              boxShadow: "0 8px 32px rgba(0,0,0,0.14)",
+              border: `1px solid ${C.border}`,
+              overflow: "hidden",
+            }}
+          >
+            {/* Header label */}
+            <div style={{ padding: "12px 16px 8px" }}>
+              <span style={{
+                fontSize: "11px",
+                fontWeight: 600,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                color: C.textMuted,
+                fontFamily: "Be Vietnam Pro, sans-serif",
+              }}>
+                Khám phá theo lĩnh vực
+              </span>
             </div>
 
+            {/* Items */}
             {CATEGORIES.map((cat) => (
               <CategoryItem key={cat.slug} cat={cat} />
             ))}
 
-            <div className="border-t border-surface-border px-4 py-2.5">
+            {/* Footer link */}
+            <div style={{ borderTop: `1px solid ${C.border}`, padding: "10px 16px" }}>
               <a
                 href="/books"
-                className="flex items-center gap-2 font-label-md text-label-md text-primary hover:text-secondary font-semibold transition-colors"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  fontSize: "14px",
+                  fontWeight: 600,
+                  color: C.primary,
+                  textDecoration: "none",
+                  fontFamily: "Be Vietnam Pro, sans-serif",
+                }}
               >
                 <span>Xem toàn bộ danh mục</span>
-                <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+                <span className="material-symbols-outlined" style={{ fontSize: "16px", display: "inline-flex" }}>arrow_forward</span>
               </a>
             </div>
           </div>
@@ -72,32 +145,66 @@ function CategoryItem({ cat }: { cat: typeof CATEGORIES[number] }) {
   return (
     <a
       href={`/books/${cat.slug}`}
-      className="flex items-center gap-3 px-4 py-2.5 transition-colors"
-      style={{ backgroundColor: hovered ? "var(--surface-subtle, #F1F5F9)" : "transparent" }}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "12px",
+        padding: "10px 16px",
+        textDecoration: "none",
+        background: hovered ? C.surfaceSubtle : "transparent",
+        transition: "background 0.12s",
+        cursor: "pointer",
+      }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <div
-        className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors shrink-0"
-        style={{
-          backgroundColor: hovered ? "#001428" : "#e5eeff",
-          color: hovered ? "#ffffff" : "#001428",
-        }}
-      >
-        <span className="material-symbols-outlined text-[18px]">{cat.icon}</span>
+      {/* Icon box */}
+      <div style={{
+        width: "32px",
+        height: "32px",
+        borderRadius: "8px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexShrink: 0,
+        background: hovered ? C.primary : C.surfaceContainer,
+        color: hovered ? C.onPrimary : C.primary,
+        transition: "background 0.12s, color 0.12s",
+      }}>
+        <span className="material-symbols-outlined" style={{ fontSize: "18px", display: "inline-flex" }}>{cat.icon}</span>
       </div>
-      <div className="flex-1 min-w-0">
-        <span
-          className="font-label-md text-label-md block transition-colors"
-          style={{ color: hovered ? "#001428" : "#0F172A" }}
-        >
+
+      {/* Text */}
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <span style={{
+          display: "block",
+          fontSize: "14px",
+          fontWeight: 500,
+          color: hovered ? C.primary : C.textPrimary,
+          fontFamily: "Be Vietnam Pro, sans-serif",
+          transition: "color 0.12s",
+        }}>
           {cat.label}
         </span>
-        <span className="font-body-sm text-body-sm text-text-muted">{cat.count}</span>
+        <span style={{
+          fontSize: "12px",
+          color: C.textMuted,
+          fontFamily: "Be Vietnam Pro, sans-serif",
+        }}>
+          {cat.count}
+        </span>
       </div>
+
+      {/* Arrow */}
       <span
-        className="material-symbols-outlined text-[16px] text-text-muted transition-opacity"
-        style={{ opacity: hovered ? 1 : 0 }}
+        className="material-symbols-outlined"
+        style={{
+          fontSize: "16px",
+          display: "inline-flex",
+          color: C.textMuted,
+          opacity: hovered ? 1 : 0,
+          transition: "opacity 0.12s",
+        }}
       >
         chevron_right
       </span>

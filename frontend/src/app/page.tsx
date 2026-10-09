@@ -1,6 +1,6 @@
 // SHOP-01 — Trang chủ
-// JSX convert 1:1 từ file HTML design gốc, giữ nguyên toàn bộ class Tailwind
 "use client";
+// SHOP-01 — Trang chủ. JSX convert 1:1 từ HTML design gốc
 import CategoryDropdown from "@/components/layout/CategoryDropdown";
 
 export default function HomePage() {
@@ -8,7 +8,7 @@ export default function HomePage() {
     <>
       {/* ═══════════════════════════════════════════ HEADER ═══════════════════════════════════════════ */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-surface/95 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
-        <div className="h-40 w-full flex flex-col justify-between">
+        <div className="w-full flex flex-col">
 
           {/* Top bar */}
           <div className="bg-primary text-on-primary py-space-xs px-margin-desktop">
@@ -95,50 +95,7 @@ export default function HomePage() {
                 <a aria-current="page" className="px-3.5 py-2 transition-all whitespace-nowrap bg-primary-container text-on-primary font-semibold rounded-lg" href="/">Trang chủ</a>
 
                 {/* Danh mục sách — dropdown */}
-                <div className="relative group/cat">
-                  <button className="px-3.5 py-2 rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-subtle hover:text-on-surface transition-all whitespace-nowrap flex items-center gap-1" type="button">
-                    <span>Danh mục sách</span>
-                    <span className="material-symbols-outlined text-[16px] group-hover/cat:rotate-180 transition-transform duration-200">expand_more</span>
-                  </button>
-                  {/* Dropdown panel */}
-                  <div className="absolute top-full left-0 pt-1 hidden group-hover/cat:block z-50 min-w-[280px]">
-                    <div className="bg-surface-card rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] border border-surface-border overflow-hidden">
-                      <div className="px-4 pt-3 pb-2">
-                        <span className="font-label-sm text-label-sm text-text-muted uppercase tracking-widest">Khám phá theo lĩnh vực</span>
-                      </div>
-                      {[
-                        { icon: "menu_book",        label: "Văn học Kinh điển & Hiện đại", count: "1.240 tựa", slug: "van-hoc" },
-                        { icon: "trending_up",      label: "Kinh tế & Khởi nghiệp",         count: "860 tựa",   slug: "kinh-te" },
-                        { icon: "self_improvement", label: "Phát triển bản thân",           count: "620 tựa",   slug: "phat-trien-ban-than" },
-                        { icon: "psychology",       label: "Tâm lý học hành vi",            count: "450 tựa",   slug: "tam-ly-hoc" },
-                        { icon: "biotech",          label: "Khoa học - Đổi mới",            count: "380 tựa",   slug: "khoa-hoc" },
-                        { icon: "child_care",       label: "Thiếu nhi & Nuôi dạy",          count: "540 tựa",   slug: "thieu-nhi" },
-                        { icon: "account_balance",  label: "Lịch sử - Triết học",           count: "490 tựa",   slug: "lich-su-triet-hoc" },
-                      ].map((cat) => (
-                        <a
-                          key={cat.slug}
-                          href={`/books/${cat.slug}`}
-                          className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-subtle transition-colors group/item"
-                        >
-                          <div className="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary group-hover/item:bg-primary group-hover/item:text-on-primary transition-colors shrink-0">
-                            <span className="material-symbols-outlined text-[18px]">{cat.icon}</span>
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <span className="font-label-md text-label-md text-text-primary group-hover/item:text-primary transition-colors block">{cat.label}</span>
-                            <span className="font-body-sm text-body-sm text-text-muted">{cat.count}</span>
-                          </div>
-                          <span className="material-symbols-outlined text-[16px] text-text-muted opacity-0 group-hover/item:opacity-100 transition-opacity">chevron_right</span>
-                        </a>
-                      ))}
-                      <div className="border-t border-surface-border px-4 py-2.5">
-                        <a href="/books" className="flex items-center gap-2 font-label-md text-label-md text-primary hover:text-secondary font-semibold transition-colors">
-                          <span>Xem toàn bộ danh mục</span>
-                          <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <CategoryDropdown />
 
                 <a className="px-3.5 py-2 rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-subtle hover:text-on-surface transition-all whitespace-nowrap" href="#">Tác phẩm mới</a>
                 <a className="px-3.5 py-2 rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-subtle hover:text-on-surface transition-all whitespace-nowrap" href="#">Bán chạy nhất</a>
@@ -157,7 +114,7 @@ export default function HomePage() {
       </header>
 
       {/* ═══════════════════════════════════════════ MAIN ═══════════════════════════════════════════ */}
-      <main className="w-full pt-40 bg-surface min-h-[calc(100vh-160px)]">
+      <main className="w-full bg-surface min-h-screen" style={{ paddingTop: "128px" }}>
         <div className="max-w-[1240px] mx-auto px-margin-desktop py-space-lg">
           <div className="flex flex-col w-full gap-space-2xl">
 
