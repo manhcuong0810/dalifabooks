@@ -41,7 +41,7 @@ export default function HomePage() {
           <div className="px-margin-desktop py-space-sm">
             <div className="max-w-[1240px] mx-auto flex items-center justify-between gap-space-lg">
               <div className="flex items-center gap-space-md shrink-0">
-                <img alt="DalifaBooks logo" className="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1Wva0GO_ElHGhfotmX2mb7-4MLiu0uPlpblNn7_ZXu32gjbYc5VbcK6uNyvnf_ymtcRFltaFmWlLgZAAn-QC7XFlmuyTrFIRXkgk4Cyzid4CNyvtQz2bioiDnqHzrdQP4czZveDGhm-GiYWhTVXyUoimGE1rg3aNZ2sUp7t2K3OJSg2143_fkUSs4vQ4z1ewqypmuzTQrE9l3xuBg8m-DJbZAm1qLfp-_K2pu-VfCcgmUr4u-bFPrVCFx5HuroezN6EnqaaE2ze1A" />
+                <span className="material-symbols-outlined text-[32px] text-primary">menu_book</span>
                 <a className="flex flex-col" href="#">
                   <span className="font-headline-sm text-headline-sm font-bold tracking-tight text-primary leading-none">DalifaBooks</span>
                   <span className="font-label-sm text-label-sm text-text-muted uppercase tracking-wider font-semibold">Tinh hoa văn hóa</span>
@@ -91,7 +91,7 @@ export default function HomePage() {
           {/* Category nav */}
           <div className="bg-surface-card px-margin-desktop shadow-[0_1px_4px_rgba(0,0,0,0.02)]">
             <div className="max-w-[1240px] mx-auto flex items-center justify-between">
-              <nav className="flex items-center gap-1 py-1 overflow-x-auto">
+              <nav className="flex items-center gap-1 py-1 flex-wrap">
                 <a aria-current="page" className="px-3.5 py-2 transition-all whitespace-nowrap bg-primary-container text-on-primary font-semibold rounded-lg" href="/">Trang chủ</a>
 
                 {/* Danh mục sách — dropdown */}
@@ -441,7 +441,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-space-xl">
             <div className="lg:col-span-2 pr-0 lg:pr-space-lg">
               <div className="flex items-center gap-space-sm mb-space-md">
-                <img alt="DalifaBooks" className="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1Wva0GO_ElHGhfotmX2mb7-4MLiu0uPlpblNn7_ZXu32gjbYc5VbcK6uNyvnf_ymtcRFltaFmWlLgZAAn-QC7XFlmuyTrFIRXkgk4Cyzid4CNyvtQz2bioiDnqHzrdQP4czZveDGhm-GiYWhTVXyUoimGE1rg3aNZ2sUp7t2K3OJSg2143_fkUSs4vQ4z1ewqypmuzTQrE9l3xuBg8m-DJbZAm1qLfp-_K2pu-VfCcgmUr4u-bFPrVCFx5HuroezN6EnqaaE2ze1A" />
+                <span className="material-symbols-outlined text-[32px] text-primary">menu_book</span>
                 <span className="font-headline-sm text-headline-sm font-bold tracking-tight text-primary">DalifaBooks</span>
               </div>
               <p className="font-body-sm text-body-sm text-text-secondary leading-relaxed mb-space-md">DalifaBooks là nền tảng phân phối và phát hành sách văn hóa, tư tưởng, khoa học và văn học cao cấp tại Việt Nam. Chúng tôi tin vào sức mạnh bền bỉ của tri thức và sự thấu cảm từ từng trang sách được ấn hành chỉn chu.</p>

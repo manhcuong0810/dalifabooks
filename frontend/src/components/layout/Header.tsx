@@ -35,11 +35,7 @@ export default function Header() {
           <div className="max-w-[1240px] mx-auto flex items-center justify-between gap-space-lg">
             {/* Logo */}
             <div className="flex items-center gap-space-md shrink-0">
-              <img
-                src="https://lh3.googleusercontent.com/aida/AEtjO1Wva0GO_ElHGhfotmX2mb7-4MLiu0uPlpblNn7_ZXu32gjbYc5VbcK6uNyvnf_ymtcRFltaFmWlLgZAAn-QC7XFlmuyTrFIRXkgk4Cyzid4CNyvtQz2bioiDnqHzrdQP4czZveDGhm-GiYWhTVXyUoimGE1rg3aNZ2sUp7t2K3OJSg2143_fkUSs4vQ4z1ewqypmuzTQrE9l3xuBg8m-DJbZAm1qLfp-_K2pu-VfCcgmUr4u-bFPrVCFx5HuroezN6EnqaaE2ze1A"
-                alt="DalifaBooks logo"
-                className="h-8 w-auto object-contain"
-              />
+              <span className="material-symbols-outlined text-[32px] text-primary">menu_book</span>
               <a href="/" className="flex flex-col">
                 <span className="font-headline-sm text-headline-sm font-bold tracking-tight text-primary leading-none">DalifaBooks</span>
                 <span className="font-label-sm text-label-sm text-text-muted uppercase tracking-wider font-semibold">Tinh hoa văn hóa</span>
@@ -108,7 +104,7 @@ export default function Header() {
         {/* Category nav */}
         <div className="bg-surface-card px-margin-desktop shadow-[0_1px_4px_rgba(0,0,0,0.02)]">
           <div className="max-w-[1240px] mx-auto flex items-center justify-between">
-            <nav className="flex items-center gap-1 py-1 overflow-x-auto">
+            <nav className="flex items-center gap-1 py-1 flex-wrap">
               <a href="/" className="px-3.5 py-2 transition-all whitespace-nowrap bg-primary-container text-on-primary font-semibold rounded-lg text-label-md font-label-md">
                 Trang chủ
               </a>
