@@ -36,15 +36,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           id="tailwind-config"
           dangerouslySetInnerHTML={{ __html: TAILWIND_CONFIG }}
         />
-        <style>{`
-          @layer base {
-            html, body { margin: 0; padding: 0; }
-            body { overscroll-behavior: none; }
-            main > :first-child { margin-top: 0 !important; }
-            main > :last-child { margin-bottom: 0 !important; }
-          }
-          ::-webkit-scrollbar { display: none; }
-        `}</style>
       </head>
       <body className="bg-surface font-body-md text-on-surface antialiased">
         {children}

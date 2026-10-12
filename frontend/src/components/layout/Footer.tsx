@@ -82,15 +82,15 @@ export default function Footer() {
             <h4 className="font-headline-sm text-headline-sm text-text-primary mb-space-md font-semibold">Hỗ trợ khách hàng</h4>
             <ul className="flex flex-col gap-2.5 font-body-sm text-body-sm text-text-secondary">
               {[
-                "Chính sách đổi trả & hoàn tiền",
-                "Chính sách giao hàng toàn quốc",
-                "Chính sách bảo mật dữ liệu",
-                "Điều khoản dịch vụ sử dụng",
-                "Hướng dẫn tra cứu đơn hàng",
-                "Câu hỏi thường gặp (FAQ)",
+                { label: "Chính sách đổi trả & hoàn tiền", href: "/policy" },
+                { label: "Chính sách giao hàng toàn quốc", href: "/policy" },
+                { label: "Chính sách bảo mật dữ liệu", href: "/policy" },
+                { label: "Điều khoản dịch vụ sử dụng", href: "/policy" },
+                { label: "Hướng dẫn tra cứu đơn hàng", href: "/order-lookup" },
+                { label: "Câu hỏi thường gặp (FAQ)", href: "/contact" },
               ].map((item) => (
-                <li key={item}>
-                  <a href="#" className="hover:text-primary transition-colors">{item}</a>
+                <li key={item.label}>
+                  <a href={item.href} className="hover:text-primary transition-colors">{item.label}</a>
                 </li>
               ))}
             </ul>

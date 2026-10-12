@@ -34,9 +34,11 @@ export default function CategoryDropdown() {
 
   return (
     <div
-      style={{ position: "relative" }}
+      style={{ position: "relative", zIndex: 1100 }}
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
+      onFocus={() => setOpen(true)}
+      onBlur={() => setOpen(false)}
     >
       {/* Trigger */}
       <button
@@ -78,11 +80,11 @@ export default function CategoryDropdown() {
         <div
           style={{
             position: "absolute",
-            top: "100%",
+            top: "calc(100% + 4px)",
             left: 0,
-            paddingTop: "4px",
-            zIndex: 9999,
+            zIndex: 1200,
             minWidth: "300px",
+            overflow: "visible",
           }}
         >
           <div
@@ -91,7 +93,7 @@ export default function CategoryDropdown() {
               borderRadius: "12px",
               boxShadow: "0 8px 32px rgba(0,0,0,0.14)",
               border: `1px solid ${C.border}`,
-              overflow: "hidden",
+              overflow: "visible",
             }}
           >
             {/* Header label */}
@@ -144,7 +146,7 @@ function CategoryItem({ cat }: { cat: typeof CATEGORIES[number] }) {
 
   return (
     <a
-      href={`/books/${cat.slug}`}
+      href={`/books?category=${encodeURIComponent(cat.slug)}`}
       style={{
         display: "flex",
         alignItems: "center",

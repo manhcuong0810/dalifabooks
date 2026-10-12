@@ -1,7 +1,10 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
+import { JwtModule } from "@nestjs/jwt";
+import { APP_GUARD } from "@nestjs/core";
 import { ThrottlerModule } from "@nestjs/throttler";
 
+import { JwtAuthGuard } from "./common/guards/jwt-auth.guard";
 import { AuthModule } from "./modules/auth/auth.module";
 import { IdentityModule } from "./modules/identity/identity.module";
 import { CatalogModule } from "./modules/catalog/catalog.module";
@@ -21,6 +24,16 @@ import { AuditModule } from "./modules/audit/audit.module";
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: "../.env" }),
+    JwtModule.registerAsync({
+      useFactory: () => ({
+        secret: process.env.JWT_SECRET ?? "dalifabooks-dev-secret",
+        signOptions: {
+          issuer: "dalifabooks",
+          audience: "admin",
+          expiresIn: "8h",
+        },
+      }),
+    }),
 
     // Rate limit — áp dụng login/reset/OTP/checkout/upload theo đặc tả
     ThrottlerModule.forRoot([
@@ -44,6 +57,12 @@ import { AuditModule } from "./modules/audit/audit.module";
     StaffModule,
     SettingsModule,
     AuditModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
   ],
 })
 export class AppModule {}

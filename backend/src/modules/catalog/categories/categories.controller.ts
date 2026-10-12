@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Patch, Param, Body } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+} from "@nestjs/common";
 import { RequirePermissions } from "../../../common/decorators/permissions.decorator";
 import { Public } from "../../../common/decorators/public.decorator";
 import { CategoriesService } from "./categories.service";
@@ -29,5 +39,12 @@ export class CategoriesController {
   @RequirePermissions("catalog.write")
   update(@Param("id") id: string, @Body() body: unknown) {
     return this.service.update(id, body);
+  }
+
+  @Delete("admin/categories/:id")
+  @RequirePermissions("catalog.write")
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async remove(@Param("id") id: string) {
+    await this.service.remove(id);
   }
 }

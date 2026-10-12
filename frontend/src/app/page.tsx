@@ -1,14 +1,87 @@
 // SHOP-01 — Trang chủ
 "use client";
 // SHOP-01 — Trang chủ. JSX convert 1:1 từ HTML design gốc
+import { useState } from "react";
 import CategoryDropdown from "@/components/layout/CategoryDropdown";
+
+const BLOG_MENU_ITEMS = [
+  { label: "Văn hóa đọc & thảo luận", slug: "van-hoa-doc", count: "42 bài" },
+  { label: "Điểm sách & phê bình", slug: "diem-sach", count: "29 bài" },
+  { label: "Đối thoại tác giả & dịch giả", slug: "doi-thoai", count: "18 bài" },
+  { label: "Tri thức & di sản", slug: "tri-thuc", count: "21 bài" },
+  { label: "Nuôi dạy con & gia đình", slug: "nuoi-day-con", count: "12 bài" },
+];
+
+function BlogDropdown() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div
+      className="relative z-[1100]"
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+    >
+      <button
+        type="button"
+        className={`flex items-center gap-1 whitespace-nowrap rounded-lg px-3.5 py-2 font-label-md text-label-md transition-all ${
+          open ? "bg-primary-container text-on-primary" : "text-on-surface-variant hover:bg-surface-subtle hover:text-on-surface"
+        }`}
+        aria-expanded={open}
+      >
+        <span>Tin tức &amp; Blog</span>
+        <span
+          className="material-symbols-outlined text-[16px] transition-transform duration-200"
+          style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)" }}
+        >
+          expand_more
+        </span>
+      </button>
+
+      {open && (
+        <div className="absolute left-0 top-full z-[1200] pt-1">
+          <div className="min-w-[320px] overflow-visible rounded-xl border border-surface-border bg-white shadow-[0_12px_30px_rgba(15,41,66,0.12)]">
+            <div className="px-4 pb-2 pt-3">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-text-muted">
+                Khám phá chuyên mục
+              </span>
+            </div>
+
+            {BLOG_MENU_ITEMS.map((item) => (
+              <a
+                key={item.slug}
+                href={`/blog?category=${item.slug}`}
+                className="flex items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-surface-subtle"
+              >
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-surface-container text-primary">
+                  <span className="material-symbols-outlined text-[18px]">article</span>
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="block truncate font-medium text-text-primary">{item.label}</div>
+                  <div className="text-[12px] text-text-muted">{item.count}</div>
+                </div>
+                <span className="material-symbols-outlined text-[16px] text-text-muted">chevron_right</span>
+              </a>
+            ))}
+
+            <div className="border-t border-surface-border px-4 py-3">
+              <a href="/blog" className="flex items-center gap-2 font-semibold text-primary">
+                <span>Xem toàn bộ nội dung</span>
+                <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function HomePage() {
   return (
     <>
       {/* ═══════════════════════════════════════════ HEADER ═══════════════════════════════════════════ */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-surface/95 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
-        <div className="w-full flex flex-col">
+      <header className="fixed top-0 left-0 right-0 z-[1000] overflow-visible bg-surface/95 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+        <div className="w-full flex flex-col overflow-visible">
 
           {/* Top bar */}
           <div className="bg-primary text-on-primary py-space-xs px-margin-desktop">
@@ -24,12 +97,12 @@ export default function HomePage() {
                 </span>
               </div>
               <div className="flex items-center gap-space-md">
-                <a className="hover:underline flex items-center gap-1" href="#">
+                <a className="hover:underline flex items-center gap-1" href="/order-lookup">
                   <span className="material-symbols-outlined text-[15px]">search_check</span>
                   <span>Tra cứu đơn hàng</span>
                 </a>
                 <span className="opacity-40">|</span>
-                <a className="hover:underline flex items-center gap-1" href="#">
+                <a className="hover:underline flex items-center gap-1" href="/contact">
                   <span className="material-symbols-outlined text-[15px]">help_center</span>
                   <span>Hỗ trợ bạn đọc</span>
                 </a>
@@ -67,7 +140,7 @@ export default function HomePage() {
                 </div>
               </div>
               <div className="flex items-center gap-space-md shrink-0">
-                <a className="relative flex items-center gap-2 px-3.5 py-2 rounded-lg bg-surface-card hover:bg-surface-subtle transition-colors shadow-[0_1px_4px_rgba(0,0,0,0.03)] text-on-surface" href="#">
+                <a className="relative flex items-center gap-2 px-3.5 py-2 rounded-lg bg-surface-card hover:bg-surface-subtle transition-colors shadow-[0_1px_4px_rgba(0,0,0,0.03)] text-on-surface" href="/cart">
                   <span className="material-symbols-outlined text-[24px] text-primary">shopping_bag</span>
                   <div className="hidden lg:flex flex-col text-left">
                     <span className="font-label-sm text-label-sm text-text-muted leading-tight">Giỏ hàng</span>
@@ -75,7 +148,7 @@ export default function HomePage() {
                   </div>
                   <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-secondary text-on-secondary font-label-sm text-label-sm font-bold flex items-center justify-center">0</span>
                 </a>
-                <a className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-card hover:bg-surface-subtle transition-colors shadow-[0_1px_4px_rgba(0,0,0,0.03)]" href="#">
+                <a className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-card hover:bg-surface-subtle transition-colors shadow-[0_1px_4px_rgba(0,0,0,0.03)]" href="/contact">
                   <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
                     <span className="material-symbols-outlined text-on-primary text-[18px]">person</span>
                   </div>
@@ -91,17 +164,15 @@ export default function HomePage() {
           {/* Category nav */}
           <div className="bg-surface-card px-margin-desktop shadow-[0_1px_4px_rgba(0,0,0,0.02)]">
             <div className="max-w-[1240px] mx-auto flex items-center justify-between">
-              <nav className="flex items-center gap-1 py-1 flex-wrap">
+              <nav className="relative z-[1100] flex min-w-0 items-center gap-1 overflow-visible whitespace-nowrap py-1">
                 <a aria-current="page" className="px-3.5 py-2 transition-all whitespace-nowrap bg-primary-container text-on-primary font-semibold rounded-lg" href="/">Trang chủ</a>
 
                 {/* Danh mục sách — dropdown */}
                 <CategoryDropdown />
 
-                <a className="px-3.5 py-2 rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-subtle hover:text-on-surface transition-all whitespace-nowrap" href="#">Tác phẩm mới</a>
-                <a className="px-3.5 py-2 rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-subtle hover:text-on-surface transition-all whitespace-nowrap" href="#">Bán chạy nhất</a>
-                <a className="px-3.5 py-2 rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-subtle hover:text-on-surface transition-all whitespace-nowrap" href="#">Khuyến mãi &amp; Combo</a>
-                <a className="px-3.5 py-2 rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-subtle hover:text-on-surface transition-all whitespace-nowrap" href="#">Tin tức &amp; Blog</a>
-                <a className="px-3.5 py-2 rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-subtle hover:text-on-surface transition-all whitespace-nowrap" href="#">Giới thiệu DalifaBooks</a>
+                <BlogDropdown />
+                <a className="px-3.5 py-2 rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-subtle hover:text-on-surface transition-all whitespace-nowrap" href="/about">Giới thiệu DalifaBooks</a>
+                <a className="px-3.5 py-2 rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-subtle hover:text-on-surface transition-all whitespace-nowrap" href="/contact">Liên Hệ</a>
               </nav>
               <div className="hidden md:flex items-center gap-2 font-label-sm text-label-sm text-secondary font-semibold">
                 <span className="w-2 h-2 rounded-full bg-secondary-container animate-pulse"></span>
@@ -114,7 +185,7 @@ export default function HomePage() {
       </header>
 
       {/* ═══════════════════════════════════════════ MAIN ═══════════════════════════════════════════ */}
-      <main className="w-full bg-surface min-h-screen" style={{ paddingTop: "128px" }}>
+      <main className="relative z-0 w-full bg-surface min-h-screen pt-[160px]">
         <div className="max-w-[1240px] mx-auto px-margin-desktop py-space-lg">
           <div className="flex flex-col w-full gap-space-2xl">
 
@@ -455,7 +526,7 @@ export default function HomePage() {
               <h4 className="font-headline-sm text-headline-sm text-text-primary mb-space-md font-semibold">Hỗ trợ khách hàng</h4>
               <ul className="flex flex-col gap-2.5 font-body-sm text-body-sm text-text-secondary">
                 {["Chính sách đổi trả & hoàn tiền", "Chính sách giao hàng toàn quốc", "Chính sách bảo mật dữ liệu", "Điều khoản dịch vụ sử dụng", "Hướng dẫn tra cứu đơn hàng", "Câu hỏi thường gặp (FAQ)"].map(i => (
-                  <li key={i}><a className="hover:text-primary transition-colors" href="#">{i}</a></li>
+                  <li key={i}><a className="hover:text-primary transition-colors" href="/about">{i}</a></li>
                 ))}
               </ul>
             </div>

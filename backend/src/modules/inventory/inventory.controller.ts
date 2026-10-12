@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Param, Body, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
 import { RequirePermissions } from "../../common/decorators/permissions.decorator";
 import { InventoryService } from "./inventory.service";
 
@@ -6,11 +6,34 @@ import { InventoryService } from "./inventory.service";
 export class InventoryController {
   constructor(private readonly service: InventoryService) {}
 
-  /** ADM-STOCK-01 */
   @Get()
   @RequirePermissions("inventory.read")
   list(@Query() query: Record<string, string>) {
     return this.service.list(query);
+  }
+
+  @Get(":id")
+  @RequirePermissions("inventory.read")
+  getById(@Param("id") id: string) {
+    return this.service.getById(id);
+  }
+
+  @Post()
+  @RequirePermissions("inventory.adjust")
+  create(@Body() body: Record<string, unknown>) {
+    return this.service.create(body);
+  }
+
+  @Patch(":id")
+  @RequirePermissions("inventory.adjust")
+  update(@Param("id") id: string, @Body() body: Record<string, unknown>) {
+    return this.service.update(id, body);
+  }
+
+  @Delete(":id")
+  @RequirePermissions("inventory.adjust")
+  remove(@Param("id") id: string) {
+    return this.service.remove(id);
   }
 
   /** ADM-STOCK-02 — lịch sử movements */

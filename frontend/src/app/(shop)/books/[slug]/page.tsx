@@ -1,6 +1,8 @@
 "use client";
 // SHOP-03 — Chi tiết sách
 import { useState } from "react";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 
 const COVER_IMAGES = [
   "https://lh3.googleusercontent.com/aida-public/AB6AXuCPtjTQ9XAbD_Spiu9pgKTLuIJyVv7NA6B5dMbLkdMpLRqpUlxWK2p8J-D2ArQ7zx89eVuqavB6id0KQMvhSAOtvoFTr-5uNqraNdOir3XgewmPMKYjXpUxW65Fv8UGzIp84ClucwsnOKFQ17OCt-JktpSAyFw5HvzWKIdC8b1uAbuPyNyMdlabsHRmB3r8DgHXC72r3eiWKe7L63gg9gj-hLmtqmR1UL0tr7UfodN4on_IE5tGXQu9",
@@ -43,81 +45,10 @@ export default function BookDetailPage() {
 
   return (
     <>
-      {/* HEADER */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-surface/95 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
-        <div className="w-full flex flex-col">
-          <div className="bg-primary text-on-primary py-space-xs px-margin-desktop">
-            <div className="max-w-[1240px] mx-auto flex items-center justify-between text-body-sm font-body-sm">
-              <div className="flex items-center gap-space-lg">
-                <span className="flex items-center gap-1.5">
-                  <span className="material-symbols-outlined text-[16px]">call</span>
-                  <span>Hotline: <strong>1900 6868</strong> (8h00 - 21h00)</span>
-                </span>
-                <span className="hidden md:flex items-center gap-1.5 opacity-90">
-                  <span className="material-symbols-outlined text-[16px]">local_shipping</span>
-                  <span>Giao sách toàn quốc • Đóng gói cẩn trọng</span>
-                </span>
-              </div>
-              <div className="flex items-center gap-space-md">
-                <a className="hover:underline flex items-center gap-1" href="#"><span className="material-symbols-outlined text-[15px]">search_check</span><span>Tra cứu đơn hàng</span></a>
-                <span className="opacity-40">|</span>
-                <a className="hover:underline flex items-center gap-1" href="#"><span className="material-symbols-outlined text-[15px]">help_center</span><span>Hỗ trợ bạn đọc</span></a>
-              </div>
-            </div>
-          </div>
-          <div className="px-margin-desktop py-space-sm">
-            <div className="max-w-[1240px] mx-auto flex items-center justify-between gap-space-lg">
-              <div className="flex items-center gap-space-md shrink-0">
-                <span className="material-symbols-outlined text-[32px] text-primary">menu_book</span>
-                <a className="flex flex-col" href="/">
-                  <span className="font-headline-sm text-headline-sm font-bold tracking-tight text-primary leading-none">DalifaBooks</span>
-                  <span className="font-label-sm text-label-sm text-text-muted uppercase tracking-wider font-semibold">Tinh hoa văn hóa</span>
-                </a>
-              </div>
-              <div className="flex-1 max-w-2xl hidden sm:block">
-                <div className="relative flex items-center">
-                  <div className="absolute left-3.5 flex items-center pointer-events-none text-text-muted">
-                    <span className="material-symbols-outlined text-[20px]">search</span>
-                  </div>
-                  <input className="w-full pl-10 pr-24 py-2 bg-surface-card rounded-lg text-body-md font-body-md text-text-primary placeholder:text-text-muted shadow-[0_1px_4px_rgba(0,0,0,0.04)] focus:outline-none focus:ring-2 focus:ring-primary-container transition-all" placeholder="Tìm kiếm theo tên sách, tác giả, nhà xuất bản, mã ISBN..." type="text" />
-                  <button className="absolute right-1 px-4 py-1.5 bg-primary-container text-on-primary rounded-md font-label-md text-label-md hover:bg-primary transition-colors" type="button">Tìm kiếm</button>
-                </div>
-              </div>
-              <div className="flex items-center gap-space-md shrink-0">
-                <a className="relative flex items-center gap-2 px-3.5 py-2 rounded-lg bg-surface-card hover:bg-surface-subtle transition-colors shadow-[0_1px_4px_rgba(0,0,0,0.03)] text-on-surface" href="/cart">
-                  <span className="material-symbols-outlined text-[24px] text-primary">shopping_bag</span>
-                  <div className="hidden lg:flex flex-col text-left"><span className="font-label-sm text-label-sm text-text-muted leading-tight">Giỏ hàng</span><span className="font-label-md text-label-md font-semibold text-text-primary leading-tight">0 đ</span></div>
-                  <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-secondary text-on-secondary font-label-sm text-label-sm font-bold flex items-center justify-center">0</span>
-                </a>
-                <a className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-card hover:bg-surface-subtle transition-colors shadow-[0_1px_4px_rgba(0,0,0,0.03)]" href="/login">
-                  <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span className="material-symbols-outlined text-on-primary text-[18px]">person</span></div>
-                  <div className="hidden xl:flex flex-col text-left"><span className="font-label-sm text-label-sm text-text-muted leading-tight">Tài khoản</span><span className="font-label-md text-label-md font-semibold text-text-primary leading-tight">Đăng nhập</span></div>
-                </a>
-              </div>
-            </div>
-          </div>
-          <div className="bg-surface-card px-margin-desktop shadow-[0_1px_4px_rgba(0,0,0,0.02)]">
-            <div className="max-w-[1240px] mx-auto flex items-center justify-between">
-              <nav className="flex items-center gap-1 py-1 flex-wrap">
-                <a className="px-3.5 py-2 rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-subtle hover:text-on-surface transition-all whitespace-nowrap" href="/">Trang chủ</a>
-                <a className="px-3.5 py-2 transition-all whitespace-nowrap bg-primary-container text-on-primary font-semibold rounded-lg" href="#">Danh mục sách</a>
-                <a className="px-3.5 py-2 rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-subtle hover:text-on-surface transition-all whitespace-nowrap" href="#">Tác phẩm mới</a>
-                <a className="px-3.5 py-2 rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-subtle hover:text-on-surface transition-all whitespace-nowrap" href="#">Bán chạy nhất</a>
-                <a className="px-3.5 py-2 rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-subtle hover:text-on-surface transition-all whitespace-nowrap" href="#">Khuyến mãi &amp; Combo</a>
-                <a className="px-3.5 py-2 rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-subtle hover:text-on-surface transition-all whitespace-nowrap" href="#">Tin tức &amp; Blog</a>
-                <a className="px-3.5 py-2 rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-subtle hover:text-on-surface transition-all whitespace-nowrap" href="#">Giới thiệu DalifaBooks</a>
-              </nav>
-              <div className="hidden md:flex items-center gap-2 font-label-sm text-label-sm text-secondary font-semibold">
-                <span className="w-2 h-2 rounded-full bg-secondary-container animate-pulse"></span>
-                <span>Tuần lễ Sách Văn học Giảm tới 40%</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header active="books" />
 
       {/* MAIN */}
-      <main className="w-full pt-40 bg-surface min-h-[calc(100vh-160px)]">
+      <main className="w-full pt-[160px] bg-surface min-h-[calc(100vh-160px)]">
         <div className="max-w-[1240px] mx-auto px-margin-desktop py-space-lg">
           <div className="flex flex-col w-full">
 
@@ -479,37 +410,7 @@ export default function BookDetailPage() {
         </div>
       </main>
 
-      {/* FOOTER */}
-      <footer className="w-full bg-surface-card shadow-[0_-2px_12px_rgba(0,0,0,0.03)] mt-space-2xl">
-        <div className="bg-surface-container-low py-space-xl px-margin-desktop">
-          <div className="max-w-[1240px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-xl items-center">
-            <div>
-              <h4 className="font-headline-sm text-headline-sm text-text-primary mb-1">Bản tin bạn đọc Dalifa</h4>
-              <p className="font-body-sm text-body-sm text-text-secondary">Nhận giới thiệu sách tuyển chọn, sự kiện ký tặng và ưu đãi độc quyền hàng tuần.</p>
-            </div>
-            <div className="lg:col-span-2">
-              <form className="flex flex-col sm:flex-row gap-2">
-                <input className="flex-1 px-4 py-2.5 rounded-lg bg-surface-card text-body-md font-body-md text-text-primary placeholder:text-text-muted shadow-[0_1px_4px_rgba(0,0,0,0.04)] focus:outline-none focus:ring-2 focus:ring-primary-container" placeholder="Nhập địa chỉ email của bạn..." type="email" />
-                <button className="px-6 py-2.5 rounded-lg bg-primary text-on-primary font-label-md text-label-md font-semibold hover:bg-primary-container transition-colors shrink-0" type="button">Đăng ký nhận tin</button>
-              </form>
-            </div>
-            <div className="flex items-center gap-space-sm font-label-sm text-label-sm text-text-secondary">
-              <span className="material-symbols-outlined text-secondary text-[22px]">verified_user</span>
-              <span>Cam kết 100% sách có bản quyền xuất bản chính hãng</span>
-            </div>
-          </div>
-        </div>
-        <div className="bg-surface-subtle py-space-md px-margin-desktop">
-          <div className="max-w-[1240px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-text-muted font-body-sm text-body-sm">
-            <span>© 2026 DalifaBooks. Bản quyền thuộc về Công ty Cổ phần Văn hóa &amp; Phát hành sách Dalifa.</span>
-            <div className="flex items-center gap-space-md">
-              <a className="hover:text-text-primary" href="#">Bảo mật</a><span>•</span>
-              <a className="hover:text-text-primary" href="#">Điều khoản</a><span>•</span>
-              <a className="hover:text-text-primary" href="#">Sơ đồ trang</a>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
 
       {/* Excerpt Modal */}
       {showModal && (

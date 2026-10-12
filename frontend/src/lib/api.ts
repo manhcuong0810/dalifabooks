@@ -4,6 +4,7 @@
  */
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
+const ADMIN_TOKEN_KEY = "dalifabooks_admin_token";
 
 type ApiResponse<T> = {
   data: T;
@@ -18,6 +19,21 @@ type ApiError = {
     request_id: string;
   };
 };
+
+export function getAdminToken(): string | null {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem(ADMIN_TOKEN_KEY);
+}
+
+export function setAdminToken(token: string) {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(ADMIN_TOKEN_KEY, token);
+}
+
+export function clearAdminToken() {
+  if (typeof window === "undefined") return;
+  localStorage.removeItem(ADMIN_TOKEN_KEY);
+}
 
 export async function apiFetch<T>(
   path: string,
@@ -37,4 +53,33 @@ export async function apiFetch<T>(
   }
 
   return res.json() as Promise<ApiResponse<T>>;
+}
+
+export async function adminFetch<T>(
+  path: string,
+  init?: RequestInit
+): Promise<T | undefined> {
+  const token = getAdminToken();
+  const res = await fetch(`${API_BASE}/api/v1/admin${path}`, {
+    ...init,
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(init?.headers ?? {}),
+    },
+    credentials: "include",
+  });
+
+  if (!res.ok) {
+    const err: ApiError = await res.json().catch(() => ({
+      error: { code: "UNKNOWN_ERROR", message: "Có lỗi xảy ra." },
+    }));
+    throw err;
+  }
+
+  if (res.status === 204 || res.headers.get("content-length") === "0") {
+    return undefined;
+  }
+
+  return res.json() as Promise<T>;
 }

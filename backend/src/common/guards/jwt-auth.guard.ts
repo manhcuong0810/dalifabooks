@@ -5,6 +5,7 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
+import { JwtService } from "@nestjs/jwt";
 
 export const IS_PUBLIC_KEY = "isPublic";
 
@@ -15,7 +16,10 @@ export const IS_PUBLIC_KEY = "isPublic";
  */
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
+  constructor(
+    private readonly reflector: Reflector,
+    private readonly jwtService: JwtService,
+  ) {}
 
   canActivate(context: ExecutionContext): boolean {
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
@@ -26,16 +30,26 @@ export class JwtAuthGuard implements CanActivate {
     if (isPublic) return true;
 
     const request = context.switchToHttp().getRequest();
+    const authHeader = request.headers?.authorization;
+    const token = typeof authHeader === "string" && authHeader.startsWith("Bearer ")
+      ? authHeader.slice(7)
+      : request.cookies?.session ?? request.headers?.["x-access-token"];
 
-    // TODO: verify JWT / session token từ cookie
-    // const token = request.cookies['session']
-    // const payload = this.jwtService.verify(token)
-    // request.user = payload
-
-    if (!request.user) {
+    if (!token) {
       throw new UnauthorizedException({ code: "UNAUTHORIZED", message: "Vui lòng đăng nhập." });
     }
 
-    return true;
+    try {
+      const payload = this.jwtService.verify(token, {
+        audience: "admin",
+      });
+      request.user = payload;
+      return true;
+    } catch {
+      throw new UnauthorizedException({
+        code: "INVALID_TOKEN",
+        message: "Token không hợp lệ hoặc đã hết hạn.",
+      });
+    }
   }
 }
