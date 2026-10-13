@@ -32,6 +32,20 @@ export class BooksController {
     return this.service.adminList(query);
   }
 
+  /** ADM-BOOK-01 — GET /admin/books/summary */
+  @Get("admin/books/summary")
+  @RequirePermissions("catalog.read")
+  adminSummary() {
+    return this.service.adminSummary();
+  }
+
+  /** ADM-BOOK-01 — GET /admin/books/:id */
+  @Get("admin/books/:id")
+  @RequirePermissions("catalog.read")
+  getById(@Param("id") id: string) {
+    return this.service.getById(id);
+  }
+
   /** ADM-BOOK-02 — POST /admin/books */
   @Post("admin/books")
   @RequirePermissions("catalog.write")

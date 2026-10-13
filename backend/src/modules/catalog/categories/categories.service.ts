@@ -24,6 +24,17 @@ const normalizeSlug = (value: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "") || "category";
 
+const normalizeNameKey = (value: string) =>
+  value
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/đ/g, "d")
+    .replace(/\s+/g, " ")
+    .replace(/[^a-z0-9 ]+/g, "")
+    .trim();
+
 export type CategoryTreeRecord = {
   id: string;
   parent_id: string | null;
@@ -84,7 +95,7 @@ export class CategoriesService {
     return parentId;
   }
 
-  private async generateUniqueSlug(base: string, excludeId?: string) {
+  private async generateUniqueSlug(base: string, parentId: string | null = null, excludeId?: string) {
     const initial = normalizeSlug(base);
     let slug = initial;
     let index = 1;
@@ -92,6 +103,7 @@ export class CategoriesService {
     while (true) {
       const category = await prisma.category.findFirst({
         where: {
+          parent_id: parentId,
           slug,
           ...(excludeId ? { id: { not: excludeId } } : {}),
         },
@@ -103,6 +115,32 @@ export class CategoriesService {
 
       slug = `${initial}-${index}`;
       index += 1;
+    }
+  }
+
+  private async ensureUniqueName(name: string, parentId: string | null, excludeId?: string) {
+    const normalized = normalizeNameKey(name);
+    if (!normalized) {
+      throw new BadRequestException({
+        code: "INVALID_INPUT",
+        message: "Tên danh mục không được để trống.",
+      });
+    }
+
+    const matching = await prisma.category.findMany({
+      where: {
+        parent_id: parentId,
+        ...(excludeId ? { id: { not: excludeId } } : {}),
+      },
+      select: { id: true, name: true },
+    });
+
+    const hasDuplicate = matching.some((item) => normalizeNameKey(item.name) === normalized);
+    if (hasDuplicate) {
+      throw new BadRequestException({
+        code: "DUPLICATE_CATEGORY_NAME",
+        message: "Tên danh mục đã tồn tại trong cùng cấp cha.",
+      });
     }
   }
 
@@ -118,7 +156,8 @@ export class CategoriesService {
     }
 
     const parentId = await this.ensureParentValid(payload.parent_id ?? null);
-    const slug = await this.generateUniqueSlug(payload.slug || name);
+    await this.ensureUniqueName(name, parentId);
+    const slug = await this.generateUniqueSlug(payload.slug || name, parentId);
     const position = Number(payload.position ?? 0);
 
     return prisma.category.create({
@@ -161,7 +200,10 @@ export class CategoriesService {
     }
 
     const nextName = name ?? existing.name;
-    const nextSlug = payload.slug ? await this.generateUniqueSlug(payload.slug, id) : existing.slug;
+    await this.ensureUniqueName(nextName, parentId, id);
+    const nextSlug = payload.slug
+      ? await this.generateUniqueSlug(payload.slug, parentId, id)
+      : await this.generateUniqueSlug(existing.slug, parentId, id);
     const nextDescription = payload.description !== undefined ? payload.description?.trim() || null : existing.description;
 
     return prisma.category.update({

@@ -8,7 +8,7 @@ Nền tảng bán sách trực tuyến — monorepo Next.js + NestJS + PostgreSQ
 
 ```
 dalifabooks/
-├── frontend/      # Storefront (Next.js, port 3000) — khách hàng mua sách
+├── frontend/      # Storefront (Next.js, port 3002) — khách hàng mua sách
 ├── cms/           # CMS (Next.js, port 3001) — nhân viên quản lý
 ├── backend/       # API (NestJS, port 4000) — /api/v1/...
 ├── db/            # Prisma schema + migrations + seed
@@ -87,7 +87,7 @@ yarn dev:worker
 
 | Service   | Port |
 |-----------|------|
-| Storefront | 3000 |
+| Storefront | 3002 |
 | CMS        | 3001 |
 | Backend    | 4000 |
 
@@ -108,7 +108,7 @@ yarn build              # Build tất cả packages
 ## Kiến trúc tổng quan
 
 ```
-Storefront (3000)  CMS (3001)
+Storefront (3002)  CMS (3001)
        │                │
        └────────┬───────┘
                 ▼

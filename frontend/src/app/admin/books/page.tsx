@@ -1,174 +1,37 @@
 "use client";
 
 import { AdminPageShell } from "@/components/admin/AdminPageShell";
+import { adminFetch, getAdminToken } from "@/lib/api";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+
+type BookStatus = "published" | "draft" | "archived";
 
 type BookRow = {
   id: string;
   title: string;
-  author: string;
-  translator: string;
-  category: string;
-  tag: string;
-  subtag?: string;
-  sku: string;
-  isbn: string;
-  editionLabel: string;
-  priceRange: string;
-  listPrice: string;
-  stock: string;
-  stockTone: "green" | "amber" | "neutral";
-  status: "published" | "draft";
-  updatedAt: string;
-  updatedBy: string;
-  cover: string;
-  price: string;
+  slug: string;
+  status: BookStatus;
+  updated_at?: string;
+  authors?: Array<{ id: string; name: string; slug: string }>;
+  categories?: Array<{ id: string; name: string; slug: string }>;
+  edition?: {
+    sku?: string;
+    isbn?: string | null;
+    page_count?: number | null;
+    list_price_vnd?: number | string | bigint | null;
+    sale_price_vnd?: number | string | bigint | null;
+    available_quantity?: number | null;
+  } | null;
 };
 
-const sampleBooks: BookRow[] = [
-  {
-    id: "1",
-    title: "Lịch sử Văn minh Phương Tây (Trọn bộ 2 tập)",
-    author: "Will Durant",
-    translator: "Huỳnh Phan Kim",
-    category: "Lịch sử Thế giới",
-    tag: "Kinh điển",
-    sku: "DLF-HST-001",
-    isbn: "978-604-58-9214-1",
-    editionLabel: "2 Phiên bản (Bìa cứng / Bìa da)",
-    priceRange: "680.000 ₫ - 1.250.000 ₫",
-    listPrice: "Giá bìa: 1.400.000 ₫",
-    stock: "248 cuốn",
-    stockTone: "green",
-    status: "published",
-    updatedAt: "18/04/2025 09:30",
-    updatedBy: "Lê Quỳnh Nga",
-    cover: "https://lh3.googleusercontent.com/aida-public/AB6AXuDmTnYqsLdAvPe3wl4wTIxnWdi0l3bb58QgfG4D9MK_pf0KNIqv1eVjJ72hR2WC2SdPWbQ-_caV0MQP-O4isAwmOUWqHpogM99uKJSUpDWfaBk2GCmg92Mlzn5QHC661_4dczJhIgOzCP1j0NUAvFehF8kbJtzgwn6y6tha2HbzJ9863Ls1I4jVxCtT3LVdG5BsAGoCn9jvGAq9IMoSdOq1nAo_rLJ4IwIHMGUX15vdagjQEfrGgRVb",
-    price: "680.000 ₫ - 1.250.000 ₫",
-  },
-  {
-    id: "2",
-    title: "Chiến lược Đại dương Xanh (Tái bản có sửa đổi)",
-    author: "W. Chan Kim, Renée Mauborgne",
-    translator: "Phương Thảo",
-    category: "Kinh tế & Quản trị",
-    tag: "Best Seller",
-    sku: "DLF-ECO-014",
-    isbn: "978-604-77-8321-0",
-    editionLabel: "1 Phiên bản (Bìa mềm tay gập)",
-    priceRange: "235.000 ₫",
-    listPrice: "Giá bìa: 260.000 ₫",
-    stock: "512 cuốn",
-    stockTone: "green",
-    status: "published",
-    updatedAt: "17/04/2025 15:10",
-    updatedBy: "Hoàng Hải Nam",
-    cover: "https://lh3.googleusercontent.com/aida-public/AB6AXuACUsvEdp_LRke_-IqY-J7TLyeWIOalklfiFFk_UejAwOn6tlkRnYYhlsmDuV3sJ1iw2eIl15vAGyYNG8XgaqD0LJPco80VaRR0v3LY0J2AdBy3qsxJbGLJTIatQ87i7Z_w0orC7r1Olqz8UkAMBIyh12U2ttLv13aKGn2UQ93mQuJPnh4X3Wo2vp3ZulXPTwzBTfm6TI-oMK9zFM95oNWu3awhdvA6kZona8ddE2uUkHGUkxA6VcK9",
-    price: "235.000 ₫",
-  },
-  {
-    id: "3",
-    title: "Đại dương trên đỉnh mây (Ấn bản đặc biệt Giới hạn)",
-    author: "Trần Uyên Bách",
-    translator: "Tác phẩm Việt Nam",
-    category: "Văn học đương đại",
-    tag: "Giới hạn 500 bản",
-    subtag: "Giới hạn 500 bản",
-    sku: "DLF-LIT-SP03",
-    isbn: "978-604-33-1002-8",
-    editionLabel: "1 Phiên bản (Bìa vải nhũ vàng)",
-    priceRange: "450.000 ₫",
-    listPrice: "Đồng giá niêm yết",
-    stock: "6 cuốn còn lại",
-    stockTone: "amber",
-    status: "published",
-    updatedAt: "17/04/2025 11:20",
-    updatedBy: "Admin Master",
-    cover: "https://lh3.googleusercontent.com/aida-public/AB6AXuAcT3bgPsto_B47u6y6LQwHZzSFU87YvAcoyPd3wfsc7hQ4gki-oqtr6u0P92vdVl5uX1nJh0TRKDXXiG_Py48XDmW6B1fiUXWr7u8c8KbZwuk_H1va3hoBC139DyqiO404ESQGbN7gp2-Zc2Mj7m28fXDeZaRS7kbqrrXfe23NTR2W7pDyYCETICxxBaXZMupLxcmdv3hA4GIqo-22ga-sK_c1dP3oRijWI8PDTKVfILwdPVDToGKM",
-    price: "450.000 ₫",
-  },
-  {
-    id: "4",
-    title: "Thế giới Đã Thay Đổi Như Thế Nào",
-    author: "Vaclav Smil",
-    translator: "Đặng Tuấn Nghĩa",
-    category: "Khoa học Xã hội",
-    tag: "Năng lượng & Môi trường",
-    sku: "DLF-SCI-082",
-    isbn: "978-604-89-4412-5",
-    editionLabel: "2 Phiên bản (Bìa mềm / Bìa cứng)",
-    priceRange: "195.000 ₫ - 290.000 ₫",
-    listPrice: "Giá bìa: 320.000 ₫",
-    stock: "94 cuốn",
-    stockTone: "green",
-    status: "published",
-    updatedAt: "15/04/2025 16:45",
-    updatedBy: "Lê Quỳnh Nga",
-    cover: "https://lh3.googleusercontent.com/aida-public/AB6AXuCDW1qHlLgQ5f6qgDPUiburkBYJHhnBQRiLAvkyiQ1HkJoZhm9dHcEwUa5x_CGhaZ7SRVRf-B6al9Uapz1xJTgV2sYJBqcWXk1tbMAiwAA4e-KmtsKWRkkcyawMR-6-sZQ7YFvtBYE0b8AP8pt1YnmenhouJ0pe8g2al6ozZqc98ndejzjlNvh8SVeioPhlt_R0_hwiushZHlxOBFUzjOJOA2xJy11rvC-cnca9-zNQEkN-9G7SEdnv",
-    price: "195.000 ₫ - 290.000 ₫",
-  },
-  {
-    id: "5",
-    title: "Tâm lý học Về Tiền & Nghệ thuật Hạnh phúc",
-    author: "Morgan Housel",
-    translator: "Vũ Hoàng Giang",
-    category: "Tài chính cá nhân",
-    tag: "Tâm lý ứng dụng",
-    sku: "DLF-FIN-DFT09",
-    isbn: "Chờ cấp mã",
-    editionLabel: "1 Phiên bản (Đang biên tập)",
-    priceRange: "Chưa định giá",
-    listPrice: "Dự kiến: 189.000 ₫",
-    stock: "0 cuốn (Tiền kỳ)",
-    stockTone: "neutral",
-    status: "draft",
-    updatedAt: "14/04/2025 18:02",
-    updatedBy: "Hoàng Hải Nam",
-    cover: "https://lh3.googleusercontent.com/aida-public/AB6AXuCcpsqV1WWFNYDmHTbUntNOcR6001Aclx8oP8ONxtJTg7psStDKJPPlqhYYUMW2djLnh_i875be2Zi-g7LnRn3fGKJVyUOq__uvBc1mSMV--hXn6rMNejI4SkfrL6K5dQ-TyPYVLIpZL2t6qDSE7E1SOqKBB49JgwG_RsX6ft98gHre9W4RiaFZcfzdpn2q4K06Hom2SrLt51Du_FkdUNLTpo0sxSlBG7-0yFNm9c3kdZk29l2sNfqB",
-    price: "Chưa định giá",
-  },
-  {
-    id: "6",
-    title: "Cội Nguồn Văn Minh & Tư Tưởng Phương Đông",
-    author: "Nhiều tác giả",
-    translator: "GS. Đỗ Văn Hưng",
-    category: "Triết học Phương Đông",
-    tag: "Nghiên cứu học thuật",
-    sku: "DLF-PHI-034",
-    isbn: "978-604-55-9011-3",
-    editionLabel: "1 Phiên bản (Bìa cứng gáy tròn)",
-    priceRange: "340.000 ₫",
-    listPrice: "Giá bìa: 380.000 ₫",
-    stock: "185 cuốn",
-    stockTone: "green",
-    status: "published",
-    updatedAt: "12/04/2025 08:15",
-    updatedBy: "Lê Quỳnh Nga",
-    cover: "https://lh3.googleusercontent.com/aida-public/AB6AXuA3F5F5ySuDNTSV9kWI-h6At9UDWqpBoEhLsqpXA0aE_t9F4qtnXPQ2Xw2_91y98bor-zSLqKWMKRkz8huri-7f5RT2dCOCO3GmbVaKyfANhlV-IGeUmasm-xGt-BHRieQmvBb-RAxw-BZk3oa-bb2Bgh0rbMydkDHEW5crukUyJpWSzvtl9txpQnAVI8ZvGsvdxEYaVqUU4cAk3j3TjsZcnU28-aNbnuxnWxXNZYQ2od9iG8FYwXuy",
-    price: "340.000 ₫",
-  },
-  {
-    id: "7",
-    title: "Chủ nghĩa Khắc Kỷ: Từ Zeno đến Marcus Aurelius",
-    author: "Ryan Holiday",
-    translator: "Minh Đức",
-    category: "Triết học Ứng dụng",
-    tag: "Phát triển bản thân",
-    sku: "DLF-STO-008",
-    isbn: "978-604-99-2311-7",
-    editionLabel: "2 Phiên bản (Bìa mềm / Bìa cứng)",
-    priceRange: "210.000 ₫ - 315.000 ₫",
-    listPrice: "Giá bìa: 350.000 ₫",
-    stock: "420 cuốn",
-    stockTone: "green",
-    status: "published",
-    updatedAt: "10/04/2025 14:10",
-    updatedBy: "Hoàng Hải Nam",
-    cover: "https://lh3.googleusercontent.com/aida-public/AB6AXuDHhmBDP9zUdkTM8WTVGHKB4GnlTX9mNmJno1cuDIGB14j090QeNBadoyxHum0LvSpOzNDM6lr56q0nycUL3Ir3Yv0C6TDe4WD8QVGQKYkZxH-xq_zF5Po2YkTeQTP2dfr2SWxbPUpmKvLdn8XS7elZ8wK62E4wIzyGJIyHkLboPy_9zDBEy6darIeHyWpWqY4MLm4xxEmZJmM-8pk2w_9BP0qTYKuylzR7FGqQRmVSFf0YcKkG8A_3",
-    price: "210.000 ₫ - 315.000 ₫",
-  },
-];
+type SummaryRow = {
+  total: number;
+  published: number;
+  draft: number;
+  archived: number;
+  low_stock_warnings: number;
+};
 
 const statusConfig: Record<string, { label: string; className: string }> = {
   published: {
@@ -178,6 +41,10 @@ const statusConfig: Record<string, { label: string; className: string }> = {
   draft: {
     label: "Bản nháp",
     className: "bg-status-neutral-bg text-status-neutral-text",
+  },
+  archived: {
+    label: "Đã lưu trữ",
+    className: "bg-surface-subtle text-text-muted",
   },
 };
 
@@ -196,26 +63,154 @@ const stockConfig: Record<string, { className: string; indicator: string }> = {
   },
 };
 
+const money = (value?: number | string | bigint | null) => {
+  if (value === null || value === undefined || value === "") return "—";
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return "—";
+  return new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+    maximumFractionDigits: 0,
+  }).format(numeric);
+};
+
+const formatDate = (value?: string) => {
+  if (!value) return "—";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleString("vi-VN", { dateStyle: "short", timeStyle: "short" });
+};
+
+const getAvailableQuantity = (book: BookRow) => Number(book.edition?.available_quantity ?? 0);
+
+const getStockStatus = (availableQuantity: number) => {
+  if (availableQuantity <= 0) return "out_of_stock";
+  if (availableQuantity <= 10) return "low_stock";
+  return "in_stock";
+};
+
 export default function AdminBooksPage() {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const [stockFilter, setStockFilter] = useState("");
+  const [sortBy, setSortBy] = useState("newest");
+  const [books, setBooks] = useState<BookRow[]>([]);
+  const [summary, setSummary] = useState<SummaryRow>({
+    total: 0,
+    published: 0,
+    draft: 0,
+    archived: 0,
+    low_stock_warnings: 0,
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        const [bookList, summaryData] = await Promise.all([
+          adminFetch<BookRow[]>("/books"),
+          adminFetch<SummaryRow>("/books/summary").catch(() => null),
+        ]);
+
+        const nextBooks = Array.isArray(bookList) ? bookList : [];
+        setBooks(nextBooks);
+        setSummary(
+          summaryData ?? {
+            total: nextBooks.length,
+            published: nextBooks.filter((book) => book.status === "published").length,
+            draft: nextBooks.filter((book) => book.status === "draft").length,
+            archived: nextBooks.filter((book) => book.status === "archived").length,
+            low_stock_warnings: 0,
+          }
+        );
+      } catch (err: any) {
+        const message = err?.error?.message || (getAdminToken() ? "Không thể tải danh sách sách." : "Bạn cần đăng nhập để xem danh sách sách.");
+        setError(message);
+        setBooks([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
+
+  const categoryOptions = useMemo(() => {
+    const map = new Map<string, string>();
+    books.forEach((book) => {
+      book.categories?.forEach((category) => {
+        map.set(category.id, category.name);
+      });
+    });
+    return Array.from(map.entries()).map(([id, name]) => ({ id, name }));
+  }, [books]);
 
   const filteredBooks = useMemo(() => {
-    return sampleBooks.filter((book) => {
-      const matchQuery = !query || [book.title, book.author, book.sku, book.isbn, book.category].some((value) => value.toLowerCase().includes(query.toLowerCase()));
-      const matchStatus = !statusFilter || (statusFilter === book.status);
-      return matchQuery && matchStatus;
+    const next = books.filter((book) => {
+      const haystack = [
+        book.title,
+        book.slug,
+        book.edition?.sku,
+        book.edition?.isbn,
+        book.authors?.map((author) => author.name).join(" "),
+        book.categories?.map((category) => category.name).join(" "),
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+
+      const matchQuery = !query || haystack.includes(query.toLowerCase());
+      const matchStatus = !statusFilter || statusFilter === book.status;
+      const matchCategory = !categoryFilter || book.categories?.some((category) => category.id === categoryFilter);
+      const stockStatus = getStockStatus(getAvailableQuantity(book));
+      const matchStock =
+        !stockFilter ||
+        (stockFilter === "in_stock" && stockStatus === "in_stock") ||
+        (stockFilter === "low_stock" && stockStatus === "low_stock") ||
+        (stockFilter === "out_of_stock" && stockStatus === "out_of_stock");
+
+      return matchQuery && matchStatus && matchCategory && matchStock;
     });
-  }, [query, statusFilter]);
+
+    const sorted = [...next];
+    switch (sortBy) {
+      case "price_asc":
+        sorted.sort((a, b) => Number(a.edition?.sale_price_vnd ?? 0) - Number(b.edition?.sale_price_vnd ?? 0));
+        break;
+      case "price_desc":
+        sorted.sort((a, b) => Number(b.edition?.sale_price_vnd ?? 0) - Number(a.edition?.sale_price_vnd ?? 0));
+        break;
+      case "stock_desc":
+        sorted.sort((a, b) => getAvailableQuantity(b) - getAvailableQuantity(a));
+        break;
+      case "title_asc":
+        sorted.sort((a, b) => a.title.localeCompare(b.title));
+        break;
+      case "newest":
+      default:
+        sorted.sort((a, b) => new Date(b.updated_at ?? 0).getTime() - new Date(a.updated_at ?? 0).getTime());
+        break;
+    }
+
+    return sorted;
+  }, [books, query, statusFilter, categoryFilter, stockFilter, sortBy]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [query, statusFilter, categoryFilter, stockFilter, sortBy]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredBooks.length / pageSize));
+  const startIndex = (page - 1) * pageSize;
+  const pageBooks = filteredBooks.slice(startIndex, startIndex + pageSize);
 
   const toggleSelect = (bookId: string) => {
-    setSelectedIds((current) => {
-      if (current.includes(bookId)) {
-        return current.filter((id) => id !== bookId);
-      }
-      return [...current, bookId];
-    });
+    setSelectedIds((current) => (current.includes(bookId) ? current.filter((id) => id !== bookId) : [...current, bookId]));
   };
 
   const toggleSelectAll = () => {
@@ -227,6 +222,13 @@ export default function AdminBooksPage() {
   };
 
   const selectedCount = selectedIds.length;
+  const stats = {
+    total: summary.total || books.length,
+    published: summary.published || books.filter((book) => book.status === "published").length,
+    draft: summary.draft || books.filter((book) => book.status === "draft").length,
+    archived: summary.archived || books.filter((book) => book.status === "archived").length,
+    low_stock_warnings: summary.low_stock_warnings || 0,
+  };
 
   return (
     <AdminPageShell activePath="/admin/books">
@@ -241,7 +243,7 @@ export default function AdminBooksPage() {
               </nav>
               <div className="flex items-center gap-3">
                 <h1 className="font-headline-lg text-headline-lg text-text-primary tracking-tight">Danh sách Sách phát hành</h1>
-                <span className="px-2.5 py-0.5 rounded-full bg-surface-container font-label-sm text-label-sm text-primary font-semibold">1.248 tựa sách</span>
+                <span className="px-2.5 py-0.5 rounded-full bg-surface-container font-label-sm text-label-sm text-primary font-semibold">{stats.total.toLocaleString("vi-VN")} tựa sách</span>
               </div>
             </div>
 
@@ -265,7 +267,7 @@ export default function AdminBooksPage() {
             <div className="bg-surface-card rounded-xl p-4 shadow-sm flex items-center justify-between">
               <div className="space-y-1">
                 <p className="font-label-sm text-label-sm text-text-muted">Tổng đầu sách</p>
-                <p className="font-headline-md text-headline-md text-text-primary font-bold">1.248</p>
+                <p className="font-headline-md text-headline-md text-text-primary font-bold">{stats.total.toLocaleString("vi-VN")}</p>
               </div>
               <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-primary">
                 <span className="material-symbols-outlined text-[22px]">auto_stories</span>
@@ -275,7 +277,7 @@ export default function AdminBooksPage() {
             <div className="bg-surface-card rounded-xl p-4 shadow-sm flex items-center justify-between">
               <div className="space-y-1">
                 <p className="font-label-sm text-label-sm text-text-muted">Đang phát hành</p>
-                <p className="font-headline-md text-headline-md text-status-emerald-text font-bold">1.180</p>
+                <p className="font-headline-md text-headline-md text-status-emerald-text font-bold">{stats.published.toLocaleString("vi-VN")}</p>
               </div>
               <div className="w-10 h-10 rounded-xl bg-status-emerald-bg flex items-center justify-center text-status-emerald-text">
                 <span className="material-symbols-outlined text-[22px]" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
@@ -285,7 +287,7 @@ export default function AdminBooksPage() {
             <div className="bg-surface-card rounded-xl p-4 shadow-sm flex items-center justify-between">
               <div className="space-y-1">
                 <p className="font-label-sm text-label-sm text-text-muted">Bản nháp</p>
-                <p className="font-headline-md text-headline-md text-text-secondary font-bold">42</p>
+                <p className="font-headline-md text-headline-md text-text-secondary font-bold">{stats.draft.toLocaleString("vi-VN")}</p>
               </div>
               <div className="w-10 h-10 rounded-xl bg-surface-subtle flex items-center justify-center text-text-secondary">
                 <span className="material-symbols-outlined text-[22px]">edit_note</span>
@@ -295,7 +297,7 @@ export default function AdminBooksPage() {
             <div className="bg-surface-card rounded-xl p-4 shadow-sm flex items-center justify-between">
               <div className="space-y-1">
                 <p className="font-label-sm text-label-sm text-text-muted">Đã lưu trữ</p>
-                <p className="font-headline-md text-headline-md text-text-muted font-bold">26</p>
+                <p className="font-headline-md text-headline-md text-text-muted font-bold">{stats.archived.toLocaleString("vi-VN")}</p>
               </div>
               <div className="w-10 h-10 rounded-xl bg-surface-subtle flex items-center justify-center text-text-muted">
                 <span className="material-symbols-outlined text-[22px]">inventory_2</span>
@@ -305,7 +307,7 @@ export default function AdminBooksPage() {
             <div className="col-span-2 md:col-span-1 bg-surface-card rounded-xl p-4 shadow-sm flex items-center justify-between">
               <div className="space-y-1">
                 <p className="font-label-sm text-label-sm text-status-amber-text">Cảnh báo tồn kho</p>
-                <p className="font-headline-md text-headline-md text-status-amber-text font-bold">14 <span className="font-body-sm text-body-sm font-normal text-text-muted">tựa</span></p>
+                <p className="font-headline-md text-headline-md text-status-amber-text font-bold">{stats.low_stock_warnings.toLocaleString("vi-VN")} <span className="font-body-sm text-body-sm font-normal text-text-muted">tựa</span></p>
               </div>
               <div className="w-10 h-10 rounded-xl bg-status-amber-bg flex items-center justify-center text-status-amber-text">
                 <span className="material-symbols-outlined text-[22px]">warning</span>
@@ -336,22 +338,21 @@ export default function AdminBooksPage() {
                   <option value="">Trạng thái: Tất cả</option>
                   <option value="published">Đang phát hành</option>
                   <option value="draft">Bản nháp</option>
+                  <option value="archived">Đã lưu trữ</option>
                 </select>
               </div>
 
               <div className="md:col-span-2">
-                <select className="w-full bg-surface-subtle text-text-secondary font-label-md text-label-md px-3 py-2.5 rounded-lg border-none focus:outline-none cursor-pointer">
+                <select value={categoryFilter} onChange={(event) => setCategoryFilter(event.target.value)} className="w-full bg-surface-subtle text-text-secondary font-label-md text-label-md px-3 py-2.5 rounded-lg border-none focus:outline-none cursor-pointer">
                   <option value="">Danh mục: Tất cả</option>
-                  <option value="classic">Văn học kinh điển</option>
-                  <option value="philosophy">Triết học &amp; Tư tưởng</option>
-                  <option value="economics">Kinh tế &amp; Quản trị</option>
-                  <option value="history">Lịch sử Thế giới</option>
-                  <option value="science">Khoa học Xã hội</option>
+                  {categoryOptions.map((category) => (
+                    <option key={category.id} value={category.id}>{category.name}</option>
+                  ))}
                 </select>
               </div>
 
               <div className="md:col-span-2">
-                <select className="w-full bg-surface-subtle text-text-secondary font-label-md text-label-md px-3 py-2.5 rounded-lg border-none focus:outline-none cursor-pointer">
+                <select value={stockFilter} onChange={(event) => setStockFilter(event.target.value)} className="w-full bg-surface-subtle text-text-secondary font-label-md text-label-md px-3 py-2.5 rounded-lg border-none focus:outline-none cursor-pointer">
                   <option value="">Tồn kho: Tất cả</option>
                   <option value="in_stock">Còn hàng (&gt; 10)</option>
                   <option value="low_stock">Sắp hết hàng (≤ 10)</option>
@@ -360,7 +361,7 @@ export default function AdminBooksPage() {
               </div>
 
               <div className="md:col-span-1 flex justify-end">
-                <button type="button" className="w-full h-10 flex items-center justify-center rounded-lg bg-surface-subtle hover:bg-surface-container text-text-secondary hover:text-text-primary transition-colors" title="Đặt lại bộ lọc" onClick={() => { setQuery(""); setStatusFilter(""); }}>
+                <button type="button" className="w-full h-10 flex items-center justify-center rounded-lg bg-surface-subtle hover:bg-surface-container text-text-secondary hover:text-text-primary transition-colors" title="Đặt lại bộ lọc" onClick={() => { setQuery(""); setStatusFilter(""); setCategoryFilter(""); setStockFilter(""); }}>
                   <span className="material-symbols-outlined text-[20px]">filter_alt_off</span>
                 </button>
               </div>
@@ -378,16 +379,21 @@ export default function AdminBooksPage() {
 
               <div className="flex items-center gap-3">
                 <span className="font-label-sm text-label-sm text-text-muted">Sắp xếp:</span>
-                <select className="bg-transparent text-text-primary font-label-sm text-label-sm font-semibold focus:outline-none cursor-pointer">
-                  <option>Mới cập nhật gần nhất</option>
-                  <option>Tồn kho nhiều nhất</option>
-                  <option>Tồn kho ít nhất</option>
-                  <option>Giá bán tăng dần</option>
-                  <option>Giá bán giảm dần</option>
+                <select value={sortBy} onChange={(event) => setSortBy(event.target.value)} className="bg-transparent text-text-primary font-label-sm text-label-sm font-semibold focus:outline-none cursor-pointer">
+                  <option value="newest">Mới cập nhật gần nhất</option>
+                  <option value="stock_desc">Tồn kho nhiều nhất</option>
+                  <option value="stock_asc">Tồn kho ít nhất</option>
+                  <option value="price_asc">Giá bán tăng dần</option>
+                  <option value="price_desc">Giá bán giảm dần</option>
+                  <option value="title_asc">Tên A–Z</option>
                 </select>
               </div>
             </div>
           </div>
+
+          {error ? (
+            <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">{error}</div>
+          ) : null}
 
           <div className="bg-surface-card rounded-xl shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
@@ -408,83 +414,86 @@ export default function AdminBooksPage() {
                 </thead>
 
                 <tbody className="divide-y divide-surface-border text-table-cell font-table-cell">
-                  {filteredBooks.map((book) => {
-                    const status = statusConfig[book.status] ?? statusConfig.published;
-                    const stock = stockConfig[book.stockTone] ?? stockConfig.green;
+                  {loading ? (
+                    <tr>
+                      <td colSpan={8} className="py-10 text-center text-text-muted">Đang tải dữ liệu...</td>
+                    </tr>
+                  ) : pageBooks.length === 0 ? (
+                    <tr>
+                      <td colSpan={8} className="py-10 text-center text-text-muted">Không có sách nào phù hợp.</td>
+                    </tr>
+                  ) : (
+                    pageBooks.map((book) => {
+                      const status = statusConfig[book.status] ?? statusConfig.published;
+                      const availableQuantity = getAvailableQuantity(book);
+                      const stockStatus = getStockStatus(availableQuantity);
+                      const stock = stockConfig[stockStatus] ?? stockConfig.green;
 
-                    return (
-                      <tr key={book.id} className="hover:bg-surface-subtle/50 transition-colors group">
-                        <td className="py-3.5 px-4 text-center">
-                          <input className="row-checkbox w-4 h-4 rounded text-primary focus:ring-primary focus:ring-2 cursor-pointer" type="checkbox" checked={selectedIds.includes(book.id)} onChange={() => toggleSelect(book.id)} />
-                        </td>
-                        <td className="py-3.5 px-4">
-                          <div className="flex items-start gap-3.5">
-                            <div className="w-12 h-18 shrink-0 bg-surface-subtle rounded overflow-hidden shadow-sm flex items-center justify-center">
-                              <img className="w-full h-full object-contain" src={book.cover} alt={book.title} />
+                      return (
+                        <tr key={book.id} className="hover:bg-surface-subtle/50 transition-colors group">
+                          <td className="py-3.5 px-4 text-center">
+                            <input className="row-checkbox w-4 h-4 rounded text-primary focus:ring-primary focus:ring-2 cursor-pointer" type="checkbox" checked={selectedIds.includes(book.id)} onChange={() => toggleSelect(book.id)} />
+                          </td>
+                          <td className="py-3.5 px-4">
+                            <div className="flex items-start gap-3.5">
+                              <div className="w-12 h-18 shrink-0 bg-surface-subtle rounded overflow-hidden shadow-sm flex items-center justify-center">
+                                <span className="text-xs font-semibold text-text-muted">{book.title?.slice(0, 1)?.toUpperCase() || "B"}</span>
+                              </div>
+                              <div className="space-y-1 min-w-0">
+                                <Link href={`/admin/books/${book.id}`} className="font-headline-sm text-[15px] font-bold text-text-primary hover:text-primary leading-tight line-clamp-1">
+                                  {book.title}
+                                </Link>
+                                <div className="flex items-center gap-1.5 text-text-secondary font-body-sm text-body-sm">
+                                  <span className="font-medium text-text-primary">{book.authors?.[0]?.name || "Chưa có tác giả"}</span>
+                                </div>
+                                <div className="flex flex-wrap items-center gap-1 mt-1">
+                                  {book.categories?.slice(0, 2).map((category) => (
+                                    <span key={category.id} className="px-2 py-0.5 rounded bg-surface-subtle text-text-secondary font-label-sm text-[11px]">{category.name}</span>
+                                  ))}
+                                </div>
+                              </div>
                             </div>
-                            <div className="space-y-1 min-w-0">
-                              <Link href={`/admin/books/${book.id}`} className="font-headline-sm text-[15px] font-bold text-text-primary hover:text-primary leading-tight line-clamp-1">
-                                {book.title}
+                          </td>
+                          <td className="py-3.5 px-4">
+                            <div className="space-y-1">
+                              <div className="font-label-sm text-label-sm font-semibold text-text-primary">{book.edition?.sku ? `SKU: ${book.edition.sku}` : "Chưa có SKU"}</div>
+                              <div className="text-text-muted font-body-sm text-body-sm">ISBN: <span className="font-mono text-text-secondary">{book.edition?.isbn || "Chưa có ISBN"}</span></div>
+                            </div>
+                          </td>
+                          <td className="py-3.5 px-4">
+                            <div className="space-y-0.5">
+                              <div className="font-price-md text-price-md text-text-primary">{money(book.edition?.sale_price_vnd)}</div>
+                              <div className="font-body-sm text-[11px] text-text-muted">{book.edition?.list_price_vnd ? `Giá gốc: ${money(book.edition.list_price_vnd)}` : "Chưa có giá"}</div>
+                            </div>
+                          </td>
+                          <td className="py-3.5 px-4">
+                            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full ${stock.className} font-label-sm text-label-sm font-semibold`}>
+                              <span className={`w-1.5 h-1.5 rounded-full ${stock.indicator}`} />
+                              {availableQuantity <= 0 ? "Hết hàng" : availableQuantity <= 10 ? `Sắp hết (${availableQuantity})` : `Còn ${availableQuantity}`}
+                            </span>
+                          </td>
+                          <td className="py-3.5 px-4">
+                            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full ${status.className} font-label-sm text-label-sm font-semibold`}>
+                              <span className="w-1.5 h-1.5 rounded-full bg-current/70" />
+                              {status.label}
+                            </span>
+                          </td>
+                          <td className="py-3.5 px-4">
+                            <div className="space-y-0.5">
+                              <div className="text-text-primary font-body-sm text-body-sm">{formatDate(book.updated_at)}</div>
+                            </div>
+                          </td>
+                          <td className="py-3.5 px-4 text-right">
+                            <div className="inline-flex items-center gap-1">
+                              <Link href={`/admin/books/${book.id}/edit`} className="p-1.5 text-text-muted hover:text-primary rounded hover:bg-surface-subtle transition-colors" title="Chỉnh sửa chi tiết">
+                                <span className="material-symbols-outlined text-[18px]">edit</span>
                               </Link>
-                              <div className="flex items-center gap-1.5 text-text-secondary font-body-sm text-body-sm">
-                                <span className="font-medium text-text-primary">{book.author}</span>
-                                <span className="text-text-muted">•</span>
-                                <span>{book.translator}</span>
-                              </div>
-                              <div className="flex flex-wrap items-center gap-1 mt-1">
-                                <span className="px-2 py-0.5 rounded bg-surface-subtle text-text-secondary font-label-sm text-[11px]">{book.category}</span>
-                                <span className="px-2 py-0.5 rounded bg-surface-subtle text-text-secondary font-label-sm text-[11px]">{book.tag}</span>
-                              </div>
                             </div>
-                          </div>
-                        </td>
-                        <td className="py-3.5 px-4">
-                          <div className="space-y-1">
-                            <div className="font-label-sm text-label-sm font-semibold text-text-primary">{book.editionLabel}</div>
-                            <div className="text-text-muted font-body-sm text-body-sm">SKU: <span className="font-mono text-text-secondary">{book.sku}</span></div>
-                            <div className="text-text-muted font-body-sm text-[11px]">ISBN: <span className="font-mono">{book.isbn}</span></div>
-                          </div>
-                        </td>
-                        <td className="py-3.5 px-4">
-                          <div className="space-y-0.5">
-                            <div className="font-price-md text-price-md text-text-primary">{book.priceRange}</div>
-                            <div className="font-body-sm text-[11px] text-text-muted">{book.listPrice}</div>
-                          </div>
-                        </td>
-                        <td className="py-3.5 px-4">
-                          <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full ${stock.className} font-label-sm text-label-sm font-semibold`}>
-                            <span className={`w-1.5 h-1.5 rounded-full ${stock.indicator}`} />
-                            {book.stock}
-                          </span>
-                        </td>
-                        <td className="py-3.5 px-4">
-                          <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full ${status.className} font-label-sm text-label-sm font-semibold`}>
-                            <span className="w-1.5 h-1.5 rounded-full bg-current/70" />
-                            {status.label}
-                          </span>
-                        </td>
-                        <td className="py-3.5 px-4">
-                          <div className="space-y-0.5">
-                            <div className="text-text-primary font-body-sm text-body-sm">{book.updatedAt}</div>
-                            <div className="text-text-muted font-body-sm text-[11px]">bởi {book.updatedBy}</div>
-                          </div>
-                        </td>
-                        <td className="py-3.5 px-4 text-right">
-                          <div className="inline-flex items-center gap-1">
-                            <a className="p-1.5 text-text-muted hover:text-text-primary rounded hover:bg-surface-subtle transition-colors" href="#" target="_blank" title="Xem trên website">
-                              <span className="material-symbols-outlined text-[18px]">open_in_new</span>
-                            </a>
-                            <Link href={`/admin/books/${book.id}/edit`} className="p-1.5 text-text-muted hover:text-primary rounded hover:bg-surface-subtle transition-colors" title="Chỉnh sửa chi tiết">
-                              <span className="material-symbols-outlined text-[18px]">edit</span>
-                            </Link>
-                            <button type="button" className="p-1.5 text-text-muted hover:text-text-primary rounded hover:bg-surface-subtle transition-colors" title="Tác vụ khác">
-                              <span className="material-symbols-outlined text-[18px]">more_vert</span>
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
                 </tbody>
               </table>
             </div>
@@ -493,43 +502,33 @@ export default function AdminBooksPage() {
               <div className="px-6 py-3 bg-primary text-on-primary flex items-center justify-between transition-all" id="bulkActionBar">
                 <div className="flex items-center gap-3">
                   <span className="font-label-md text-label-md font-semibold"><span>{selectedCount}</span> đầu sách đã chọn</span>
-                  <span className="text-on-primary/40">•</span>
-                  <button type="button" className="text-on-primary/80 hover:text-on-primary font-body-sm text-body-sm underline">Chọn tất cả 1.248 sách</button>
                 </div>
                 <div className="flex items-center gap-2">
-                  <button type="button" className="px-3 py-1.5 rounded bg-surface-card/10 hover:bg-surface-card/20 text-on-primary font-label-sm text-label-sm transition-colors">Cập nhật danh mục</button>
-                  <button type="button" className="px-3 py-1.5 rounded bg-surface-card/10 hover:bg-surface-card/20 text-on-primary font-label-sm text-label-sm transition-colors">Điều chỉnh giá nhanh</button>
                   <button type="button" className="px-3 py-1.5 rounded bg-surface-card/10 hover:bg-surface-card/20 text-on-primary font-label-sm text-label-sm transition-colors">Lưu trữ tựa sách</button>
-                  <button type="button" className="px-3 py-1.5 rounded bg-error hover:bg-error-container text-on-primary font-label-sm text-label-sm transition-colors">Xóa khỏi hệ thống</button>
                 </div>
               </div>
             ) : null}
 
             <div className="px-6 py-4 bg-surface-card flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-surface-border">
               <div className="flex items-center gap-3 text-text-muted font-body-sm text-body-sm">
-                <span>Hiển thị <span className="font-medium text-text-primary">1 - {Math.min(filteredBooks.length, 7)}</span> trên <span className="font-medium text-text-primary">{filteredBooks.length}</span> đầu sách</span>
-                <span className="text-text-muted">•</span>
-                <div className="flex items-center gap-1.5">
-                  <span>Hiển thị</span>
-                  <select className="bg-surface-subtle text-text-secondary font-label-sm text-label-sm px-2.5 py-1 rounded border-none focus:outline-none cursor-pointer">
-                    <option selected>10 dòng</option>
-                    <option>20 dòng</option>
-                    <option>50 dòng</option>
-                    <option>100 dòng</option>
-                  </select>
-                </div>
+                <span>Hiển thị <span className="font-medium text-text-primary">{filteredBooks.length === 0 ? 0 : startIndex + 1} - {Math.min(startIndex + pageSize, filteredBooks.length)}</span> trên <span className="font-medium text-text-primary">{filteredBooks.length}</span> đầu sách</span>
               </div>
 
               <div className="flex items-center gap-1">
-                <button type="button" className="p-2 rounded-lg text-text-muted hover:bg-surface-subtle disabled:opacity-40 disabled:hover:bg-transparent cursor-not-allowed transition-colors" disabled title="Trang trước">
+                <button type="button" disabled={page === 1} onClick={() => setPage((current) => Math.max(1, current - 1))} className="p-2 rounded-lg text-text-muted hover:bg-surface-subtle disabled:opacity-40 disabled:hover:bg-transparent cursor-pointer transition-colors" title="Trang trước">
                   <span className="material-symbols-outlined text-[18px]">chevron_left</span>
                 </button>
-                <button type="button" className="w-8 h-8 rounded-lg bg-primary text-on-primary font-label-sm text-label-sm font-semibold flex items-center justify-center">1</button>
-                <button type="button" className="w-8 h-8 rounded-lg text-text-secondary hover:bg-surface-subtle font-label-sm text-label-sm flex items-center justify-center transition-colors">2</button>
-                <button type="button" className="w-8 h-8 rounded-lg text-text-secondary hover:bg-surface-subtle font-label-sm text-label-sm flex items-center justify-center transition-colors">3</button>
-                <span className="px-1.5 text-text-muted">...</span>
-                <button type="button" className="w-8 h-8 rounded-lg text-text-secondary hover:bg-surface-subtle font-label-sm text-label-sm flex items-center justify-center transition-colors">125</button>
-                <button type="button" className="p-2 rounded-lg text-text-secondary hover:bg-surface-subtle transition-colors" title="Trang tiếp theo">
+                {Array.from({ length: totalPages }, (_, index) => index + 1).map((pageNumber) => (
+                  <button
+                    key={pageNumber}
+                    type="button"
+                    onClick={() => setPage(pageNumber)}
+                    className={`w-8 h-8 rounded-lg font-label-sm text-label-sm flex items-center justify-center transition-colors ${page === pageNumber ? "bg-primary text-on-primary" : "text-text-secondary hover:bg-surface-subtle"}`}
+                  >
+                    {pageNumber}
+                  </button>
+                ))}
+                <button type="button" disabled={page >= totalPages} onClick={() => setPage((current) => Math.min(totalPages, current + 1))} className="p-2 rounded-lg text-text-secondary hover:bg-surface-subtle disabled:opacity-40 disabled:hover:bg-transparent transition-colors" title="Trang tiếp theo">
                   <span className="material-symbols-outlined text-[18px]">chevron_right</span>
                 </button>
               </div>

@@ -57,7 +57,7 @@ const loadBook = async (id: string) =>
     where: { id },
     include: {
       editions: {
-        include: { publisher: true },
+        include: { publisher: true, inventory_balances: true },
         orderBy: [{ created_at: "desc" }],
       },
       book_authors: {
@@ -70,29 +70,42 @@ const loadBook = async (id: string) =>
     },
   });
 
-const mapEdition = (edition: any) =>
-  edition
-    ? {
-        id: edition.id,
-        sku: edition.sku,
-        isbn: edition.isbn,
-        publisher_id: edition.publisher_id,
-        publisher: edition.publisher
-          ? {
-              id: edition.publisher.id,
-              name: edition.publisher.name,
-              slug: edition.publisher.slug,
-            }
-          : null,
-        language: edition.language,
-        format: edition.format,
-        publication_date: edition.publication_date,
-        page_count: edition.page_count,
-        list_price_vnd: Number(edition.list_price_vnd ?? 0),
-        sale_price_vnd: Number(edition.sale_price_vnd ?? 0),
-        status: edition.status,
-      }
-    : null;
+const getAvailableQuantity = (inventoryBalances: any[] = []) =>
+  inventoryBalances.reduce((sum, balance) => {
+    const onHand = Number(balance?.on_hand ?? 0);
+    const reserved = Number(balance?.reserved ?? 0);
+    return sum + Math.max(0, onHand - reserved);
+  }, 0);
+
+const mapEdition = (edition: any) => {
+  if (!edition) return null;
+
+  const availableQuantity = getAvailableQuantity(edition.inventory_balances ?? []);
+
+  return {
+    id: edition.id,
+    sku: edition.sku,
+    isbn: edition.isbn,
+    publisher_id: edition.publisher_id,
+    publisher: edition.publisher
+      ? {
+          id: edition.publisher.id,
+          name: edition.publisher.name,
+          slug: edition.publisher.slug,
+        }
+      : null,
+    language: edition.language,
+    format: edition.format,
+    publication_date: edition.publication_date,
+    page_count: edition.page_count,
+    list_price_vnd: Number(edition.list_price_vnd ?? 0),
+    sale_price_vnd: Number(edition.sale_price_vnd ?? 0),
+    status: edition.status,
+    available_quantity: availableQuantity,
+    stock_status:
+      availableQuantity <= 0 ? "out_of_stock" : availableQuantity <= 10 ? "low_stock" : "in_stock",
+  };
+};
 
 const mapBook = (row: any) => {
   const edition = row.editions?.[0] ?? null;
@@ -187,7 +200,11 @@ export class BooksService {
     const rows = await prisma.book.findMany({
       where,
       include: {
-        editions: { include: { publisher: true }, orderBy: [{ created_at: "desc" }], take: 1 },
+        editions: {
+          include: { publisher: true, inventory_balances: true },
+          orderBy: [{ created_at: "desc" }],
+          take: 1,
+        },
         book_authors: { include: { author: true } },
         book_categories: { include: { category: true } },
       },
@@ -202,7 +219,32 @@ export class BooksService {
     const row = await prisma.book.findFirst({
       where: { slug, status: "published" },
       include: {
-        editions: { include: { publisher: true }, orderBy: [{ created_at: "desc" }], take: 1 },
+        editions: {
+          include: { publisher: true, inventory_balances: true },
+          orderBy: [{ created_at: "desc" }],
+          take: 1,
+        },
+        book_authors: { include: { author: true } },
+        book_categories: { include: { category: true } },
+      },
+    });
+
+    if (!row) {
+      throw new NotFoundException({ code: "BOOK_NOT_FOUND", message: "Sách không tồn tại." });
+    }
+
+    return mapBook(row);
+  }
+
+  async getById(id: string) {
+    const row = await prisma.book.findUnique({
+      where: { id },
+      include: {
+        editions: {
+          include: { publisher: true, inventory_balances: true },
+          orderBy: [{ created_at: "desc" }],
+          take: 1,
+        },
         book_authors: { include: { author: true } },
         book_categories: { include: { category: true } },
       },
@@ -235,7 +277,11 @@ export class BooksService {
     const rows = await prisma.book.findMany({
       where,
       include: {
-        editions: { include: { publisher: true }, orderBy: [{ created_at: "desc" }], take: 1 },
+        editions: {
+          include: { publisher: true, inventory_balances: true },
+          orderBy: [{ created_at: "desc" }],
+          take: 1,
+        },
         book_authors: { include: { author: true } },
         book_categories: { include: { category: true } },
       },
@@ -243,6 +289,44 @@ export class BooksService {
     });
 
     return rows.map(mapBook);
+  }
+
+  async adminSummary() {
+    const rows = await prisma.book.groupBy({
+      by: ["status"],
+      _count: { status: true },
+    });
+
+    const summary = {
+      total: 0,
+      published: 0,
+      draft: 0,
+      archived: 0,
+      low_stock_warnings: 0,
+    };
+
+    for (const row of rows) {
+      const count = row._count.status ?? 0;
+      summary.total += count;
+
+      if (row.status === "published") summary.published = count;
+      if (row.status === "draft") summary.draft = count;
+      if (row.status === "archived") summary.archived = count;
+    }
+
+    const balances = await prisma.inventoryBalance.findMany({
+      select: {
+        on_hand: true,
+        reserved: true,
+        low_stock_threshold: true,
+      },
+    });
+
+    summary.low_stock_warnings = balances.filter(
+      (item) => item.on_hand - item.reserved <= (item.low_stock_threshold ?? 0)
+    ).length;
+
+    return summary;
   }
 
   async create(body: unknown) {

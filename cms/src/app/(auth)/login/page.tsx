@@ -13,7 +13,7 @@ export default function CmsLoginPage() {
 
   useEffect(() => {
     if (getCmsToken()) {
-      router.replace("/dashboard");
+      router.replace("/admin/dashboard");
     }
   }, [router]);
 
@@ -45,7 +45,7 @@ export default function CmsLoginPage() {
       }
 
       setCmsToken(payload.access_token);
-      router.replace("/dashboard");
+      router.replace("/admin/dashboard");
     } catch (err) {
       const message =
         err instanceof Error

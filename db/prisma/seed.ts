@@ -146,48 +146,170 @@ async function main() {
   ];
 
   for (const root of categoryTree) {
-    const parent = await prisma.category.upsert({
-      where: { slug: root.slug },
-      update: {
-        name: root.name,
-        description: root.description,
-        active: true,
-        position: 0,
-      },
-      create: {
-        id: randomUUID(),
-        name: root.name,
+    let parent = await prisma.category.findFirst({
+      where: {
+        parent_id: null,
         slug: root.slug,
-        description: root.description,
-        active: true,
-        position: 0,
       },
     });
 
-    for (const child of root.children ?? []) {
-      await prisma.category.upsert({
-        where: { slug: child.slug },
-        update: {
-          name: child.name,
-          description: child.description,
+    if (!parent) {
+      parent = await prisma.category.create({
+        data: {
+          id: randomUUID(),
+          name: root.name,
+          slug: root.slug,
+          description: root.description,
           active: true,
-          parent_id: parent.id,
           position: 0,
         },
-        create: {
-          id: randomUUID(),
-          parent_id: parent.id,
-          name: child.name,
-          slug: child.slug,
-          description: child.description,
+      });
+    } else {
+      parent = await prisma.category.update({
+        where: { id: parent.id },
+        data: {
+          name: root.name,
+          description: root.description,
           active: true,
           position: 0,
+        },
+      });
+    }
+
+    for (const child of root.children ?? []) {
+      let existingChild = await prisma.category.findFirst({
+        where: {
+          parent_id: parent.id,
+          slug: child.slug,
+        },
+      });
+
+      if (!existingChild) {
+        await prisma.category.create({
+          data: {
+            id: randomUUID(),
+            parent_id: parent.id,
+            name: child.name,
+            slug: child.slug,
+            description: child.description,
+            active: true,
+            position: 0,
+          },
+        });
+      } else {
+        await prisma.category.update({
+          where: { id: existingChild.id },
+          data: {
+            name: child.name,
+            description: child.description,
+            parent_id: parent.id,
+            active: true,
+            position: 0,
+          },
+        });
+      }
+    }
+  }
+
+  const categoryLookup = await prisma.category.findMany({
+    select: { id: true, slug: true },
+  });
+  const categorySlugMap = Object.fromEntries(categoryLookup.map((category) => [category.slug, category.id]));
+
+  const categoryRules = [
+    {
+      test: /javascript|react|python|ai|machine learning|data|programming|code|software|khoa học dữ liệu|công nghệ/i,
+      slugs: ["cong-nghe-thong-tin", "khoa-hoc-tu-nhien"],
+    },
+    {
+      test: /marketing|bán hàng|startup|khởi nghiệp|tài chính|thành công|đắc nhân tâm|kinh doanh/i,
+      slugs: ["marketing-ban-hang", "khoi-nghiep"],
+    },
+    {
+      test: /triết|tư duy|tư tưởng|lão tử|khổng tử|aristote|đạo lý|tự do|phương đông|phương tây/i,
+      slugs: ["triet-hoc-phuong-dong", "triet-hoc-phuong-tay"],
+    },
+    {
+      test: /văn học|harry potter|mắt biếc|dế mèn|tuổi thơ|nỗi buồn|mặt trời|hoa vàng|thơ|hoài niệm|bạn thân/i,
+      slugs: ["van-hoc-viet-nam", "van-hoc-nuoc-ngoai"],
+    },
+    {
+      test: /lịch sử|văn minh|xã hội|tôn giáo|nhân văn|hội|thế giới/i,
+      slugs: ["khoa-hoc-xa-hoi-va-nhan-van"],
+    },
+  ];
+
+  const books = await prisma.book.findMany({
+    include: {
+      editions: { select: { id: true, sku: true } },
+      book_categories: { select: { category_id: true } },
+    },
+  });
+
+  for (const book of books) {
+    const chosenCategoryIds = new Set<string>();
+    const title = book.title ?? "";
+
+    for (const rule of categoryRules) {
+      if (rule.test.test(title)) {
+        for (const slug of rule.slugs) {
+          const categoryId = categorySlugMap[slug];
+          if (categoryId) chosenCategoryIds.add(categoryId);
+        }
+      }
+    }
+
+    if (chosenCategoryIds.size === 0) {
+      const fallback = categorySlugMap["van-hoc-viet-nam"] ?? categorySlugMap["khoa-hoc-xa-hoi-va-nhan-van"] ?? Object.values(categorySlugMap)[0];
+      if (fallback) chosenCategoryIds.add(fallback);
+    }
+
+    await prisma.bookCategory.deleteMany({ where: { book_id: book.id } });
+    for (const categoryId of chosenCategoryIds) {
+      await prisma.bookCategory.upsert({
+        where: { book_id_category_id: { book_id: book.id, category_id: categoryId } },
+        update: {},
+        create: { book_id: book.id, category_id: categoryId, is_primary: false },
+      });
+    }
+
+    for (const edition of book.editions) {
+      const hash = [...book.title].reduce((sum, char) => sum + char.charCodeAt(0), 0) + edition.sku.length;
+      let onHand = ((hash % 24) + 4) * (hash % 2 === 0 ? 1 : 2);
+      if (hash % 11 === 0) onHand = 0;
+      if (hash % 9 === 0) onHand = 7;
+      if (hash % 13 === 0) onHand = 12;
+      if (hash % 17 === 0) onHand = 18;
+
+      const reserved = Math.min(6, Math.max(0, Math.floor(onHand * 0.2)));
+      const threshold = onHand <= 5 ? 5 : onHand <= 12 ? 8 : 10;
+
+      await prisma.inventoryBalance.upsert({
+        where: {
+          edition_id_warehouse_id: {
+            edition_id: edition.id,
+            warehouse_id: warehouse.id,
+          },
+        },
+        update: {
+          on_hand: onHand,
+          reserved,
+          low_stock_threshold: threshold,
+        },
+        create: {
+          edition_id: edition.id,
+          warehouse_id: warehouse.id,
+          on_hand: onHand,
+          reserved,
+          low_stock_threshold: threshold,
         },
       });
     }
   }
 
   console.log("Sample categories seeded:", categoryTree.length, "roots");
+  console.log("Book category assignments synced:", books.length);
+  console.log("Inventory balances synced for warehouse:", warehouse.code);
   console.log("Default admin user seeded:", adminEmail);
   console.log("Default admin password:", adminPassword);
   console.log("Seed complete.");

@@ -46,10 +46,11 @@ export default function AdminBookDetailPage() {
       if (!params?.id) return;
 
       try {
-        const rows = (await adminFetch<BookRecord[]>("/books")) ?? [];
-        setBook(rows.find((item) => item.id === params.id) ?? null);
+        const nextBook = await adminFetch<BookRecord>(`/books/${params.id}`);
+        setBook(nextBook ?? null);
       } catch (error) {
         console.error(error);
+        setBook(null);
       } finally {
         setLoading(false);
       }
