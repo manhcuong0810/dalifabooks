@@ -12,7 +12,9 @@ type EditionFormat = "paperback" | "hardcover";
 type WarehouseOption = {
   id: string;
   name: string;
-  location: string;
+  code?: string;
+  city?: string;
+  location?: string;
 };
 
 type WarehouseStock = {
@@ -67,18 +69,12 @@ const moneyInput = (value?: number | string) => {
   return "";
 };
 
-const warehouseOptions: WarehouseOption[] = [
-  { id: "hanoi-central", name: "Kho Tổng Hà Nội", location: "Long Biên" },
-  { id: "hcm-central", name: "Kho TP.HCM", location: "Quận 7" },
-  { id: "da-nang", name: "Kho Đà Nẵng", location: "Hải Châu" },
-  { id: "can-tho", name: "Kho Cần Thơ", location: "Ninh Kiều" },
-];
-
 export function BookEditor({ mode, bookId }: { mode: "create" | "edit"; bookId?: string }) {
   const router = useRouter();
   const [categories, setCategories] = useState<CategoryItem[]>([]);
   const [authors, setAuthors] = useState<AuthorItem[]>([]);
   const [publishers, setPublishers] = useState<PublisherItem[]>([]);
+  const [warehouseOptions, setWarehouseOptions] = useState<WarehouseOption[]>([]);
   const [loadingData, setLoadingData] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -96,9 +92,7 @@ export function BookEditor({ mode, bookId }: { mode: "create" | "edit"; bookId?:
   const [pageCount, setPageCount] = useState("320");
   const [listPrice, setListPrice] = useState("0");
   const [salePrice, setSalePrice] = useState("0");
-  const [warehouseStocks, setWarehouseStocks] = useState<WarehouseStock[]>([
-    { warehouseId: warehouseOptions[0].id, quantity: 0 },
-  ]);
+  const [warehouseStocks, setWarehouseStocks] = useState<WarehouseStock[]>([]);
   const [attributes, setAttributes] = useState<BookAttribute[]>([
     { key: "Hình thức đóng gói", value: "Bộ 2 tập kèm hộp cứng (Boxset)" },
     { key: "Kích thước", value: "16 x 24 x 6 cm" },
@@ -107,15 +101,25 @@ export function BookEditor({ mode, bookId }: { mode: "create" | "edit"; bookId?:
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [categoryResult, authorResult, publisherResult] = await Promise.all([
+        const [categoryResult, authorResult, publisherResult, warehouseResult] = await Promise.all([
           adminFetch<CategoryItem[]>("/categories"),
           adminFetch<AuthorItem[]>("/authors"),
           adminFetch<PublisherItem[]>("/publishers"),
+          adminFetch<WarehouseOption[]>("/inventory"),
         ]);
 
+        const nextWarehouses = warehouseResult ?? [];
         setCategories(categoryResult ?? []);
         setAuthors(authorResult ?? []);
         setPublishers(publisherResult ?? []);
+        setWarehouseOptions(nextWarehouses);
+
+        if (nextWarehouses.length > 0) {
+          setWarehouseStocks((current) => {
+            if (current.length > 0) return current;
+            return [{ warehouseId: nextWarehouses[0].id, quantity: 0 }];
+          });
+        }
 
         if (mode === "edit" && bookId) {
           const books = (await adminFetch<BookRecord[]>("/books")) ?? [];
@@ -161,6 +165,11 @@ export function BookEditor({ mode, bookId }: { mode: "create" | "edit"; bookId?:
     }
   }, [title, mode]);
 
+  useEffect(() => {
+    if (warehouseOptions.length === 0 || warehouseStocks.length > 0) return;
+    setWarehouseStocks([{ warehouseId: warehouseOptions[0].id, quantity: 0 }]);
+  }, [warehouseOptions, warehouseStocks.length]);
+
   const toggleAuthor = (id: string) => {
     setSelectedAuthors((current) => (current.includes(id) ? current.filter((item) => item !== id) : [...current, id]));
   };
@@ -170,6 +179,8 @@ export function BookEditor({ mode, bookId }: { mode: "create" | "edit"; bookId?:
   };
 
   const addWarehouseRow = () => {
+    if (warehouseOptions.length === 0) return;
+
     setWarehouseStocks((current) => [
       ...current,
       {
@@ -607,7 +618,9 @@ export function BookEditor({ mode, bookId }: { mode: "create" | "edit"; bookId?:
                                 <span className="material-symbols-outlined text-[18px]">delete</span>
                               </button>
                             </div>
-                            <span className="mt-2 block text-[11px] text-text-muted">{warehouse.location}</span>
+                            <span className="mt-2 block text-[11px] text-text-muted">
+                              {warehouse.city ?? warehouse.code ?? "Chi nhánh"}
+                            </span>
                           </div>
                         </div>
                       </div>

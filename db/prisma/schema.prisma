@@ -769,13 +769,28 @@ model CheckoutQuote {
 // 15.5 INVENTORY
 // ══════════════════════════════════════════════════════════════════
 
+enum WarehouseStatus {
+  active
+  maintenance
+  paused
+
+  @@map("warehouse_status")
+}
+
 model Warehouse {
-  id     String  @id @default(uuid()) @db.Uuid
-  code   String  @unique @db.VarChar(32)
-  name   String  @db.VarChar(200)
-  active Boolean @default(true)
+  id       String          @id @default(uuid()) @db.Uuid
+  code     String          @unique @db.VarChar(32)
+  name     String          @db.VarChar(200)
+  city     String?         @db.VarChar(120)
+  address  String?         @db.Text
+  manager  String?         @db.VarChar(200)
+  phone    String?         @db.VarChar(40)
+  capacity Int             @default(0)
+  status   WarehouseStatus @default(active)
+  active   Boolean         @default(true)
 
   created_at DateTime @default(now()) @db.Timestamptz
+  updated_at DateTime @updatedAt @db.Timestamptz
 
   inventory_balances     InventoryBalance[]
   inventory_reservations InventoryReservation[]

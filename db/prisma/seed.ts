@@ -16,17 +16,69 @@ async function main() {
   console.log("Seeding database...");
 
   // ── Kho mặc định ────────────────────────────────────────────────
-  const warehouse = await prisma.warehouse.upsert({
-    where: { code: "HN-001" },
-    update: {},
-    create: {
-      id: randomUUID(),
+  const defaultWarehouses = [
+    {
       code: "HN-001",
       name: "Kho Hà Nội",
-      active: true,
+      city: "Hà Nội",
+      address: "Long Biên, Hà Nội",
+      manager: "Nguyễn Minh Hạnh",
+      phone: "0908 111 222",
+      capacity: 20000,
+      status: "active" as const,
     },
-  });
-  console.log("Warehouse:", warehouse.code);
+    {
+      code: "HCM-001",
+      name: "Kho TP.HCM",
+      city: "TP. Hồ Chí Minh",
+      address: "Quận 7, TP. Hồ Chí Minh",
+      manager: "Phạm Quốc Anh",
+      phone: "0908 333 444",
+      capacity: 18000,
+      status: "active" as const,
+    },
+    {
+      code: "DN-001",
+      name: "Kho Đà Nẵng",
+      city: "Đà Nẵng",
+      address: "Hải Châu, Đà Nẵng",
+      manager: "Lê Thị Tuyết",
+      phone: "0908 555 666",
+      capacity: 8000,
+      status: "maintenance" as const,
+    },
+  ];
+
+  for (const warehouseItem of defaultWarehouses) {
+    await prisma.warehouse.upsert({
+      where: { code: warehouseItem.code },
+      update: {
+        name: warehouseItem.name,
+        city: warehouseItem.city,
+        address: warehouseItem.address,
+        manager: warehouseItem.manager,
+        phone: warehouseItem.phone,
+        capacity: warehouseItem.capacity,
+        status: warehouseItem.status,
+        active: true,
+      },
+      create: {
+        id: randomUUID(),
+        code: warehouseItem.code,
+        name: warehouseItem.name,
+        city: warehouseItem.city,
+        address: warehouseItem.address,
+        manager: warehouseItem.manager,
+        phone: warehouseItem.phone,
+        capacity: warehouseItem.capacity,
+        status: warehouseItem.status,
+        active: true,
+      },
+    });
+  }
+
+  const warehouseList = await prisma.warehouse.findMany({ orderBy: { name: "asc" } });
+  console.log("Warehouses:", warehouseList.map((w) => w.code).join(", "));
 
   // ── Permissions cơ bản ──────────────────────────────────────────
   const permissionCodes = [
@@ -275,41 +327,44 @@ async function main() {
 
     for (const edition of book.editions) {
       const hash = [...book.title].reduce((sum, char) => sum + char.charCodeAt(0), 0) + edition.sku.length;
-      let onHand = ((hash % 24) + 4) * (hash % 2 === 0 ? 1 : 2);
-      if (hash % 11 === 0) onHand = 0;
-      if (hash % 9 === 0) onHand = 7;
-      if (hash % 13 === 0) onHand = 12;
-      if (hash % 17 === 0) onHand = 18;
+      let baseOnHand = ((hash % 24) + 4) * (hash % 2 === 0 ? 1 : 2);
+      if (hash % 11 === 0) baseOnHand = 0;
+      if (hash % 9 === 0) baseOnHand = 7;
+      if (hash % 13 === 0) baseOnHand = 12;
+      if (hash % 17 === 0) baseOnHand = 18;
 
-      const reserved = Math.min(6, Math.max(0, Math.floor(onHand * 0.2)));
-      const threshold = onHand <= 5 ? 5 : onHand <= 12 ? 8 : 10;
+      for (const warehouse of warehouseList) {
+        const onHand = Math.max(0, baseOnHand + (warehouse.code === "HCM-001" ? 3 : warehouse.code === "DN-001" ? -2 : 0));
+        const reserved = Math.min(6, Math.max(0, Math.floor(onHand * 0.2)));
+        const threshold = onHand <= 5 ? 5 : onHand <= 12 ? 8 : 10;
 
-      await prisma.inventoryBalance.upsert({
-        where: {
-          edition_id_warehouse_id: {
+        await prisma.inventoryBalance.upsert({
+          where: {
+            edition_id_warehouse_id: {
+              edition_id: edition.id,
+              warehouse_id: warehouse.id,
+            },
+          },
+          update: {
+            on_hand: onHand,
+            reserved,
+            low_stock_threshold: threshold,
+          },
+          create: {
             edition_id: edition.id,
             warehouse_id: warehouse.id,
+            on_hand: onHand,
+            reserved,
+            low_stock_threshold: threshold,
           },
-        },
-        update: {
-          on_hand: onHand,
-          reserved,
-          low_stock_threshold: threshold,
-        },
-        create: {
-          edition_id: edition.id,
-          warehouse_id: warehouse.id,
-          on_hand: onHand,
-          reserved,
-          low_stock_threshold: threshold,
-        },
-      });
+        });
+      }
     }
   }
 
   console.log("Sample categories seeded:", categoryTree.length, "roots");
   console.log("Book category assignments synced:", books.length);
-  console.log("Inventory balances synced for warehouse:", warehouse.code);
+  console.log("Inventory balances synced for warehouses:", warehouseList.map((w) => w.code).join(", "));
   console.log("Default admin user seeded:", adminEmail);
   console.log("Default admin password:", adminPassword);
   console.log("Seed complete.");

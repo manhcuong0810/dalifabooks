@@ -1,6 +1,40 @@
+"use client";
+
+import { adminFetch } from "@/lib/api";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+
+type WarehouseOption = {
+  id: string;
+  name: string;
+  code?: string;
+  city?: string;
+};
 
 export function AdminTopbar() {
+  const [warehouses, setWarehouses] = useState<WarehouseOption[]>([]);
+  const [selectedWarehouseId, setSelectedWarehouseId] = useState("all");
+
+  useEffect(() => {
+    let isMounted = true;
+
+    adminFetch<WarehouseOption[]>("/inventory")
+      .then((data) => {
+        if (!isMounted) return;
+        const list = data ?? [];
+        setWarehouses(list);
+      })
+      .catch((error) => {
+        if (!isMounted) return;
+        console.error("Failed to load warehouses for topbar", error);
+        setWarehouses([]);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   return (
     <header className="fixed left-64 right-0 top-0 z-40 flex h-16 items-center justify-between bg-surface-card/95 px-6 shadow-[0_1px_4px_rgba(0,0,0,0.04)] backdrop-blur-md">
       <div className="flex max-w-2xl flex-1 items-center gap-4">
@@ -14,10 +48,17 @@ export function AdminTopbar() {
         </div>
 
         <div className="hidden items-center gap-2 md:flex">
-          <select className="rounded-lg border-none bg-surface-subtle px-3 py-1.5 text-label-sm font-label-sm text-text-secondary focus:outline-none">
-            <option>Kho Tổng Hà Nội</option>
-            <option>Kho Chi nhánh TP.HCM</option>
-            <option>Toàn bộ chi nhánh</option>
+          <select
+            value={selectedWarehouseId}
+            onChange={(event) => setSelectedWarehouseId(event.target.value)}
+            className="rounded-lg border-none bg-surface-subtle px-3 py-1.5 text-label-sm font-label-sm text-text-secondary focus:outline-none"
+          >
+            <option value="all">Toàn bộ chi nhánh</option>
+            {warehouses.map((warehouse) => (
+              <option key={warehouse.id} value={warehouse.id}>
+                {warehouse.name}
+              </option>
+            ))}
           </select>
           <select className="rounded-lg border-none bg-surface-subtle px-3 py-1.5 text-label-sm font-label-sm text-text-secondary focus:outline-none">
             <option>Hôm nay (24h)</option>

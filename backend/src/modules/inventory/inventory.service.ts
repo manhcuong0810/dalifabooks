@@ -18,43 +18,35 @@ type WarehouseListItem = {
   active: boolean;
 };
 
-const DEFAULT_WAREHOUSE_MAP: Record<string, Partial<WarehouseListItem>> = {
-  "HN-001": {
-    city: "Hà Nội",
-    address: "Long Biên, Hà Nội",
-    manager: "Nguyễn Minh Hạnh",
-    phone: "0908 111 222",
-    capacity: 20000,
-  },
-  "HCM-001": {
-    city: "TP. Hồ Chí Minh",
-    address: "Quận 7, TP. Hồ Chí Minh",
-    manager: "Phạm Quốc Anh",
-    phone: "0908 333 444",
-    capacity: 18000,
-  },
-  "DN-001": {
-    city: "Đà Nẵng",
-    address: "Hải Châu, Đà Nẵng",
-    manager: "Lê Thị Tuyết",
-    phone: "0908 555 666",
-    capacity: 8000,
-  },
+const normalizeWarehouseStatus = (value: unknown, fallbackActive: boolean): WarehouseStatus => {
+  const normalized = String(value ?? "").trim().toLowerCase();
+  if (normalized === "active" || normalized === "maintenance" || normalized === "paused") {
+    return normalized as WarehouseStatus;
+  }
+
+  return fallbackActive ? "active" : "paused";
 };
 
 @Injectable()
 export class InventoryService {
-  private mapWarehouse(record: { id: string; code: string; name: string; active: boolean }, index = 0): WarehouseListItem {
-    const fallback = DEFAULT_WAREHOUSE_MAP[record.code] ?? {
-      city: ["Hà Nội", "Hồ Chí Minh", "Đà Nẵng", "Cần Thơ"][index % 4],
-      address: "Khu trung chuyển, thành phố lớn",
-      manager: `Quản lý kho ${index + 1}`,
-      phone: "0908 000 000",
-      capacity: 5000 + index * 1500,
-    };
-
-    const status: WarehouseStatus = record.active === false ? "paused" : index % 3 === 1 ? "maintenance" : "active";
-    const used = Math.max(0, Math.round((fallback.capacity ?? 5000) * (0.45 + (index % 4) * 0.12)));
+  private mapWarehouse(
+    record: {
+      id: string;
+      code: string;
+      name: string;
+      city: string | null;
+      address: string | null;
+      manager: string | null;
+      phone: string | null;
+      capacity: number;
+      status: string | null;
+      active: boolean;
+    },
+    used = 0,
+    index = 0
+  ): WarehouseListItem {
+    const status: WarehouseStatus = normalizeWarehouseStatus(record.status ?? (record.active === false ? "paused" : "active"), record.active !== false);
+    const fallbackCity = ["Hà Nội", "TP. Hồ Chí Minh", "Đà Nẵng", "Cần Thơ"][index % 4];
 
     return {
       id: record.id,
@@ -62,47 +54,74 @@ export class InventoryService {
       name: record.name,
       active: record.active,
       status,
-      city: fallback.city ?? "Hà Nội",
-      address: fallback.address ?? "Khu trung chuyển",
-      manager: fallback.manager ?? "Quản lý kho",
-      phone: fallback.phone ?? "0908 000 000",
-      capacity: fallback.capacity ?? 5000,
+      city: record.city ?? fallbackCity,
+      address: record.address ?? "Khu trung chuyển, thành phố lớn",
+      manager: record.manager ?? `Quản lý kho ${index + 1}`,
+      phone: record.phone ?? "0908 000 000",
+      capacity: record.capacity ?? 5000,
       used,
     };
   }
 
   async list(_query: Record<string, string>) {
-    const records = await prisma.warehouse.findMany({
-      orderBy: { name: "asc" },
-    });
+    const [records, balanceRows] = await Promise.all([
+      prisma.warehouse.findMany({
+        orderBy: { name: "asc" },
+      }),
+      prisma.inventoryBalance.groupBy({
+        by: ["warehouse_id"],
+        _sum: { on_hand: true },
+      }),
+    ]);
 
-    return records.map((record, index) => this.mapWarehouse(record, index));
+    const usedByWarehouse = new Map<string, number>();
+    for (const row of balanceRows) {
+      usedByWarehouse.set(row.warehouse_id, Number(row._sum.on_hand ?? 0));
+    }
+
+    return records.map((record, index) => this.mapWarehouse(record, usedByWarehouse.get(record.id) ?? 0, index));
   }
 
   async getById(id: string) {
-    const record = await prisma.warehouse.findUnique({ where: { id } });
+    const [record, used] = await Promise.all([
+      prisma.warehouse.findUnique({ where: { id } }),
+      prisma.inventoryBalance
+        .aggregate({
+          where: { warehouse_id: id },
+          _sum: { on_hand: true },
+        })
+        .then((result) => Number(result._sum.on_hand ?? 0)),
+    ]);
+
     if (!record) {
       throw new NotFoundException("Warehouse not found");
     }
 
-    return this.mapWarehouse(record, 0);
+    return this.mapWarehouse(record, used, 0);
   }
 
   async create(body: Record<string, unknown>) {
+    const status = normalizeWarehouseStatus(body.status ?? body.active, body.active !== false);
     const name = String(body.name ?? "Kho mới").trim();
     const code = String(body.code ?? "WH-" + Date.now().toString().slice(-4)).trim();
-    const active = body.active !== undefined ? Boolean(body.active) : String(body.status ?? "active") !== "paused";
+    const active = status !== "paused";
 
     const record = await prisma.warehouse.create({
       data: {
         id: randomUUID(),
         name,
         code,
+        city: String(body.city ?? "").trim() || "Hà Nội",
+        address: String(body.address ?? "").trim() || "Khu trung chuyển, thành phố lớn",
+        manager: String(body.manager ?? "").trim() || "Quản lý kho",
+        phone: String(body.phone ?? "").trim() || "0908 000 000",
+        capacity: Number(body.capacity) || 0,
+        status,
         active,
       },
     });
 
-    return this.mapWarehouse(record, 0);
+    return this.mapWarehouse(record, 0, 0);
   }
 
   async update(id: string, body: Record<string, unknown>) {
@@ -111,15 +130,17 @@ export class InventoryService {
       throw new NotFoundException("Warehouse not found");
     }
 
+    const status = normalizeWarehouseStatus(body.status ?? existing.status ?? (existing.active ? "active" : "paused"), existing.active !== false);
     const payload = {
       name: body.name !== undefined ? String(body.name).trim() || existing.name : existing.name,
       code: body.code !== undefined ? String(body.code).trim() || existing.code : existing.code,
-      active:
-        body.active !== undefined
-          ? Boolean(body.active)
-          : body.status !== undefined
-            ? String(body.status) !== "paused"
-            : existing.active,
+      city: body.city !== undefined ? String(body.city).trim() || existing.city || "Hà Nội" : existing.city || "Hà Nội",
+      address: body.address !== undefined ? String(body.address).trim() || existing.address || "Khu trung chuyển, thành phố lớn" : existing.address || "Khu trung chuyển, thành phố lớn",
+      manager: body.manager !== undefined ? String(body.manager).trim() || existing.manager || "Quản lý kho" : existing.manager || "Quản lý kho",
+      phone: body.phone !== undefined ? String(body.phone).trim() || existing.phone || "0908 000 000" : existing.phone || "0908 000 000",
+      capacity: body.capacity !== undefined ? Number(body.capacity) || 0 : existing.capacity,
+      status,
+      active: status !== "paused",
     };
 
     const record = await prisma.warehouse.update({
@@ -127,7 +148,14 @@ export class InventoryService {
       data: payload,
     });
 
-    return this.mapWarehouse(record, 0);
+    const used = await prisma.inventoryBalance
+      .aggregate({
+        where: { warehouse_id: id },
+        _sum: { on_hand: true },
+      })
+      .then((result) => Number(result._sum.on_hand ?? 0));
+
+    return this.mapWarehouse(record, used, 0);
   }
 
   async remove(id: string) {
