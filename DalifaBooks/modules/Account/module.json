@@ -1,0 +1,6 @@
+{
+    "name": "Account",
+    "alias": "account",
+    "description": "The DalifaBooks Account Module.",
+    "priority": 100
+}

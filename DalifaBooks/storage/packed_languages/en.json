@@ -1,0 +1,2684 @@
+{
+    "Account": {
+        "attributes": {
+            "addresses": {
+                "first_name": "This is the first name",
+                "last_name": "Last Name",
+                "address_1": "Address Line 1",
+                "city": "City",
+                "zip": "Postcode \/ ZIP",
+                "country": "Country",
+                "state": "State \/ Province"
+            }
+        },
+        "messages": {
+            "profile_updated": "Your profile has been updated",
+            "default_address_updated": "The default address has been updated",
+            "address_created": "The address has been created",
+            "address_updated": "The address has been updated",
+            "address_deleted": "The address has been deleted"
+        }
+    },
+    "Admin": {
+        "admin": {
+            "admin": "Admin",
+            "storefront": "Storefront",
+            "form": {
+                "please_select": "Please Select"
+            },
+            "buttons": {
+                "save": "Save",
+                "save_and_edit": "Save & Edit",
+                "save_and_exit": "Save & Exit",
+                "delete": "Delete",
+                "cancel": "Cancel"
+            },
+            "table": {
+                "id": "ID",
+                "status": "Status",
+                "created": "Created",
+                "updated": "Updated",
+                "date": "Date",
+                "search_here": "Search here...",
+                "active": "Active",
+                "inactive": "Inactive",
+                "approved": "Approved",
+                "pending": "Pending",
+                "loading": "Loading...",
+                "no_matching_records_found": "No matching records found",
+                "no_data_available_table": "No data available in table",
+                "show_menu_entries": "Show _MENU_ entries",
+                "showing_start_end_total_entries": "Showing _START_ to _END_ of _TOTAL_ entries",
+                "filtered_from_max_total_entries": "(filtered from _MAX_ total entries",
+                "showing_empty_entries": "Showing 0 to 0 of 0 entries"
+            },
+            "pagination": {
+                "previous": "Previous",
+                "next": "Next"
+            },
+            "delete": {
+                "confirmation": "Confirmation",
+                "confirmation_message": "Are you sure you want to delete?"
+            },
+            "shortcuts": {
+                "keyboard_shortcuts": "Keyboard shortcuts",
+                "available_shortcuts": "Available keyboard shortcuts on this page",
+                "this_menu": "This Menu",
+                "back_to_index": "Back to :name Index"
+            },
+            "errors": {
+                "404": "404",
+                "404_title": "Oops! This page was not found",
+                "404_description": "The page you are looking for was not found",
+                "500": "500",
+                "500_title": "Oops! Something went wrong",
+                "500_description": "An administrator was notified"
+            }
+        },
+        "dashboard": {
+            "dashboard": "Dashboard",
+            "total_sales": "Total Sales",
+            "total_orders": "Total Orders",
+            "total_products": "Total Products",
+            "total_customers": "Total Customers",
+            "no_data": "No data available!",
+            "latest_searches": "Latest Searches",
+            "latest_orders": "Latest Orders",
+            "latest_reviews": "Latest Reviews",
+            "table": {
+                "customer": "Customer",
+                "latest_searches": {
+                    "keyword": "Keyword",
+                    "results": "Results",
+                    "hits": "Hits"
+                },
+                "latest_orders": {
+                    "order_id": "Order ID",
+                    "status": "Status",
+                    "total": "Total"
+                },
+                "latest_reviews": {
+                    "product": "Product",
+                    "rating": "Rating"
+                }
+            },
+            "sales_analytics_title": "Sales Analytics",
+            "sales_analytics": {
+                "orders": "Orders",
+                "sales": "Sales",
+                "day_names": [
+                    "Monday",
+                    "Tuesday",
+                    "Wednesday",
+                    "Thursday",
+                    "Friday",
+                    "Saturday",
+                    "Sunday"
+                ]
+            }
+        },
+        "messages": {
+            "resource_created": ":resource created",
+            "resource_updated": ":resource updated",
+            "resource_deleted": ":resource deleted",
+            "permission_denied": "Permission Denied (required permission: \":permission\")"
+        },
+        "resource": {
+            "create": "Create :resource",
+            "show": "Show :resource",
+            "edit": "Edit :resource",
+            "delete": "Delete :resource",
+            "add": "Add :resource"
+        },
+        "sidebar": {
+            "content": "Content",
+            "sales": "Sales",
+            "system": "System",
+            "localization": "Localization",
+            "appearance": "Appearance",
+            "tools": "Tools",
+            "update": "Update"
+        }
+    },
+    "Attribute": {
+        "admin": {
+            "attribute": "Attribute",
+            "attributes": "Attributes",
+            "table": {
+                "name": "Name",
+                "attribute_set": "Attribute Set",
+                "filterable": "Filterable",
+                "yes": "Yes",
+                "no": "No"
+            },
+            "tabs": {
+                "group": {
+                    "attribute_information": "Attribute Information"
+                },
+                "general": "General",
+                "values": "Values"
+            },
+            "form": {
+                "use_this_attribute_for_filtering_products": "Use this attribute for filtering products",
+                "value": "Value",
+                "add_new_value": "Add New Value",
+                "delete_value": "Delete Value"
+            }
+        },
+        "attribute_sets": {
+            "attribute_set": "Attribute Set",
+            "attribute_sets": "Attribute Sets",
+            "table": {
+                "name": "Name"
+            },
+            "tabs": {
+                "group": {
+                    "attribute_set_information": "Attribute Set Information"
+                },
+                "general": "General"
+            }
+        },
+        "attribute_values": {
+            "attribute_value": "Attribute Value",
+            "attribute_values": "Attribute Values"
+        },
+        "attributes": {
+            "attributes": {
+                "attribute_set_id": "Attribute Set",
+                "name": "Name",
+                "categories": "Categories",
+                "slug": "URL",
+                "is_filterable": "Filterable"
+            },
+            "attribute_sets": {
+                "name": "Name"
+            },
+            "product_attributes": {
+                "attributes.*.attribute_id": "Attribute",
+                "attributes.*.values": "Values"
+            }
+        },
+        "permissions": {
+            "attributes": {
+                "index": "Index Attribute",
+                "create": "Create Attribute",
+                "edit": "Edit Attribute",
+                "destroy": "Delete Attribute"
+            },
+            "attribute_sets": {
+                "index": "Index Attribute Set",
+                "create": "Create Attribute Set",
+                "edit": "Edit Attribute Set",
+                "destroy": "Delete Attribute Set"
+            }
+        },
+        "sidebar": {
+            "attribute_sets": "Attribute Sets",
+            "attributes": "Attributes"
+        }
+    },
+    "Blog": {
+        "admin": {
+            "blog": "Blog",
+            "posts": "Posts",
+            "categories": "Categories",
+            "tags": "Tags",
+            "blog_post": {
+                "name": "Blog Post"
+            },
+            "blog_posts": {
+                "name": "Blog Posts",
+                "table": {
+                    "featured_image": "Featured Image",
+                    "title": "Title",
+                    "user": "User",
+                    "publish_status": "Publish Status"
+                },
+                "form": {
+                    "title": "Title",
+                    "description": "Description",
+                    "short_description": "Short Description",
+                    "featured_image": "Featured Image"
+                }
+            },
+            "blog_category": {
+                "name": "Blog Category"
+            },
+            "blog_categories": {
+                "name": "Blog Categories",
+                "table": {
+                    "name": "Name"
+                }
+            },
+            "blog_tag": {
+                "name": "Blog Tag"
+            },
+            "blog_tags": {
+                "name": "Blog Tags",
+                "table": {
+                    "name": "Name"
+                }
+            }
+        },
+        "attributes": {
+            "posts": {
+                "title": "Title",
+                "description": "Description",
+                "slug": "URL",
+                "category": "Select Category",
+                "tags": "Add Tags",
+                "publish_status": "Publish Status"
+            },
+            "categories": {
+                "name": "Name",
+                "slug": "URL"
+            },
+            "tags": {
+                "name": "Name",
+                "slug": "URL"
+            }
+        },
+        "blog": {
+            "posts": {
+                "name": "Blog Post",
+                "groups": {
+                    "featured_image": "Featured Image",
+                    "publish": "Publish",
+                    "categories": "Categories",
+                    "tags": "Tags",
+                    "general": "General",
+                    "seo": "SEO"
+                },
+                "form": {
+                    "enable_the_blog_category": "Enable the blog category",
+                    "publish_status": {
+                        "published": "Published",
+                        "unpublished": "Unpublished"
+                    }
+                }
+            },
+            "categories": {
+                "name": "Blog Category"
+            },
+            "tags": {
+                "name": "Blog Tag"
+            }
+        },
+        "permissions": {
+            "posts": {
+                "index": "Index Blog Post",
+                "create": "Create Blog Post",
+                "edit": "Edit Blog Post",
+                "destroy": "Delete Blog Post"
+            },
+            "categories": {
+                "index": "Index Blog Category",
+                "create": "Create Blog Category",
+                "edit": "Edit Blog Category",
+                "destroy": "Delete Blog Category"
+            },
+            "tags": {
+                "index": "Index Blog Tag",
+                "create": "Create Blog Tag",
+                "edit": "Edit Blog Tag",
+                "destroy": "Delete Blog Tag"
+            }
+        }
+    },
+    "Brand": {
+        "attributes": {
+            "name": "Name",
+            "is_active": "Status"
+        },
+        "brands": {
+            "brand": "Brand",
+            "brands": "Brands",
+            "table": {
+                "logo": "Logo",
+                "name": "Name"
+            },
+            "tabs": {
+                "group": {
+                    "brand_information": "Brand Information"
+                },
+                "general": "General",
+                "seo": "SEO",
+                "images": "Images"
+            },
+            "form": {
+                "enable_the_brand": "Enable the brand",
+                "logo": "Logo",
+                "banner": "Banner"
+            }
+        },
+        "permissions": {
+            "index": "Index Test",
+            "create": "Create Test",
+            "edit": "Edit Test",
+            "destroy": "Delete Test"
+        }
+    },
+    "Cart": {
+        "messages": {
+            "out_of_stock": "Sorry, the product is out of stock",
+            "not_have_enough_quantity_in_stock": "Sorry, we only have :stock in stock",
+            "one_or_more_product_is_out_of_stock": "Sorry, one or more product is out of stock",
+            "one_or_more_product_doesn't_have_enough_stock": "Sorry, one or more product doesn't have enough stock"
+        },
+        "validation": {
+            "this_field_is_required": "This field is required",
+            "the_selected_option_is_invalid": "The selected option is invalid"
+        }
+    },
+    "Category": {
+        "attributes": {
+            "id": "ID",
+            "name": "Name",
+            "slug": "URL",
+            "is_searchable": "Searchable",
+            "is_active": "Status"
+        },
+        "categories": {
+            "category": "Category",
+            "categories": "Categories",
+            "tree": {
+                "add_root_category": "Add Root Category",
+                "add_sub_category": "Add Subcategory",
+                "collapse_all": "Collapse All",
+                "expand_all": "Expand All"
+            },
+            "tabs": {
+                "general": "General",
+                "image": "Image",
+                "seo": "SEO"
+            },
+            "form": {
+                "show_this_category_in_search_box": "Show this category in search box category list",
+                "enable_the_category": "Enable the category",
+                "logo": "Logo",
+                "banner": "Banner"
+            }
+        },
+        "messages": {
+            "category_order_updated": "Category order updated"
+        },
+        "permissions": {
+            "index": "Index Categories",
+            "create": "Create Categories",
+            "edit": "Edit Categories",
+            "destroy": "Delete Categories"
+        },
+        "sidebar": {
+            "categories": "Categories"
+        }
+    },
+    "Checkout": {
+        "attributes": {
+            "billing": {
+                "first_name": "First Name",
+                "last_name": "Last Name",
+                "address_1": "Address Line 1",
+                "address_2": "Address Line 2 (optional)",
+                "city": "City",
+                "zip": "Postcode \/ ZIP",
+                "country": "Country",
+                "state": "State \/ Province"
+            },
+            "shipping": {
+                "first_name": "First Name",
+                "last_name": "Last Name",
+                "address_1": "Address Line 1",
+                "address_2": "Address Line 2 (optional)",
+                "city": "City",
+                "zip": "Postcode \/ ZIP",
+                "country": "Country",
+                "state": "State \/ Province"
+            },
+            "street_address": "Street Address",
+            "customer_email": "Email",
+            "customer_phone": "Phone",
+            "create_an_account": "Create an account?",
+            "password": "Password",
+            "ship_to_a_different_address": "Ship to a different address",
+            "order_note": "Order Note"
+        },
+        "mail": {
+            "new_order_subject": "A new order has been placed",
+            "new_order_text": "A new order has been placed. The order id is #:order_id.",
+            "view_order": "View Order",
+            "if_you\\\u2019re_having_trouble": "If you\u2019re having trouble clicking the \"View Order\" button, copy and paste the URL below into your web browser:"
+        },
+        "messages": {
+            "no_shipping_method": "No shipping method is found"
+        }
+    },
+    "Contact": {
+        "attributes": {
+            "email": "Email",
+            "subject": "Subject",
+            "message": "Message",
+            "g-recaptcha": "Captcha"
+        },
+        "messages": {
+            "your_message_has_been_sent": "Your message has been sent"
+        },
+        "validation": {
+            "failed_to_verify": "Failed to verify"
+        }
+    },
+    "Core": {
+        "messages": {
+            "the_given_data_was_invalid": "The given data was invalid",
+            "mail_is_not_configured": "Mail is not configured properly",
+            "something_went_wrong": "Something went wrong!"
+        },
+        "validation": {
+            "redis": "Could not connect to the redis server",
+            "accepted": "The :attribute must be accepted",
+            "active_url": "The :attribute is not a valid URL",
+            "after": "The :attribute must be a date after :date",
+            "after_or_equal": "The :attribute must be a date after or equal to :date",
+            "alpha": "The :attribute may only contain letters",
+            "alpha_dash": "The :attribute may only contain letters, numbers, and dashes",
+            "alpha_num": "The :attribute may only contain letters and numbers",
+            "array": "The :attribute must be an array",
+            "before": "The :attribute must be a date before :date",
+            "before_or_equal": "The :attribute must be a date before or equal to :date",
+            "between": {
+                "numeric": "The :attribute must be between :min and :max",
+                "file": "The :attribute must be between :min and :max kilobytes",
+                "string": "The :attribute must be between :min and :max characters",
+                "array": "The :attribute must have between :min and :max items"
+            },
+            "boolean": "The :attribute field must be true or false",
+            "confirmed": "The :attribute confirmation does not match",
+            "date": "The :attribute is not a valid date",
+            "date_format": "The :attribute does not match the format :format",
+            "different": "The :attribute and :other must be different",
+            "digits": "The :attribute must be :digits digits",
+            "digits_between": "The :attribute must be between :min and :max digits",
+            "dimensions": "The :attribute has invalid image dimensions",
+            "distinct": "The :attribute field has a duplicate value",
+            "email": "The :attribute must be a valid email address",
+            "exists": "The selected :attribute is invalid",
+            "file": "The :attribute must be a file",
+            "filled": "The :attribute field must have a value",
+            "image": "The :attribute must be an image",
+            "in": "The selected :attribute is invalid",
+            "in_array": "The :attribute field does not exist in :other",
+            "integer": "The :attribute must be an integer",
+            "ip": "The :attribute must be a valid IP address",
+            "ipv4": "The :attribute must be a valid IPv4 address",
+            "ipv6": "The :attribute must be a valid IPv6 address",
+            "json": "The :attribute must be a valid JSON string",
+            "max": {
+                "numeric": "The :attribute may not be greater than :max",
+                "file": "The :attribute may not be greater than :max kilobytes",
+                "string": "The :attribute may not be greater than :max characters",
+                "array": "The :attribute may not have more than :max items"
+            },
+            "mimes": "The :attribute must be a file of type: :values",
+            "mimetypes": "The :attribute must be a file of type: :values",
+            "min": {
+                "numeric": "The :attribute must be at least :min",
+                "file": "The :attribute must be at least :min kilobytes",
+                "string": "The :attribute must be at least :min characters",
+                "array": "The :attribute must have at least :min items"
+            },
+            "not_in": "The selected :attribute is invalid",
+            "numeric": "The :attribute must be a number",
+            "present": "The :attribute field must be present",
+            "regex": "The :attribute format is invalid",
+            "required": "The :attribute field is required",
+            "required_if": "The :attribute field is required when :other is :value",
+            "required_unless": "The :attribute field is required unless :other is in :values",
+            "required_with": "The :attribute field is required when :values is present",
+            "required_with_all": "The :attribute field is required when :values is present",
+            "required_without": "The :attribute field is required when :values is not present",
+            "required_without_all": "The :attribute field is required when none of :values are present",
+            "same": "The :attribute and :other must match",
+            "size": {
+                "numeric": "The :attribute must be :size",
+                "file": "The :attribute must be :size kilobytes",
+                "string": "The :attribute must be :size characters",
+                "array": "The :attribute must contain :size items"
+            },
+            "string": "The :attribute must be a string",
+            "timezone": "The :attribute must be a valid zone",
+            "unique": "The :attribute has already been taken",
+            "uploaded": "The :attribute failed to upload",
+            "url": "The :attribute format is invalid"
+        }
+    },
+    "Coupon": {
+        "attributes": {
+            "name": "Name",
+            "code": "Code",
+            "is_percent": "Discount Type",
+            "value": "Value",
+            "free_shipping": "Free Shipping",
+            "start_date": "Start date",
+            "end_date": "End date",
+            "is_active": "Status",
+            "minimum_spend": "Minimum Spend",
+            "maximum_spend": "Maximum Spend",
+            "products": "Products",
+            "exclude_products": "Exclude Products",
+            "categories": "Categories",
+            "exclude_categories": "Exclude Categories",
+            "usage_limit_per_coupon": "Usage Limit Per Coupon",
+            "usage_limit_per_customer": "Usage Limit Per Customer"
+        },
+        "coupons": {
+            "coupon": "Coupon",
+            "coupons": "Coupons",
+            "table": {
+                "name": "Name",
+                "code": "Code",
+                "discount": "Discount"
+            },
+            "tabs": {
+                "group": {
+                    "coupon_information": "Coupon Information"
+                },
+                "general": "General",
+                "usage_restrictions": "Usage Restrictions",
+                "usage_limits": "Usage Limits"
+            },
+            "form": {
+                "price_types": [
+                    "Fixed",
+                    "Percent"
+                ],
+                "allow_free_shipping": "Allow free shipping",
+                "enable_the_coupon": "Enable the coupon"
+            }
+        },
+        "messages": {
+            "not_exists": "The coupon does not exist",
+            "already_applied": "The coupon has been already applied",
+            "invalid_coupon": "The coupon is not valid",
+            "minimum_spend": "You need to spend at least :amount to apply this coupon",
+            "maximum_spend": "You need to spend less than :amount to apply this coupon",
+            "inapplicable": "This coupon is not applicable to your cart",
+            "usage_limit_reached": "The coupon usage limit has been reached"
+        },
+        "permissions": {
+            "index": "Index Coupons",
+            "create": "Create Coupons",
+            "edit": "Edit Coupons",
+            "destroy": "Delete Coupons"
+        }
+    },
+    "Currency": {
+        "attributes": {
+            "rate": "Rate"
+        },
+        "currency_rates": {
+            "currency_rate": "Currency Rate",
+            "currency_rates": "Currency Rates",
+            "refresh_rates": "Refresh Rates",
+            "refresh_currency_rates_from": "Refresh currency rates from :service",
+            "table": {
+                "currency": "Currency",
+                "code": "Code",
+                "rate": "Rate",
+                "last_updated": "Last Updated"
+            },
+            "tabs": {
+                "group": {
+                    "currency_rate_information": "Currency Rate Information"
+                },
+                "general": "General"
+            }
+        },
+        "messages": {
+            "exchange_service_is_not_configured": "Currency rate exchange service is not configured"
+        },
+        "permissions": {
+            "index": "Index Currency Rates",
+            "edit": "Edit Currency Rates"
+        },
+        "services": {
+            "fixer": "Fixer",
+            "forge": "Forge",
+            "currency_data_feed": "Currency Data Feed"
+        }
+    },
+    "FlashSale": {
+        "attributes": {
+            "product": "Product",
+            "end_date": "End Date",
+            "price": "Price",
+            "quantity": "Quantity",
+            "campaign_name": "Campaign Name",
+            "products.*.product_id": "Product",
+            "products.*.end_date": "End Date",
+            "products.*.price": "Price",
+            "products.*.qty": "Quantity"
+        },
+        "flash_sales": {
+            "flash_sale": "Flash Sale",
+            "flash_sales": "Flash Sales",
+            "table": {
+                "campaign_name": "Campaign Name"
+            },
+            "tabs": {
+                "group": {
+                    "flash_sale_information": "Flash Sale Information"
+                },
+                "products": "Products",
+                "settings": "Settings"
+            },
+            "form": {
+                "add_product": "Add Product",
+                "flash_sale_product": "Flash Sale Product"
+            }
+        },
+        "permissions": {
+            "index": "Index Flash Sale",
+            "create": "Create Flash Sale",
+            "edit": "Edit Flash Sale",
+            "destroy": "Delete Flash Sale"
+        }
+    },
+    "Importer": {
+        "importer": {
+            "import": "Import",
+            "import_products": "Import Products",
+            "download_sample_file": "Download Sample File",
+            "product_data_csv_or_excel": "Product Data (CSV or Excel)",
+            "product_images_zip": "Product Images (ZIP)",
+            "products_imported_successfully": "Products imported successfully!",
+            "write_to_database_failed": "Write to Database Failed.",
+            "product_creation_failed": "Product creation failed."
+        },
+        "permissions": {
+            "import": "Import Products"
+        }
+    },
+    "Media": {
+        "media": {
+            "media": "Media",
+            "drop_files_here": "Drop files here or click to upload",
+            "upload_new_file": "Upload New File",
+            "browse": "Browse",
+            "thumbnails": "Thumbnails",
+            "table": {
+                "thumbnail": "Thumbnail",
+                "filename": "Filename",
+                "width": "Width",
+                "height": "Height"
+            },
+            "file_manager": {
+                "title": "File Manager",
+                "insert": "Insert"
+            }
+        },
+        "messages": {
+            "image_has_been_added": "Image has been added"
+        },
+        "permissions": {
+            "index": "Index Media",
+            "create": "Create Media",
+            "destroy": "Delete Media"
+        }
+    },
+    "Menu": {
+        "attributes": {
+            "name": "Name",
+            "type": "Type",
+            "url": "URL",
+            "icon": "Icon",
+            "category_id": "Category",
+            "page_id": "Page",
+            "parent_id": "Parent Menu Item",
+            "target": "Target",
+            "is_fluid": "Fluid Menu",
+            "is_active": "Status"
+        },
+        "menu_items": {
+            "menu_item": "Menu Item",
+            "back_to_menu_edit_page": "Back to Menu Edit Page",
+            "tabs": {
+                "group": {
+                    "menu_item_information": "Menu Item Information"
+                },
+                "general": "General",
+                "image": "Image"
+            },
+            "form": {
+                "types": {
+                    "category": "Category",
+                    "page": "Page",
+                    "url": "URL"
+                },
+                "targets": {
+                    "_self": "Same Tab",
+                    "_blank": "New Tab"
+                },
+                "select_category": "Select Category",
+                "select_page": "Select Page",
+                "select_parent": "Select Parent",
+                "background_image": "Background Image",
+                "full_width_menu": "This is a full width menu",
+                "enable_the_menu_item": "Enable the menu item"
+            }
+        },
+        "menus": {
+            "menu": "Menu",
+            "menus": "Menus",
+            "table": {
+                "name": "Name"
+            },
+            "form": {
+                "please_save_the_menu_first": "Please save the menu first to add menu items",
+                "enable_the_menu": "Enable the menu"
+            }
+        },
+        "messages": {
+            "menu_item_deleted": "Menu item has been deleted",
+            "menu_items_order_updated": "Menu items order has been updated"
+        },
+        "permissions": {
+            "menus": {
+                "index": "Index Menus",
+                "create": "Create Menus",
+                "edit": "Edit Menus",
+                "destroy": "Delete Menus"
+            },
+            "menu_items": {
+                "index": "Index Menu Items",
+                "create": "Create Menu Items",
+                "edit": "Edit Menu Items",
+                "destroy": "Delete Menu Items"
+            }
+        },
+        "sidebar": {
+            "menus": "Menus"
+        }
+    },
+    "Meta": {
+        "attributes": {
+            "meta_title": "Meta Title",
+            "meta_description": "Meta Description"
+        }
+    },
+    "Newsletter": {
+        "attributes": {
+            "email": "Email"
+        }
+    },
+    "Option": {
+        "attributes": {
+            "name": "Name",
+            "type": "Type",
+            "is_required": "Required",
+            "label": "Label",
+            "price": "Price",
+            "price_type": "Price Type",
+            "values.*.label": "Label",
+            "values.*.price": "Price",
+            "values.*.price_type": "Price Type",
+            "options.*.name": "Name",
+            "options.*.type": "Type",
+            "options.*.values.*.label": "Label",
+            "options.*.values.*.price": "Price",
+            "options.*.values.*.price_type": "Price Type"
+        },
+        "options": {
+            "option": "Option",
+            "options": "Options",
+            "please_select_a_option_type": "Please select a option type",
+            "table": {
+                "name": "Name",
+                "type": "Type"
+            },
+            "tabs": {
+                "group": {
+                    "option_information": "Option Information"
+                },
+                "general": "General",
+                "values": "Values"
+            },
+            "form": {
+                "this_option_is_required": "This option is required",
+                "option_types": {
+                    "please_select": "Please Select",
+                    "text": "Text",
+                    "field": "Field",
+                    "textarea": "Textarea",
+                    "select": "Select",
+                    "dropdown": "Dropdown",
+                    "checkbox": "Checkbox",
+                    "checkbox_custom": "Custom Checkbox",
+                    "radio": "Radio Button",
+                    "radio_custom": "Custom Radio Button",
+                    "multiple_select": "Multiple Select",
+                    "date": "Date",
+                    "date_time": "Date & Time",
+                    "time": "Time"
+                },
+                "delete_option": "Delete Option",
+                "price": "Price",
+                "price_types": {
+                    "fixed": "Fixed",
+                    "percent": "Percent"
+                },
+                "add_row": "Add Row",
+                "delete_row": "Delete Row"
+            }
+        },
+        "permissions": {
+            "options": {
+                "index": "Index Options",
+                "create": "Create Options",
+                "edit": "Edit Options",
+                "destroy": "Delete Options"
+            }
+        },
+        "sidebar": {
+            "options": "Options"
+        }
+    },
+    "Order": {
+        "mail": {
+            "your_order_status_changed_subject": "Your order status is changed",
+            "your_order_status_changed_text": "Your order #:order_id status is changed to :status."
+        },
+        "messages": {
+            "status_updated": "Order status has been updated",
+            "invoice_sent": "Invoice has been sent to the customer"
+        },
+        "orders": {
+            "order": "Order",
+            "orders": "Orders",
+            "table": {
+                "customer_name": "Customer Name",
+                "customer_email": "Customer Email",
+                "total": "Total"
+            },
+            "send_email": "Send Email",
+            "print": "Print",
+            "order_tracking": "Order Tracking",
+            "tracking_reference": "Tracking Reference",
+            "tracking_reference_placeholder": "Tracking reference such as Tracking Code, Tracking URL, Tracking ID, etc.",
+            "order_and_account_information": "Order & Account Information",
+            "order_information": "Order Information",
+            "order_id": "Order ID",
+            "order_date": "Order Date",
+            "order_status": "Order Status",
+            "payment_method": "Payment Method",
+            "currency": "Currency",
+            "currency_rate": "Currency Rate",
+            "order_note": "Order Note",
+            "account_information": "Account Information",
+            "customer_name": "Customer Name",
+            "customer_email": "Customer Email",
+            "customer_phone": "Customer Phone",
+            "customer_group": "Customer Group",
+            "guest": "Guest",
+            "registered": "Registered",
+            "address_information": "Address Information",
+            "billing_address": "Billing Address",
+            "shipping_address": "Shipping Address",
+            "items_ordered": "Items Ordered",
+            "product": "Product",
+            "unit_price": "Unit Price",
+            "quantity": "Quantity",
+            "line_total": "Line Total",
+            "subtotal": "Subtotal",
+            "shipping_method": "Shipping Method",
+            "coupon": "Coupon",
+            "tax": "Tax",
+            "total": "Total"
+        },
+        "permissions": {
+            "index": "Index Order",
+            "show": "Show Order",
+            "edit": "Edit Order"
+        },
+        "print": {
+            "invoice": "INVOICE",
+            "invoice_id": "Invoice ID",
+            "date": "Date",
+            "order_details": "Order Details",
+            "email": "Email",
+            "phone": "Phone",
+            "shipping_method": "Shipping Method",
+            "payment_method": "Payment Method",
+            "billing_address": "Billing Address",
+            "shipping_address": "Shipping Address",
+            "product": "Product",
+            "unit_price": "Unit Price",
+            "quantity": "Quantity",
+            "line_total": "Line Total",
+            "subtotal": "Subtotal",
+            "total": "Total"
+        },
+        "statuses": {
+            "canceled": "Canceled",
+            "completed": "Completed",
+            "on_hold": "On Hold",
+            "pending": "Pending",
+            "pending_payment": "Pending Payment",
+            "processing": "Processing",
+            "refunded": "Refunded"
+        }
+    },
+    "Page": {
+        "attributes": {
+            "name": "Name",
+            "slug": "URL",
+            "body": "Body",
+            "is_active": "Status"
+        },
+        "pages": {
+            "page": "Page",
+            "pages": "Pages",
+            "table": {
+                "name": "Name"
+            },
+            "tabs": {
+                "group": {
+                    "page_information": "Page Information"
+                },
+                "general": "General",
+                "seo": "SEO"
+            },
+            "form": {
+                "enable_the_page": "Enable the page"
+            }
+        },
+        "permissions": {
+            "index": "Index Pages",
+            "create": "Create Pages",
+            "edit": "Edit Pages",
+            "destroy": "Delete Pages"
+        },
+        "sidebar": {
+            "pages": "Pages"
+        }
+    },
+    "Payment": {
+        "messages": {
+            "only_supports_bdt": "Only BDT currency is supported",
+            "only_supports_inr": "Only INR currency is supported",
+            "only_supports_zar": "Only ZAR currency is supported",
+            "currency_not_supported": "Currency not supported",
+            "payment_gateway_error": "Payment gateway error!",
+            "payment_cancelled": "Payment cancelled!"
+        },
+        "order": {
+            "tax": "Tax",
+            "discount": "Discount",
+            "shipping": "Shipping"
+        }
+    },
+    "Product": {
+        "attributes": {
+            "name": "Name",
+            "slug": "URL",
+            "description": "Description",
+            "short_description": "Short Description",
+            "brand_id": "Brand",
+            "categories": "Categories",
+            "tax_class_id": "Tax Class",
+            "tags": "Tags",
+            "is_virtual": "Virtual",
+            "is_active": "Status",
+            "price": "Price",
+            "special_price": "Special Price",
+            "special_price_type": "Special Price Type",
+            "special_price_start": "Special Price Start",
+            "special_price_end": "Special Price End",
+            "sku": "SKU",
+            "manage_stock": "Inventory Management",
+            "qty": "Qty",
+            "in_stock": "Stock Availability",
+            "new_from": "New From",
+            "new_to": "New To",
+            "up_sells": "Up-Sells",
+            "cross_sells": "Cross-Sells",
+            "related_products": "Related Products",
+            "attributes": {
+                "*.attribute_id": "Attribute",
+                "*.values": "Values"
+            },
+            "options": {
+                "*.name": "Name",
+                "*.type": "Type",
+                "*.values.*.label": "Label",
+                "*.values.*.price": "Price",
+                "*.values.*.price_type": "Price Type"
+            },
+            "variations": {
+                "*.name": "Name",
+                "*.type": "Type",
+                "*.values": "Values",
+                "*.values.*.label": "Label",
+                "*.values.*.color": "Color",
+                "*.values.*.image": "Image"
+            },
+            "variants": {
+                "*.name": "Name",
+                "*.sku": "SKU",
+                "*.is_active": "Status",
+                "*.is_default": "Default",
+                "*.price": "Price",
+                "*.special_price": "Special Price",
+                "*.special_price_type": "Special Price Type",
+                "*.special_price_start": "Special Price Start",
+                "*.special_price_end": "Special Price End",
+                "*.manage_stock": "Inventory Management",
+                "*.qty": "Quantity",
+                "*.in_stock": "Stock Availability"
+            }
+        },
+        "permissions": {
+            "index": "Index Products",
+            "create": "Create Products",
+            "edit": "Edit Products",
+            "destroy": "Delete Products"
+        },
+        "products": {
+            "product": "Product",
+            "products": "Products",
+            "save": "Save",
+            "save_and_exit": "Save & Exit",
+            "save_and_edit": "Save & Edit",
+            "section": {
+                "expand_all": "Expand All",
+                "collapse_all": "Collapse All",
+                "order_saved": "Order saved"
+            },
+            "table": {
+                "thumbnail": "Thumbnail",
+                "name": "Name",
+                "price": "Price",
+                "stock": "Stock"
+            },
+            "group": {
+                "general": "General",
+                "attributes": "Attributes",
+                "downloads": "Downloads",
+                "variations": "Variations",
+                "variants": "Variants",
+                "options": "Options",
+                "pricing": "Pricing",
+                "inventory": "Inventory",
+                "media": "Media",
+                "linked_products": "Linked Products",
+                "seo": "SEO",
+                "additional": "Additional"
+            },
+            "attributes": {
+                "attribute": "Attribute",
+                "values": "Values",
+                "add_attribute": "Add Attribute"
+            },
+            "downloads": {
+                "file": "File",
+                "choose": "Choose",
+                "add_file": "Add File"
+            },
+            "variations": {
+                "new_variation": "New Variation",
+                "add_variation": "Add Variation",
+                "insert": "Insert",
+                "add_row": "Add Row",
+                "please_add_some_variations": "Please add some variations to generate variants"
+            },
+            "variants": {
+                "variants": "Variants",
+                "variant": "Variant",
+                "default": "Default",
+                "inactive": "Inactive",
+                "out_of_stock": "Out of Stock",
+                "apply": "Apply",
+                "has_product_variant": "Managed from individual variants",
+                "bulk_variants_updated": "Variants updated",
+                "variants_created": ":count :suffix created",
+                "variants_updated": ":count :suffix updated",
+                "variants_removed": ":count :suffix removed",
+                "variants_reordered": "Variants reordered",
+                "disable_default_variant": "The default variant cannot be disabled"
+            },
+            "options": {
+                "new_option": "New Option",
+                "add_option": "Add Option",
+                "add_row": "Add Row",
+                "insert": "Insert",
+                "option_inserted": "Option inserted"
+            },
+            "form": {
+                "the_product_won't_be_shipped": "The product won't be shipped",
+                "enable_the_product": "Enable the product",
+                "special_price_types": {
+                    "fixed": "Fixed",
+                    "percent": "Percent"
+                },
+                "manage_stock_states": [
+                    "Don't Track Inventory",
+                    "Track Inventory"
+                ],
+                "stock_availability_states": {
+                    "1": "In Stock",
+                    "0": "Out of Stock"
+                },
+                "variations": {
+                    "name": "Name",
+                    "type": "Type",
+                    "values": "Values",
+                    "label": "Label",
+                    "color": "Color",
+                    "image": "Image",
+                    "variation_types": {
+                        "please_select": "Please Select",
+                        "text": "Text",
+                        "color": "Color",
+                        "image": "Image"
+                    },
+                    "select_template": "Select Template"
+                },
+                "variants": {
+                    "default_variant": "Default Variant",
+                    "bulk_edit": "Bulk Edit",
+                    "all_variants": "All Variants",
+                    "field_type": "Field Type",
+                    "name": "Name",
+                    "media": "Media",
+                    "sku": "SKU",
+                    "is_active": "Status",
+                    "enable_the_variants": "Enable the variants",
+                    "price": "Price",
+                    "special_price": "Special Price",
+                    "special_price_type": "Special Price Type",
+                    "special_price_types": {
+                        "fixed": "Fixed",
+                        "percent": "Percent"
+                    },
+                    "special_price_start": "Special Price Start",
+                    "special_price_end": "Special Price End",
+                    "manage_stock": "Inventory Management",
+                    "manage_stock_states": [
+                        "Don't Track Inventory",
+                        "Track Inventory"
+                    ],
+                    "qty": "Qty",
+                    "in_stock": "Stock Availability",
+                    "stock_availability_states": [
+                        "Out of Stock",
+                        "In Stock"
+                    ]
+                },
+                "options": {
+                    "name": "Name",
+                    "type": "Type",
+                    "is_required": "Required",
+                    "label": "Label",
+                    "price": "Price",
+                    "price_type": "Price Type",
+                    "option_types": {
+                        "please_select": "Please Select",
+                        "text": "Text",
+                        "field": "Field",
+                        "textarea": "Textarea",
+                        "select": "Select",
+                        "dropdown": "Dropdown",
+                        "checkbox": "Checkbox",
+                        "checkbox_custom": "Custom Checkbox",
+                        "radio": "Radio Button",
+                        "radio_custom": "Custom Radio Button",
+                        "multiple_select": "Multiple Select",
+                        "date": "Date",
+                        "date_time": "Date & Time",
+                        "time": "Time"
+                    },
+                    "price_types": {
+                        "fixed": "Fixed",
+                        "percent": "Percent"
+                    },
+                    "select_template": "Select Template"
+                }
+            }
+        },
+        "sidebar": {
+            "products": "Products",
+            "create_product": "Create Product",
+            "all_products": "All Products"
+        },
+        "validation": {
+            "price_field_is_required": "The price field is required"
+        }
+    },
+    "Report": {
+        "admin": {
+            "reports": "Reports",
+            "no_data": "No data available!",
+            "filter": "Filter",
+            "filters": {
+                "report_type": "Report Type",
+                "report_types": {
+                    "coupons_report": "Coupons Report",
+                    "customers_order_report": "Customers Order Report",
+                    "products_purchase_report": "Products Purchase Report",
+                    "products_stock_report": "Products Stock Report",
+                    "products_view_report": "Products View Report",
+                    "branded_products_report": "Branded Products Report",
+                    "categorized_products_report": "Categorized Products Report",
+                    "taxed_products_report": "Taxed Products Report",
+                    "tagged_products_report": "Tagged Products Report",
+                    "sales_report": "Sales Report",
+                    "search_report": "Search Report",
+                    "shipping_report": "Shipping Report",
+                    "tax_report": "Tax Report"
+                },
+                "date_start": "Date Start",
+                "date_end": "Date End",
+                "group_by": "Group By",
+                "groups": {
+                    "days": "Days",
+                    "weeks": "Weeks",
+                    "months": "Months",
+                    "years": "Years"
+                },
+                "please_select": "Please Select",
+                "status": "Order Status",
+                "coupon_code": "Coupon Code",
+                "customer_name": "Customer Name",
+                "customer_email": "Customer Email",
+                "product": "Product",
+                "sku": "SKU",
+                "brand": "Brand",
+                "category": "Category",
+                "tax_class": "Tax Class",
+                "tag": "Tag",
+                "keyword": "Keyword",
+                "quantity_below": "Quantity Below",
+                "quantity_above": "Quantity Above",
+                "stock_availability": "Stock Availability",
+                "stock_availability_states": {
+                    "in_stock": "In Stock",
+                    "out_of_stock": "Out of Stock"
+                },
+                "shipping_method": "Shipping Method",
+                "tax_name": "Tax Name"
+            },
+            "table": {
+                "date": "Date",
+                "orders": "Orders",
+                "products": "Products",
+                "product": "Product",
+                "products_count": "Products Count",
+                "total": "Total",
+                "coupon_name": "Coupon Name",
+                "coupon_code": "Coupon Code",
+                "customer_name": "Customer Name",
+                "customer_email": "Customer Email",
+                "customer_group": "Customer Group",
+                "guest": "Guest",
+                "registered": "Registered",
+                "qty": "Qty",
+                "stock_availability": "Stock Availability",
+                "views": "Views",
+                "brand": "Brand",
+                "category": "Category",
+                "tax_class": "Tax Class",
+                "tag": "Tag",
+                "subtotal": "Subtotal",
+                "shipping": "Shipping",
+                "discount": "Discount",
+                "tax": "Tax",
+                "keyword": "Keyword",
+                "results": "Results",
+                "hits": "Hits",
+                "shipping_method": "Shipping Method",
+                "tax_name": "Tax Name"
+            }
+        },
+        "permissions": {
+            "index": "Index Reports"
+        },
+        "sidebar": {
+            "reports": "Reports"
+        }
+    },
+    "Review": {
+        "attributes": {
+            "rating": "Rating",
+            "reviewer_name": "Reviewer Name",
+            "comment": "Comment",
+            "is_approved": "Status"
+        },
+        "messages": {
+            "submitted_for_approval": "Your review is submitted for approval"
+        },
+        "permissions": {
+            "index": "Index Reviews",
+            "edit": "Edit Reviews",
+            "destroy": "Delete Reviews"
+        },
+        "reviews": {
+            "review": "Review",
+            "reviews": "Reviews",
+            "products": {
+                "reviews": "Reviews"
+            },
+            "table": {
+                "product": "Product",
+                "reviewer_name": "Reviewer Name",
+                "rating": "Rating",
+                "approved": "Approved"
+            },
+            "tabs": {
+                "group": {
+                    "review_information": "Review Information"
+                },
+                "general": "General"
+            },
+            "form": {
+                "approve_this_review": "Approve this review"
+            },
+            "shortcuts": {
+                "back_to_product_edit_page": "Back to product edit page"
+            }
+        },
+        "sidebar": {
+            "reviews": "Reviews"
+        },
+        "statuses": {
+            "approved": "Approved",
+            "unapproved": "Unapproved"
+        }
+    },
+    "Setting": {
+        "attributes": {
+            "supported_countries": "Supported Countries",
+            "default_country": "Default Country",
+            "default_timezone": "Default Timezone",
+            "customer_role": "Customer Role",
+            "reviews_enabled": "Reviews & Ratings",
+            "auto_approve_reviews": "Auto Approve Reviews",
+            "cookie_bar_enabled": "Cookie Bar",
+            "maintenance_mode": "Maintenance Mode",
+            "translatable.store_tagline": "Store Tagline",
+            "translatable.store_name": "Store Name",
+            "translatable.store_description": "Store Description",
+            "store_phone": "Store Phone",
+            "store_email": "Store Email",
+            "store_address_1": "Store Address 1",
+            "store_address_2": "Store Address 2",
+            "store_city": "Store City",
+            "store_country": "Store Country",
+            "store_state": "Store State",
+            "store_zip": "Store Zip",
+            "store_phone_hide": "Hide Store Phone",
+            "store_email_hide": "Hide Store Email",
+            "pwa_enabled": "Status",
+            "pwa_icon": "Icon",
+            "pwa_theme_color": "Theme Color",
+            "pwa_background_color": "Background Color",
+            "pwa_status_bar": "Status Bar",
+            "pwa_display": "Display",
+            "pwa_orientation": "Orientation",
+            "pwa_direction": "Direction",
+            "supported_currency": "Supported Currency",
+            "supported_currencies": "Supported Currencies",
+            "default_currency": "Default Currency",
+            "currency_rate_exchange_service": "Exchange Rate Service",
+            "fixer_access_key": "Fixer Access key",
+            "forge_api_key": "Forge API key",
+            "currency_data_feed_api_key": "Currency Data Feed API Key",
+            "auto_refresh_currency_rates": "Auto Refresh",
+            "auto_refresh_currency_rate_frequency": "Frequency",
+            "sms_from": "SMS From",
+            "sms_service": "SMS Service",
+            "vonage_key": "API Key",
+            "vonage_secret": "API Secret",
+            "twilio_sid": "Account SID",
+            "twilio_token": "Auth Token",
+            "welcome_sms": "Welcome SMS",
+            "new_order_admin_sms": "New Order Admin SMS",
+            "new_order_sms": "New Order SMS",
+            "sms_order_statuses": "SMS Order Statuses",
+            "mail_from_address": "Mail From Address",
+            "mail_from_name": "Mail From Name",
+            "mail_host": "Mail Host",
+            "mail_port": "Mail Port",
+            "mail_username": "Mail Username",
+            "mail_password": "Mail Password",
+            "mail_encryption": "Mail Encryption",
+            "welcome_email": "Welcome Email",
+            "admin_order_email": "New Order Admin Email",
+            "invoice_email": "Invoice Email",
+            "email_order_statuses": "Email Order Statuses",
+            "newsletter_enabled": "Newsletter",
+            "mailchimp_api_key": "Mailchimp API Key",
+            "mailchimp_list_id": "Mailchimp List ID",
+            "google_recaptcha_enabled": "Status",
+            "google_recaptcha_site_key": "Site Key",
+            "google_recaptcha_secret_key": "Secret Key",
+            "custom_header_assets": "Header",
+            "custom_footer_assets": "Footer",
+            "facebook_login_enabled": "Status",
+            "facebook_login_app_id": "App ID",
+            "facebook_login_app_secret": "App Secret",
+            "google_login_enabled": "Status",
+            "google_login_client_id": "Client ID",
+            "google_login_client_secret": "Client Secret",
+            "free_shipping_enabled": "Status",
+            "translatable.free_shipping_label": "Label",
+            "free_shipping_min_amount": "Minimum Amount",
+            "local_pickup_enabled": "Status",
+            "translatable.local_pickup_label": "Label",
+            "local_pickup_cost": "Cost",
+            "flat_rate_enabled": "Status",
+            "translatable.flat_rate_label": "Label",
+            "flat_rate_cost": "Cost",
+            "paypal_enabled": "Status",
+            "translatable.paypal_label": "Label",
+            "translatable.paypal_description": "Description",
+            "paypal_test_mode": "Sandbox",
+            "paypal_client_id": "Client ID",
+            "paypal_secret": "Secret",
+            "stripe_enabled": "Status",
+            "translatable.stripe_label": "Label",
+            "translatable.stripe_description": "Description",
+            "stripe_publishable_key": "Publishable Key",
+            "stripe_secret_key": "Secret Key",
+            "stripe_integration_type": "Integration Type",
+            "paytm_enabled": "Status",
+            "translatable.paytm_label": "Label",
+            "translatable.paytm_description": "Description",
+            "paytm_test_mode": "Sandbox",
+            "paytm_merchant_id": "Merchant ID",
+            "paytm_merchant_key": "Merchant Key",
+            "bkash_enabled": "Status",
+            "translatable.bkash_label": "Label",
+            "translatable.bkash_description": "Description",
+            "bkash_test_mode": "Sandbox",
+            "bkash_app_key": "App Key",
+            "bkash_app_secret": "App Secret",
+            "bkash_username": "Username",
+            "bkash_password": "Password",
+            "nagad_enabled": "Status",
+            "translatable.nagad_label": "Label",
+            "translatable.nagad_description": "Description",
+            "nagad_test_mode": "Sandbox",
+            "nagad_merchant_id": "Merchant ID",
+            "nagad_merchant_number": "Merchant Number",
+            "nagad_public_key": "Public Key",
+            "nagad_private_key": "Private Key",
+            "sslcommerz_enabled": "Status",
+            "translatable.sslcommerz_label": "Label",
+            "translatable.sslcommerz_description": "Description",
+            "sslcommerz_test_mode": "Sandbox",
+            "sslcommerz_store_id": "Store ID",
+            "sslcommerz_store_password": "Store Password",
+            "sslcommerz_is_localhost": "Is Localhost?",
+            "razorpay_enabled": "Status",
+            "translatable.razorpay_label": "Label",
+            "translatable.razorpay_description": "Description",
+            "razorpay_key_id": "Key Id",
+            "razorpay_key_secret": "Key Secret",
+            "instamojo_enabled": "Status",
+            "translatable.instamojo_label": "Label",
+            "translatable.instamojo_description": "Description",
+            "instamojo_test_mode": "Sandbox",
+            "instamojo_api_key": "API Key",
+            "instamojo_auth_token": "Auth Token",
+            "paystack_enabled": "Status",
+            "translatable.paystack_label": "Label",
+            "translatable.paystack_description": "Description",
+            "paystack_test_mode": "Sandbox",
+            "paystack_public_key": "Public Key",
+            "paystack_secret_key": "Secret Key",
+            "authorizenet_enabled": "Status",
+            "translatable.authorizenet_label": "Label",
+            "translatable.authorizenet_description": "Description",
+            "authorizenet_test_mode": "Sandbox",
+            "authorizenet_merchant_login_id": "Merchant Login ID",
+            "authorizenet_merchant_transaction_key": "Merchant Transaction Key",
+            "mercadopago_enabled": "Status",
+            "translatable.mercadopago_label": "Label",
+            "translatable.mercadopago_description": "Description",
+            "mercadopago_test_mode": "Sandbox",
+            "mercadopago_public_key": "Public Key",
+            "mercadopago_access_token": "Access Token",
+            "flutterwave_enabled": "Status",
+            "translatable.flutterwave_label": "Label",
+            "translatable.flutterwave_description": "Description",
+            "flutterwave_test_mode": "Sandbox",
+            "flutterwave_public_key": "Public Key",
+            "flutterwave_secret_key": "Secret Key",
+            "flutterwave_encryption_key": "Encryption Key",
+            "iyzico_enabled": "Status",
+            "iyzico_label": "Label",
+            "iyzico_description": "Description",
+            "iyzico_test_mode": "Sandbox",
+            "iyzico_api_key": "API Key",
+            "iyzico_api_secret": "API Secret",
+            "payfast_enabled": "Status",
+            "translatable.payfast_label": "Label",
+            "translatable.payfast_description": "Description",
+            "payfast_test_mode": "Sandbox",
+            "payfast_merchant_id": "Merchant ID",
+            "payfast_merchant_key": "Merchant Key",
+            "payfast_passphrase": "Passphrase",
+            "cod_enabled": "Status",
+            "translatable.cod_label": "Label",
+            "translatable.cod_description": "Description",
+            "bank_transfer_enabled": "Status",
+            "translatable.bank_transfer_label": "Label",
+            "translatable.bank_transfer_description": "Description",
+            "translatable.bank_transfer_instructions": "Instructions",
+            "check_payment_enabled": "Status",
+            "translatable.check_payment_label": "Label",
+            "translatable.check_payment_description": "Description",
+            "translatable.check_payment_instructions": "Instructions",
+            "supported_countries.*": "Supported Countries",
+            "supported_currencies.*": "Supported Currencies"
+        },
+        "messages": {
+            "settings_updated": "Settings updated"
+        },
+        "permissions": {
+            "edit": "Edit Settings"
+        },
+        "settings": {
+            "settings": "Settings",
+            "tabs": {
+                "group": {
+                    "general_settings": "General Settings",
+                    "social_logins": "Social Logins",
+                    "shipping_methods": "Shipping Methods",
+                    "payment_methods": "Payment Methods"
+                },
+                "general": "General",
+                "logo": "Logo",
+                "maintenance": "Maintenance",
+                "store": "Store",
+                "pwa": "PWA",
+                "currency": "Currency",
+                "sms": "SMS",
+                "mail": "Mail",
+                "newsletter": "Newsletter",
+                "google_recaptcha": "Google reCAPTCHA",
+                "custom_css_js": "Custom CSS\/JS",
+                "facebook": "Facebook",
+                "google": "Google",
+                "free_shipping": "Free Shipping",
+                "local_pickup": "Local Pickup",
+                "flat_rate": "Flat Rate",
+                "paypal": "PayPal",
+                "stripe": "Stripe",
+                "paytm": "Paytm",
+                "bkash": "Bkash",
+                "nagad": "Nagad",
+                "razorpay": "Razorpay",
+                "instamojo": "Instamojo",
+                "paystack": "Paystack",
+                "authorizenet": "Authorize.net",
+                "mercadopago": "Mercado Pago",
+                "flutterwave": "Flutterwave",
+                "iyzico": "Iyzico",
+                "payfast": "PayFast",
+                "cod": "Cash On Delivery",
+                "bank_transfer": "Bank Transfer",
+                "check_payment": "Check \/ Money Order",
+                "bkash_payment": "Bkash",
+                "nagad_payment": "Nagad",
+                "sslcommerz_payment": "SSLCommerz Payment",
+                "sslcommerz": "SSLCommerz"
+            },
+            "form": {
+                "logo": "Logo",
+                "small_logo": "Small Logo",
+                "enable_pwa": "Enable PWA",
+                "pwa_icon": "Icon",
+                "pwa_displays": {
+                    "fullscreen": "Fullscreen",
+                    "standalone": "Standalone",
+                    "minimal-ui": "Minimal-UI",
+                    "browser": "Browser"
+                },
+                "pwa_orientations": {
+                    "any": "Any",
+                    "natural": "Natural",
+                    "landscape": "Landscape",
+                    "portrait": "Portrait",
+                    "portrait-primary": "Portrait-Primary",
+                    "portrait-secondary": "Portrait-Secondary",
+                    "landscape-primary": "Landscape-Primary",
+                    "landscape-secondary": "Landscape-Secondary"
+                },
+                "pwa_directions": {
+                    "ltr": "LTR",
+                    "rtl": "RTL",
+                    "auto": "Auto"
+                },
+                "allow_reviews": "Allow customers to give reviews & ratings",
+                "approve_reviews_automatically": "Customer reviews will be approved automatically",
+                "show_cookie_bar": "Show cookie bar in your website",
+                "privacy_settings": "Privacy Settings",
+                "hide_store_phone": "Hide store phone from the storefront",
+                "hide_store_email": "Hide store email from the storefront",
+                "put_the_application_into_maintenance_mode": "Put the application into maintenance mode",
+                "ip_addreses_seperated_in_new_line": "IP addreses seperated in new line",
+                "select_service": "Select Service",
+                "enable_auto_refreshing_currency_rates": "Enable auto-refreshing currency rates",
+                "auto_refresh_currency_rate_frequencies": {
+                    "daily": "Daily",
+                    "weekly": "Weekly",
+                    "monthly": "Monthly"
+                },
+                "customer_notification_settings": "Customer Notification Settings",
+                "send_welcome_sms_after_registration": "Send welcome SMS after registration",
+                "order_notification_settings": "Order Notification Settings",
+                "send_new_order_notification_to_customer": "Send new order notification to the customer",
+                "send_new_order_notification_to_admin": "Send new order notification to the admin",
+                "mail_encryption_protocols": {
+                    "ssl": "SSL",
+                    "tls": "Tls"
+                },
+                "send_welcome_email_after_registration": "Send welcome email after registration",
+                "send_invoice_email": "Send invoice email to the customer after checkout",
+                "allow_customers_to_subscribe": "Allow customers to subscribe to your newsletter",
+                "enable_google_recaptcha": "Enable Google reCAPTCHA (V2) in Registration, Review and Contact Us Forms",
+                "enable_facebook_login": "Enable Facebook Login",
+                "enable_google_login": "Enable Google Login",
+                "enable_free_shipping": "Enable Free Shipping",
+                "enable_local_pickup": "Enable Local Pickup",
+                "enable_flat_rate": "Enable Flat Rate",
+                "enable_paypal": "Enable PayPal",
+                "use_sandbox_for_test_payments": "Use sandbox for test payments",
+                "enable_stripe": "Enable Stripe",
+                "enable_paytm": "Enable Paytm",
+                "enable_razorpay": "Enable Razorpay",
+                "enable_instamojo": "Enable Instamojo",
+                "enable_paystack": "Enable Paystack",
+                "enable_authorizenet": "Enable Authorize.net",
+                "enable_mercadopago": "Enable Mercado Pago",
+                "enable_flutterwave": "Enable Flutterwave",
+                "enable_iyzico": "Enable Iyzico",
+                "enable_payfast": "Enable PayFast",
+                "enable_bkash": "Enable Bkash",
+                "enable_nagad": "Enable Nagad",
+                "enable_sslcommerz": "Enable SSLCommerz",
+                "sslcommerz_is_localhost": "Yes, I am using localhost",
+                "enable_cod": "Enable Cash On Delivery",
+                "enable_bank_transfer": "Enable Bank Transfer",
+                "enable_check_payment": "Enable Check \/ Money Order"
+            },
+            "validation": {
+                "sqlite_is_not_installed": "SQLite is not installed"
+            }
+        },
+        "sidebar": {
+            "settings": "Settings",
+            "general": "General"
+        }
+    },
+    "Slider": {
+        "attributes": {
+            "caption_1": "Caption 1",
+            "caption_2": "Caption 2",
+            "direction": "Direction",
+            "call_to_action_url": "Call to Action URL",
+            "open_in_new_window": "Open in new window",
+            "caption_1_delay": "Delay",
+            "caption_1_effect": "Effect",
+            "caption_2_delay": "Delay",
+            "caption_2_effect": "Effect",
+            "call_to_action_delay": "Delay",
+            "call_to_action_effect": "Effect",
+            "name": "Name",
+            "speed": "Speed",
+            "autoplay": "Autoplay",
+            "autoplay_speed": "Autoplay Speed",
+            "fade": "Fade",
+            "dots": "Dots",
+            "arrows": "Arrows"
+        },
+        "permissions": {
+            "index": "Index Slider",
+            "create": "Create Slider",
+            "edit": "Edit Slider",
+            "destroy": "Delete Slider"
+        },
+        "sliders": {
+            "slider": "Slider",
+            "sliders": "Sliders",
+            "table": {
+                "name": "Name"
+            },
+            "tabs": {
+                "group": {
+                    "slider_information": "Slider Information"
+                },
+                "slides": "Slides",
+                "settings": "Settings"
+            },
+            "slide": {
+                "add_slide": "Add Slide",
+                "image_slide": "Image Slide",
+                "form": {
+                    "directions": {
+                        "left": "Left",
+                        "right": "Right"
+                    },
+                    "caption_1": "Caption 1",
+                    "caption_2": "Caption 2",
+                    "call_to_action_url": "Call to Action URL",
+                    "open_in_new_window": "Open in new window"
+                }
+            },
+            "form": {
+                "enable_autoplay": "Enable autoplay",
+                "300ms": "300ms",
+                "3000ms": "3000ms",
+                "show_dots": "Show slider dots",
+                "show_arrows": "Show Prev\/Next arrows"
+            }
+        }
+    },
+    "Sms": {
+        "messages": {
+            "welcome": "Welcome :first_name,\nYour account has been created successfully",
+            "new_order": "A new order has been placed. The order id is #:order_id",
+            "order_has_been_placed": "Hi :first_name,\nYour order #:order_id has been placed. Thanks for shopping with us",
+            "order_status_changed": "Hi :first_name,\nYour order #:order_id status is changed to :status"
+        },
+        "services": {
+            "vonage": "Vonage",
+            "twilio": "Twilio"
+        }
+    },
+    "Storefront": {
+        "404": {
+            "404": "404",
+            "page_not_found": "Oops! Page Not Found.",
+            "unable_to_find_the_page": "Sorry but we are unable to find the page that you are looking for.",
+            "back_to_home": "Back to Home"
+        },
+        "account": {
+            "image": "Image",
+            "product_name": "Product Name",
+            "date": "Date",
+            "status": "Status",
+            "action": "Action",
+            "actions": "Actions",
+            "pages": {
+                "my_account": "My Account",
+                "dashboard": "Dashboard",
+                "my_orders": "My Orders",
+                "my_downloads": "My Downloads",
+                "my_wishlist": "My Wishlist",
+                "my_reviews": "My Reviews",
+                "my_addresses": "My Addresses",
+                "my_profile": "My Profile",
+                "logout": "Logout"
+            },
+            "dashboard": {
+                "recent_orders": "Recent Orders",
+                "view_all": "View All",
+                "account_information": "Account Information",
+                "edit": "Edit"
+            },
+            "orders": {
+                "order_id": "Order ID",
+                "total": "Total",
+                "tracking": "Tracking",
+                "open_link": "Open Link",
+                "view": "View",
+                "view_order": "View Order",
+                "no_orders": "You haven't placed any order yet."
+            },
+            "view_order": {
+                "view_order": "View Order",
+                "order_information": "Order Information",
+                "id": "ID",
+                "phone": "Phone:",
+                "email": "Email:",
+                "date": "Date:",
+                "shipping_method": "Shipping Method:",
+                "payment_method": "Payment Method:",
+                "copy": "Copy",
+                "open_link": "Open Link",
+                "copied_to_clipboard": "Copied to clipboard",
+                "order_note": "Order Note:",
+                "tracking_reference": "Tracking Reference",
+                "billing_address": "Billing Address",
+                "shipping_address": "Shipping Address",
+                "unit_price": "Unit Price",
+                "quantity": "Quantity",
+                "line_total": "Line Total",
+                "subtotal": "Subtotal",
+                "coupon": "Coupon",
+                "total": "Total"
+            },
+            "downloads": {
+                "filename": "Filename",
+                "download": "Download",
+                "no_file_found": "No file found.",
+                "no_downloadable_files": "You don't have any downloadable files."
+            },
+            "wishlist": {
+                "price": "Price",
+                "availability": "Availability",
+                "in_stock": "In Stock",
+                "out_of_stock": "Out of Stock",
+                "add_to_cart": "Add to Cart",
+                "delete": "Delete",
+                "empty_wishlist": "Your wishlist is empty."
+            },
+            "reviews": {
+                "rating": "Rating",
+                "no_reviews": "You haven't reviewed any product yet."
+            },
+            "addresses": {
+                "confirm": "Are you sure want to delete this address?",
+                "default": "Default",
+                "edit": "Edit",
+                "delete": "Delete",
+                "new_address": "New Address",
+                "add_new_address": "Add New Address",
+                "first_name": "First Name",
+                "last_name": "Last Name",
+                "street_address": "Street Address",
+                "address_line_1": "Address Line 1",
+                "address_line_2": "Address Line 2 (optional)",
+                "city": "City",
+                "zip": "Postcode \/ ZIP",
+                "country": "Country",
+                "state": "State \/ Province",
+                "please_select": "Please Select",
+                "cancel": "Cancel",
+                "save_address": "Save Address"
+            },
+            "profile": {
+                "account": "Account",
+                "email": "Email",
+                "phone": "Phone",
+                "first_name": "First Name",
+                "last_name": "Last Name",
+                "password": "Password",
+                "new_password": "New Password",
+                "confirm_password": "Confirm Password",
+                "save_changes": "Save Changes"
+            }
+        },
+        "attributes": {
+            "storefront_welcome_text": "Welcome Text",
+            "storefront_theme_color": "Theme Color",
+            "storefront_display_font": "Display Font",
+            "storefront_custom_theme_color": "Custom Theme Color",
+            "storefront_mail_theme_color": "Mail Theme Color",
+            "storefront_custom_mail_theme_color": "Custom Mail Theme Color",
+            "storefront_slider": "Slider",
+            "storefront_terms_page": "Terms & Conditions Page",
+            "storefront_privacy_page": "Privacy Policy Page",
+            "storefront_address": "Address",
+            "storefront_most_searched_keywords": "Most Searched Keywords",
+            "storefront_navbar_text": "Navbar Text",
+            "storefront_primary_menu": "Primary Menu",
+            "storefront_category_menu": "Category Menu",
+            "storefront_footer_menu_one_title": "Footer Menu One Title",
+            "storefront_footer_menu_one": "Footer Menu One",
+            "storefront_footer_menu_two_title": "Footer Menu Two Title",
+            "storefront_footer_menu_two": "Footer Menu Two",
+            "storefront_footer_tags": "Footer Tags",
+            "storefront_copyright_text": "Footer Copyright Text",
+            "storefront_facebook_link": "Facebook",
+            "storefront_twitter_link": "Twitter",
+            "storefront_instagram_link": "Instagram",
+            "storefront_youtube_link": "Youtube",
+            "caption_1": "Caption 1",
+            "caption_2": "Caption 2",
+            "call_to_action_url": "Call to Action URL",
+            "url": "URL",
+            "enabled": "Enabled",
+            "open_in_new_window": "Open in new window",
+            "title": "Title",
+            "subtitle": "Subtitle",
+            "icon": "Icon",
+            "section_status": "Section Status",
+            "section_title": "Section Title",
+            "section_subtitle": "Section Subtitle",
+            "category": "Category",
+            "total_products": "Total Products",
+            "type": "Type",
+            "products_limit": "Products Limit",
+            "products": "Products",
+            "storefront_top_brands": "Top Brands",
+            "storefront_active_flash_sale_campaign": "Active Campaign",
+            "recent_blogs": "Recent Blogs"
+        },
+        "blog": {
+            "blog": "Blog",
+            "blog_posts": {
+                "blog_posts": "Blog Posts",
+                "view_all": "View All",
+                "read_post": "Read Post",
+                "no_blog_post_found": "Oops! No blog post found.",
+                "search": "Search",
+                "recent_posts": "Recent Posts",
+                "no_recent_posts": "No recent posts",
+                "search_blog_posts": "Search blog posts",
+                "categories": "Categories",
+                "no_categories": "No categories",
+                "social_share": "Social Share",
+                "facebook": "Facebook",
+                "twitter": "Twitter",
+                "linkedin": "Linkedin",
+                "tumblr": "Tumblr",
+                "tags": "Tags"
+            },
+            "search_results_for": "Search results for:"
+        },
+        "brands": {
+            "brands": "Brands",
+            "no_brand_found": "Oops! No brand found."
+        },
+        "cart": {
+            "cart": "Cart",
+            "my_cart": "My Cart",
+            "01": "01",
+            "02": "02",
+            "03": "03",
+            "checkout": "Checkout",
+            "order_complete": "Order Complete",
+            "table": {
+                "image": "Image",
+                "product_name": "Product Name",
+                "unit_price": "Unit Price",
+                "quantity": "Quantity",
+                "line_total": "Line Total"
+            },
+            "cart_summary": "Cart Summary",
+            "total": "Total",
+            "proceed_to_checkout": "Proceed to Checkout",
+            "your_cart_is_empty": "Your cart is empty",
+            "looks_like_you_haven't_made_any_choice_yet": "Looks like you haven't made any choice yet.",
+            "continue_shopping": "Continue Shopping"
+        },
+        "categories": {
+            "all_categories": "All Categories",
+            "no_category_found": "Opps! No category found."
+        },
+        "checkout": {
+            "checkout": "Checkout",
+            "account_details": "Account Details",
+            "add_new_address": "Add New Address",
+            "billing_details": "Billing Details",
+            "default": "Default",
+            "you_must_select_an_address": "You must select an address.",
+            "please_select": "Please Select",
+            "create_an_account_by_entering_the_information_below": "Create an account by entering the information below. If you are a returning customer please login from the top of the page.",
+            "shipping_details": "Shipping Details",
+            "special_note_for_delivery": "Special note for delivery",
+            "payment_method": "Payment Method",
+            "shipping_method": "Shipping Method",
+            "no_payment_method": "No payment method is found",
+            "payment_instructions": "Payment Instructions",
+            "order_summary": "Order Summary",
+            "subtotal": "Subtotal",
+            "enter_coupon_code": "Enter coupon code",
+            "apply": "Apply",
+            "coupon": "Coupon",
+            "shipping_cost": "Shipping Cost",
+            "free": "Free",
+            "total": "Total",
+            "i_agree_to_the": "I agree to the",
+            "terms_&_conditions": "Terms & Conditions",
+            "place_order": "Place Order",
+            "payment_for_order": "Payment for order #:id",
+            "remember_about_your_order": "(1) Remember about your order"
+        },
+        "compare": {
+            "compare": "Compare",
+            "no_product": "No product in the compare list.",
+            "product_overview": "Product Overview",
+            "description": "Description",
+            "rating": "Rating",
+            "availability": "Availability",
+            "in_stock": "In Stock",
+            "out_of_stock": "Out of Stock",
+            "price": "Price",
+            "actions": "Actions",
+            "add_to_cart": "Add to Cart",
+            "add_to_wishlist": "Add to Wishlist",
+            "view_options": "View Options"
+        },
+        "contact": {
+            "contact": "Contact",
+            "leave_a_message": "Leave a Message",
+            "send_message": "SEND MESSAGE"
+        },
+        "invoice": {
+            "subject": "Invoice for order #:id",
+            "invoice": "INVOICE",
+            "order_id": "Order ID",
+            "date": "Date",
+            "order_details": "Order Details",
+            "email": "Email",
+            "phone": "Phone",
+            "payment_method": "Payment Method",
+            "billing_address": "Billing Address",
+            "shipping_address": "Shipping Address",
+            "product": "Product",
+            "unit_price": "Unit Price",
+            "quantity": "Quantity",
+            "line_total": "Line Total",
+            "subtotal": "Subtotal",
+            "coupon": "Coupon",
+            "total": "Total"
+        },
+        "layouts": {
+            "home": "Home",
+            "contact": "Contact",
+            "blog": "Blog",
+            "compare": "Compare",
+            "account": "Account",
+            "wishlist": "Wishlist",
+            "cart": "Cart",
+            "login_register": "Login \/ Register",
+            "login": "Login",
+            "search_for_products": "Search for products",
+            "category_suggestions": "Category Suggestions",
+            "product_suggestions": "Product Suggestions",
+            "more_results": ":count more results",
+            "favorites": "Favorites",
+            "most_searched": "Most searched:",
+            "all_categories_header": "ALL CATEGORIES",
+            "all_categories": "All Categories",
+            "navigation": "Navigation",
+            "categories": "Categories",
+            "menu": "Menu",
+            "more": "More",
+            "language_and_currency": "Language & Currency",
+            "language": "Language",
+            "currency": "Currency",
+            "my_cart": "My Cart",
+            "subtotal": "Subtotal",
+            "view_cart": "View Cart",
+            "clear_cart": "Clear Cart",
+            "checkout": "Checkout",
+            "subscribe_to_our_newsletter": "Subscribe to Our Newsletter",
+            "subscribe_to_our_newsletter_subtitle": "Subscribe to our newsletter & get notification about discounts.",
+            "by_subscribing": "By subscribing to our newsletter you agree to our ",
+            "privacy_policy": "Privacy Policy.",
+            "no_thanks": "No, Thanks",
+            "email_address": "Email address",
+            "subscribe": "Subscribe",
+            "subscribed": "Subscribed",
+            "the_website_uses_cookies": "The website uses cookies to ensure you get the best experience on our website.",
+            "accept": "Accept",
+            "decline": "Decline",
+            "next": "NEXT",
+            "prev": "PREV",
+            "contact_us": "Contact Us",
+            "my_account": "My Account",
+            "tags": "Tags"
+        },
+        "mail": {
+            "hello": "Hello :name!",
+            "all_rights_reserved": "All rights reserved."
+        },
+        "messages": {
+            "no_internet": "No Internet Connection",
+            "connection_lost": "The internet connection has been lost, please reconnect to the internet and try again"
+        },
+        "order_complete": {
+            "order_placed": "Order Placed!",
+            "your_order_has_been_placed": "Your order has been placed. Your order ID is: <b>:id<\/b>"
+        },
+        "permissions": {
+            "storefront": {
+                "edit": "Edit Storefront Settings"
+            }
+        },
+        "product": {
+            "left_in_stock": ":count left in stock",
+            "in_stock": "In stock",
+            "out_of_stock": "Out of stock",
+            "wishlist": "Wishlist",
+            "compare": "Compare",
+            "click_to_select": "Click to select",
+            "options": {
+                "choose_an_option": "Choose an option"
+            },
+            "quantity": "Quantity",
+            "add_to_cart": "Add to Cart",
+            "unavailable": "Unavailable",
+            "sku": "SKU:",
+            "categories": "Categories:",
+            "tags": "Tags:",
+            "share": "Share:",
+            "facebook": "Facebook",
+            "twitter": "Twitter",
+            "linkedin": "Linkedin",
+            "tumblr": "Tumblr",
+            "you_might_also_like": "You might also like",
+            "description": "Description",
+            "specification": "Specification",
+            "reviews": "Reviews (:count)",
+            "add_a_review": "Add a review",
+            "review_submitted": "Review submitted",
+            "review_form": {
+                "your_rating": "Your Rating",
+                "name": "Name",
+                "comment": "Comment",
+                "submit_review": "Submit Review"
+            },
+            "be_the_first_one_to_review_this_product": "Be the first one to review this product.",
+            "related_products": "Related Products",
+            "show_more": "Show More",
+            "show_less": "Show Less"
+        },
+        "product_card": {
+            "out_of_stock": "Out of Stock",
+            "new": "New",
+            "review": "Review",
+            "reviews": "Reviews",
+            "add_to_cart": "Add to Cart",
+            "view_options": "View Options",
+            "compare": "Compare",
+            "wishlist": "Wishlist",
+            "available": "Available:",
+            "sold": "Sold:"
+        },
+        "products": {
+            "browse_categories": "Browse Categories",
+            "categories": "Categories",
+            "price": "Price",
+            "filters": "Filters",
+            "latest_products": "Latest Products",
+            "search_results_for": "Search results for:",
+            "shop": "Shop",
+            "grid_view": "Grid View",
+            "list_view": "List View",
+            "sort_options": {
+                "relevance": "Relevance",
+                "alphabetic": "Alphabetic",
+                "topRated": "Top Rated",
+                "latest": "Latest",
+                "priceLowToHigh": "Price: Low to High",
+                "priceHighToLow": "Price: High to Low"
+            },
+            "per_page_options": {
+                "10": "10",
+                "20": "20",
+                "30": "30",
+                "40": "40",
+                "50": "50"
+            },
+            "no_products_found": "Oops! No products found.",
+            "showing_results": "Showing :from-:to of :total results"
+        },
+        "pwa": [],
+        "sidebar": {
+            "storefront": "Storefront"
+        },
+        "storefront": {
+            "storefront": "Storefront",
+            "something_went_wrong": "Something went wrong!",
+            "try_again": "Try Again",
+            "form": {
+                "favicon": "Favicon",
+                "header_logo": "Header Logo",
+                "mail_logo": "Mail Logo",
+                "accepted_payment_methods_image": "Accepted Payment Methods Image",
+                "newsletter_bg_image": "Background Image",
+                "please_select": "Please Select",
+                "background": "Background",
+                "banner": "Banner",
+                "banner_1": "Banner 1",
+                "banner_2": "Banner 2",
+                "banner_3": "Banner 3",
+                "feature_1": "Feature 1",
+                "feature_2": "Feature 2",
+                "feature_3": "Feature 3",
+                "feature_4": "Feature 4",
+                "feature_5": "Feature 5",
+                "enable_features_section": "Enable features section",
+                "enable_most_searched_keywords": "Enable most searched keywords",
+                "product_page_banner": "Product Page Banner",
+                "enable_three_column_full_width_banners_section": "Enable three column full width banners section",
+                "enable_featured_categories_section": "Enable featured categories section",
+                "enable_product_tabs_one_section": "Enable product tabs one section",
+                "enable_brands_section": "Enable brands section",
+                "enable_flash_sale_and_vertical_products_section": "Enable flash sale & vertical products section",
+                "enable_two_column_banners_section": "Enable two column banners section",
+                "enable_product_grid_section": "Enable product grid section",
+                "enable_three_column_banners_section": "Enable three column banners section",
+                "enable_product_tabs_two_section": "Enable product tabs two section",
+                "enable_one_column_banner_section": "Enable One column banner section",
+                "enable_blogs_section": "Enable Blogs Section",
+                "recent_blogs": {
+                    "5": "5",
+                    "10": "10",
+                    "15": "15",
+                    "20": "20"
+                },
+                "product_types": {
+                    "category_products": "Category Products",
+                    "latest_products": "Latest Products",
+                    "recently_viewed_products": "Recently Viewed Products",
+                    "custom_products": "Custom Products"
+                },
+                "category_1": "Category 1",
+                "category_2": "Category 2",
+                "category_3": "Category 3",
+                "category_4": "Category 4",
+                "category_5": "Category 5",
+                "category_6": "Category 6",
+                "tab_1": "Tab 1",
+                "tab_2": "Tab 2",
+                "tab_3": "Tab 3",
+                "tab_4": "Tab 4",
+                "storefront_top_brands": "Top Brands",
+                "flash_sale": "Flash Sale",
+                "vertical_products_1": "Vertical Products 1",
+                "vertical_products_2": "Vertical Products 2",
+                "vertical_products_3": "Vertical Products 3"
+            },
+            "tabs": {
+                "group": {
+                    "general_settings": "General Settings",
+                    "home_page_sections": "Home Page Sections"
+                },
+                "general": "General",
+                "logo": "Logo",
+                "menus": "Menus",
+                "footer": "Footer",
+                "newsletter": "Newsletter",
+                "features": "Features",
+                "product_page": "Product Page",
+                "social_links": "Social Links",
+                "slider_banners": "Slider Banners",
+                "featured_categories": "Featured Categories",
+                "three_column_full_width_banners": "Three Column Full Width Banners",
+                "product_tabs_one": "Product Tabs One",
+                "top_brands": "Top Brands",
+                "flash_sale_and_vertical_products": "Flash Sale & Vertical Products",
+                "two_column_banners": "Two column banners",
+                "product_grid": "Product Grid",
+                "three_column_banners": "Three Column Banners",
+                "product_tabs_two": "Product Tabs Two",
+                "one_column_banner": "One Column Banner",
+                "blogs": "Blogs"
+            },
+            "social_links": {
+                "facebook": "Facebook",
+                "twitter": "Twitter",
+                "instagram": "Instagram",
+                "youtube": "YouTube"
+            }
+        },
+        "themes": {
+            "blue": "Blue",
+            "bondi-blue": "Bondi Blue",
+            "cornflower": "Cornflower",
+            "violet": "Violet",
+            "red": "Red",
+            "yellow": "Yellow",
+            "orange": "Orange",
+            "green": "Green",
+            "pink": "Pink",
+            "black": "Black",
+            "indigo": "Indigo",
+            "magenta": "Magenta",
+            "custom_color": "Custom Color"
+        }
+    },
+    "Support": {
+        "clear_cache": {
+            "clear_cache": "Clear Cache",
+            "clear_cache_success": "Caches cleared successfully.",
+            "clear_cache_error": "Failed to clear caches: "
+        },
+        "recaptcha": {
+            "validation": {
+                "failed_to_verify": "Failed to verify"
+            }
+        },
+        "sitemap": {
+            "sitemap": "Sitemap",
+            "generate": "Generate",
+            "generate_sitemap": "Generate Sitemap",
+            "sidebar": {
+                "sitemap": "Sitemap"
+            },
+            "messages": {
+                "sitemap_generated_successfully": "Sitemap generated successfully"
+            }
+        }
+    },
+    "Tag": {
+        "attributes": {
+            "name": "Name",
+            "slug": "URL"
+        },
+        "permissions": {
+            "index": "Index Tag",
+            "create": "Create Tag",
+            "edit": "Edit Tag",
+            "destroy": "Delete Tag"
+        },
+        "tags": {
+            "tag": "Tag",
+            "tags": "Tags",
+            "table": {
+                "name": "Name"
+            },
+            "tabs": {
+                "group": {
+                    "tag_information": "Tag Information"
+                },
+                "general": "General"
+            }
+        }
+    },
+    "Tax": {
+        "attributes": {
+            "label": "Tax Class",
+            "based_on": "Based On",
+            "name": "Tax Name",
+            "country": "Country",
+            "state": "State",
+            "city": "City",
+            "zip": "Zip",
+            "rate": "Rate %",
+            "rates.*.name": "Tax Name",
+            "rates.*.rate": "Rate"
+        },
+        "permissions": {
+            "taxes": {
+                "index": "Index Tax",
+                "create": "Create Tax",
+                "edit": "Edit Tax",
+                "destroy": "Delete Tax"
+            }
+        },
+        "sidebar": {
+            "taxes": "Taxes"
+        },
+        "taxes": {
+            "tax": "Tax",
+            "taxes": "Taxes",
+            "table": {
+                "tax_class": "Tax Class"
+            },
+            "tabs": {
+                "group": {
+                    "tax_information": "Tax Information"
+                },
+                "general": "General",
+                "rates": "Rates"
+            },
+            "form": {
+                "add_new_rate": "Add New Rate",
+                "delete_rate": "Delete Rate",
+                "based_on": {
+                    "shipping_address": "Shipping Address",
+                    "billing_address": "Billing Address",
+                    "store_address": "Store Address"
+                }
+            }
+        }
+    },
+    "Transaction": {
+        "permissions": {
+            "index": "Index Transaction"
+        },
+        "transactions": {
+            "transactions": "Transactions",
+            "table": {
+                "order_id": "Order ID",
+                "transaction_id": "Transaction ID",
+                "payment_method": "Payment Method"
+            }
+        }
+    },
+    "Translation": {
+        "attributes": {
+            "file": "File"
+        },
+        "languages": {
+            "language": "Language",
+            "languages": "Languages",
+            "add_language": "Add Language",
+            "table": {
+                "name": "Name",
+                "default": "Default",
+                "actions": "Actions",
+                "translations": "Translations",
+                "delete": "Delete"
+            },
+            "default_language_updated": "Default language updated"
+        },
+        "permissions": {
+            "index": "Index Translations",
+            "edit": "Edit Translations",
+            "languages": {
+                "index": "Index Languages",
+                "add": "Add Language"
+            }
+        },
+        "sidebar": {
+            "languages": "Languages",
+            "translations": "Translations"
+        },
+        "translations": {
+            "translation": "Translation",
+            "translations": "Translations",
+            "buttons": {
+                "import": "Import",
+                "export": "Export"
+            },
+            "table": {
+                "key": "Key"
+            }
+        }
+    },
+    "User": {
+        "attributes": {
+            "auth": {
+                "remember_me": "Remember me"
+            },
+            "users": {
+                "first_name": "First Name",
+                "last_name": "Last Name",
+                "email": "Email",
+                "phone": "Phone",
+                "password": "Password",
+                "password_confirmation": "Confirm Password",
+                "roles": "Roles",
+                "activated": "Status",
+                "new_password": "New Password",
+                "confirm_new_password": "Confirm New Password"
+            },
+            "roles": {
+                "name": "Name"
+            }
+        },
+        "auth": {
+            "back_to_home": "Back to Home",
+            "back_to_login": "Back to Login",
+            "login": "Login",
+            "logout": "Logout",
+            "welcome": "Welcome",
+            "enter_your_details": "Enter your details below to sign in into your account.",
+            "enter_your_create_account_details": "Enter your details below to create your account.",
+            "create_new_password": "Create a new password",
+            "this_password_should_be_different": "This password should be different from the previous password.",
+            "email": "Email",
+            "enter_your_email": "Enter your email",
+            "enter_your_password": "Enter your password",
+            "phone": "Phone",
+            "password": "Password",
+            "confirm_password": "Confirm Password",
+            "hide_password": "Hide password",
+            "show_password": "Show password",
+            "remember_me": "Remember me",
+            "forgot_password": "Forgot password?",
+            "sign_in": "Sign In",
+            "or_continue_with": "Or, Continue With",
+            "or_sign_up_with": "Or, Sign Up With",
+            "dont_have_an_account": "Don't Have an Account?",
+            "create_account": "Create Account",
+            "register": "Register",
+            "already_have_an_account": "Already Have an Account?",
+            "first_name": "First Name",
+            "last_name": "Last Name",
+            "i_agree_to_the": "I agree to the",
+            "privacy_policy": "Privacy Policy",
+            "reset_password": "Reset Password",
+            "enter_email": "Enter your account email to receive a link allowing you to reset your password.",
+            "submit": "Submit",
+            "sign_in_with_google": "Sign in with Google",
+            "sign_in_with_facebook": "Sign in with Facebook",
+            "or": "Or",
+            "do_not_have_an_account": "Don't have an account?",
+            "sign_up": "Sign up"
+        },
+        "mail": {
+            "welcome": "Welcome :name!",
+            "account_created": "Your account has been created successfully.",
+            "reset_your_account_password": "Reset your account password",
+            "received_a_password_reset_request": "You are receiving this email because we received a password reset request for your account.",
+            "reset_password": "Reset Password",
+            "no_further_action_is_required": "If you did not request a password reset, no further action is required.",
+            "if_you\\\u2019re_having_trouble": "If you\u2019re having trouble clicking the \"Reset Password\" button, copy and paste the URL below into your web browser:"
+        },
+        "messages": {
+            "users": {
+                "account_created": "Your account has been created",
+                "no_user_found": "No user with that email address belongs to our system",
+                "invalid_credentials": "Invalid email address or password",
+                "account_not_activated": "Your account is not activated. Please check your email",
+                "account_is_blocked": "Your account is blocked for :delay seconds",
+                "check_email_to_reset_password": "Check your email address to reset password",
+                "invalid_reset_code": "Invalid or expired reset code",
+                "password_has_been_reset": "Your password has been reset",
+                "reset_password_email_sent": "Reset password email sent"
+            },
+            "email": {
+                "reset_password": "Reset your account password"
+            }
+        },
+        "permissions": {
+            "users": {
+                "index": "Index Users",
+                "create": "Create Users",
+                "edit": "Edit Users",
+                "destroy": "Delete Users"
+            },
+            "roles": {
+                "index": "Index Roles",
+                "create": "Create Roles",
+                "edit": "Edit Roles",
+                "destroy": "Delete Roles"
+            }
+        },
+        "roles": {
+            "role": "Role",
+            "roles": "Roles",
+            "table": {
+                "name": "Name"
+            },
+            "tabs": {
+                "role_information": "Role Information",
+                "general": "General",
+                "permissions": "Permissions"
+            },
+            "permissions": {
+                "allow_all": "Allow all",
+                "deny_all": "Deny all",
+                "inherit_all": "Inherit all",
+                "allow": "Allow",
+                "deny": "Deny",
+                "inherit": "Inherit"
+            }
+        },
+        "sidebar": {
+            "users": "Users",
+            "roles": "Roles"
+        },
+        "users": {
+            "user": "User",
+            "users": "Users",
+            "profile": "Profile",
+            "table": {
+                "first_name": "First Name",
+                "last_name": "Last Name",
+                "email": "Email",
+                "last_login": "Last Login"
+            },
+            "tabs": {
+                "group": {
+                    "user_information": "User Information",
+                    "profile_information": "Profile Information"
+                },
+                "account": "Account",
+                "permissions": "Permissions",
+                "new_password": "New Password"
+            },
+            "form": {
+                "activated": "Activated"
+            },
+            "or_reset_password": "or, Reset Password",
+            "send_reset_password_email": "Send Reset Password Email"
+        }
+    },
+    "Variation": {
+        "attributes": {
+            "name": "Name",
+            "type": "Type",
+            "values": "Values",
+            "values.*.label": "Label",
+            "values.*.color": "Color",
+            "values.*.image": "Image"
+        },
+        "permissions": {
+            "variations": {
+                "index": "Index Variations",
+                "create": "Create Variations",
+                "edit": "Edit Variations",
+                "destroy": "Delete Variations"
+            }
+        },
+        "sidebar": {
+            "variations": "Variations"
+        },
+        "variations": {
+            "variation": "Variation",
+            "variations": "Variations",
+            "table": {
+                "name": "Name",
+                "type": "Type"
+            },
+            "group": {
+                "general": "General",
+                "values": "Values"
+            },
+            "form": {
+                "name": "Name",
+                "type": "Type",
+                "values": "Values",
+                "label": "Label",
+                "color": "Color",
+                "image": "Image",
+                "variation_types": {
+                    "please_select": "Please Select",
+                    "text": "Text",
+                    "color": "Color",
+                    "image": "Image"
+                },
+                "add_row": "Add Row"
+            }
+        }
+    }
+}

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <linearGradient id="bg_kt" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f0fdf4"/>
+      <stop offset="100%" stop-color="#dcfce7"/>
+    </linearGradient>
+    <linearGradient id="green_grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+  </defs>
+  <rect width="120" height="120" rx="28" fill="url(#bg_kt)"/>
+  <!-- Bar chart -->
+  <rect x="28" y="62" width="14" height="26" rx="4" fill="#a7f3d0"/>
+  <rect x="47" y="50" width="14" height="38" rx="4" fill="#6ee7b7"/>
+  <rect x="66" y="38" width="14" height="50" rx="4" fill="url(#green_grad)"/>
+  <!-- Trend arrow -->
+  <path d="M30 55 L52 42 L68 47 L88 28" fill="none" stroke="#047857" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <polygon points="82,26 92,26 92,36" fill="#047857"/>
+  <!-- Coin symbol -->
+  <circle cx="86" cy="68" r="14" fill="#fbbf24" stroke="#f59e0b" stroke-width="2"/>
+  <text x="86" y="73" font-size="14" font-family="Arial, sans-serif" font-weight="bold" fill="#78350f" text-anchor="middle">$</text>
+</svg>

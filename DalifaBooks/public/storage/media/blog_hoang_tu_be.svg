@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+  <defs>
+    <linearGradient id="bg6" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#022c22"/>
+      <stop offset="60%" stop-color="#14532d"/>
+      <stop offset="100%" stop-color="#15803d"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#bg6)"/>
+  <!-- Badge -->
+  <rect x="60" y="50" width="160" height="34" rx="17" fill="#16a34a"/>
+  <text x="140" y="72" font-size="14" font-family="Arial, sans-serif" font-weight="bold" fill="#ffffff" text-anchor="middle" letter-spacing="1">ĐIỂM SÁCH HAY</text>
+  <!-- Book Title -->
+  <text x="60" y="160" font-size="42" font-family="Arial, sans-serif" font-weight="bold" fill="#ffffff">HOÀNG TỬ BÉ</text>
+  <text x="60" y="205" font-size="22" font-family="Arial, sans-serif" fill="#bbf7d0">Những bài học cuộc đời chỉ có thể nhìn rõ bằng trái tim</text>
+  <!-- Excerpt quote -->
+  <rect x="60" y="240" width="4" height="60" fill="#4ade80"/>
+  <text x="80" y="265" font-size="16" font-family="Arial, sans-serif" font-style="italic" fill="#dcfce7">"Người ta chỉ thấy rõ bằng trái tim.</text>
+  <text x="80" y="292" font-size="16" font-family="Arial, sans-serif" font-style="italic" fill="#dcfce7">Cái cốt tử vô hình đối với đôi mắt."</text>
+  <!-- Author Tag -->
+  <text x="60" y="380" font-size="16" font-family="Arial, sans-serif" font-weight="bold" fill="#86efac">Tác giả: Antoine de Saint-Exupéry • Kiệt tác văn học thế giới</text>
+  <!-- Planet & Rose -->
+  <g transform="translate(560, 160)">
+    <circle cx="80" cy="140" r="80" fill="#166534"/>
+    <!-- Rose under glass -->
+    <path d="M78 80 C78 65, 82 65, 82 80" stroke="#4ade80" stroke-width="3"/>
+    <circle cx="80" cy="62" r="12" fill="#ef4444"/>
+    <!-- Star -->
+    <polygon points="120,20 123,28 132,28 125,34 127,42 120,37 113,42 115,34 108,28 117,28" fill="#fde047"/>
+  </g>
+</svg>

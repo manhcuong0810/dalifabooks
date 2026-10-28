@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <linearGradient id="bg_kh" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f0f9ff"/>
+      <stop offset="100%" stop-color="#e0f2fe"/>
+    </linearGradient>
+    <linearGradient id="atom_grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#0369a1"/>
+    </linearGradient>
+  </defs>
+  <rect width="120" height="120" rx="28" fill="url(#bg_kh)"/>
+  <!-- Atom orbits -->
+  <ellipse cx="60" cy="60" rx="42" ry="16" fill="none" stroke="#38bdf8" stroke-width="3" transform="rotate(30 60 60)"/>
+  <ellipse cx="60" cy="60" rx="42" ry="16" fill="none" stroke="#0284c7" stroke-width="3" transform="rotate(-30 60 60)"/>
+  <ellipse cx="60" cy="60" rx="42" ry="16" fill="none" stroke="#818cf8" stroke-width="3" transform="rotate(90 60 60)"/>
+  <!-- Orbiting particles -->
+  <circle cx="88" cy="44" r="4.5" fill="#0284c7"/>
+  <circle cx="32" cy="76" r="4.5" fill="#38bdf8"/>
+  <circle cx="60" cy="18" r="4.5" fill="#6366f1"/>
+  <!-- Nucleus / Tech center -->
+  <circle cx="60" cy="60" r="10" fill="url(#atom_grad)"/>
+  <circle cx="58" cy="58" r="3" fill="#ffffff" opacity="0.8"/>
+</svg>

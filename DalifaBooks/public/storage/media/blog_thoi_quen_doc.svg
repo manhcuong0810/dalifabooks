@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+  <defs>
+    <linearGradient id="bg5" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4c1d95"/>
+      <stop offset="60%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#9333ea"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#bg5)"/>
+  <!-- Badge -->
+  <rect x="60" y="50" width="160" height="34" rx="17" fill="#8b5cf6"/>
+  <text x="140" y="72" font-size="14" font-family="Arial, sans-serif" font-weight="bold" fill="#ffffff" text-anchor="middle" letter-spacing="1">VĂN HÓA ĐỌC</text>
+  <!-- Book Title -->
+  <text x="60" y="160" font-size="40" font-family="Arial, sans-serif" font-weight="bold" fill="#ffffff">ĐỌC 30 TRANG SÁCH MỖI NGÀY</text>
+  <text x="60" y="205" font-size="22" font-family="Arial, sans-serif" fill="#ddd6fe">Phương pháp rèn luyện thói quen đọc sách cho người bận rộn</text>
+  <!-- Excerpt quote -->
+  <rect x="60" y="240" width="4" height="60" fill="#c084fc"/>
+  <text x="80" y="265" font-size="16" font-family="Arial, sans-serif" font-style="italic" fill="#f3e8ff">30 trang mỗi ngày = 30 cuốn sách mỗi năm.</text>
+  <text x="80" y="292" font-size="16" font-family="Arial, sans-serif" font-style="italic" fill="#f3e8ff">Sức mạnh của kỷ luật vi mô và phương pháp ghi nhớ thông minh.</text>
+  <!-- Author Tag -->
+  <text x="60" y="380" font-size="16" font-family="Arial, sans-serif" font-weight="bold" fill="#ddd6fe">Kỹ năng học tập suốt đời • Ban Biên Tập DalifaBooks</text>
+  <!-- Coffee & Book -->
+  <g transform="translate(570, 160)">
+    <!-- Book stack -->
+    <rect x="0" y="120" width="150" height="24" rx="4" fill="#a855f7"/>
+    <rect x="10" y="90" width="130" height="24" rx="4" fill="#c084fc"/>
+    <rect x="20" y="60" width="110" height="24" rx="4" fill="#e9d5ff"/>
+    <!-- Coffee cup -->
+    <rect x="120" y="30" width="40" height="40" rx="8" fill="#fbbf24"/>
+    <path d="M160 40 C170 40, 170 55, 160 55" fill="none" stroke="#fbbf24" stroke-width="4"/>
+  </g>
+</svg>

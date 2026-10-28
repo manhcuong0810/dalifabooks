@@ -1,0 +1,48 @@
+services:
+  app:
+    image: dalifabooks-app:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dalifabooks_app
+    restart: unless-stopped
+    ports:
+      - "3008:80"
+    volumes:
+      - ./DalifaBooks:/var/www/html
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    networks:
+      - dalifabooks_net
+
+  mariadb:
+    image: mariadb:10.11
+    container_name: dalifabooks_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: dalifabooks_root_password
+      MYSQL_DATABASE: dalifabooks
+      MYSQL_USER: dalifabooks
+      MYSQL_PASSWORD: dalifabooks_password
+    ports:
+      - "3308:3306"
+    volumes:
+      - dalifabooks_mariadb_data:/var/lib/mysql
+    networks:
+      - dalifabooks_net
+    healthcheck:
+      test: ["CMD-SHELL", "mariadb-admin ping -u root -pdalifabooks_root_password --silent || exit 1"]
+      interval: 3s
+      timeout: 5s
+      retries: 20
+
+networks:
+  dalifabooks_net:
+    driver: bridge
+
+volumes:
+  dalifabooks_mariadb_data:

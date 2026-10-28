@@ -1,0 +1,9 @@
+{
+    "name": "Importer",
+    "alias": "importer",
+    "description": "The DalifaBooks Importer Module.",
+    "priority": 100,
+    "providers": [
+        "Modules\\Importer\\Providers\\ImporterServiceProvider"
+    ]
+}
